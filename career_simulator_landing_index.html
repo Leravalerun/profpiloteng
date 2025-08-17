@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Tailwind Play CDN for quick Replit setup -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -30,9 +29,6 @@
           },
           boxShadow: {
             soft: '0 10px 30px rgba(2, 6, 23, 0.08)'
-          },
-          transitionProperty: {
-            'all': 'all'
           }
         }
       }
@@ -45,83 +41,190 @@
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-  <!-- ...navbar, hero, how it works sections remain unchanged... -->
+
+  <!-- Navbar -->
+  <header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
+    <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
+        <span class="h-8 w-8 grid place-items-center rounded-xl bg-brand-600 text-white font-bold">CS</span>
+        Career Simulator
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
+        <a href="#roles" class="hover:text-brand-700 transition">Simulators</a>
+        <a href="#about" class="hover:text-brand-700 transition">About</a>
+        <a href="#pricing" class="hover:text-brand-700 transition">Pricing</a>
+        <a href="#faq" class="hover:text-brand-700 transition">FAQ</a>
+      </nav>
+      <a href="#roles" class="hidden sm:inline-block rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">Start now</a>
+    </div>
+  </header>
+  <div class="h-16"></div><!-- Spacer for fixed navbar -->
+
+  <!-- Hero / Intro -->
+  <section class="relative py-20 sm:py-28 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200 overflow-hidden">
+    <div aria-hidden="true" class="absolute inset-0 pointer-events-none w-full h-full z-0 overflow-hidden">
+      <svg width="100%" height="100%" fill="none">
+        <circle cx="80%" cy="20%" r="180" fill="#3b82f615"/>
+        <circle cx="20%" cy="80%" r="120" fill="#1e40af15"/>
+      </svg>
+    </div>
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+        See what a job is really like — <span class="text-brand-700">in just 3 days</span>
+      </h1>
+      <p class="mt-6 text-xl text-slate-700 max-w-4xl mx-auto">
+        People spend thousands of dollars and months of effort on career change programs. Bootcamps often promise high salaries, but research shows <span class="font-semibold">only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023)</span>.
+      </p>
+      <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
+        At the same time, student loan debt for reskilling is growing worldwide. Many quit their jobs, take loans, and still fail to transition.
+      </p>
+      <p class="mt-4 text-lg text-slate-700 max-w-3xl mx-auto">
+        With <span class="font-semibold">Career Simulator</span> you can test‑drive a profession before risking your time and money. Do real tasks, get guided feedback, and decide if the role fits you.
+      </p>
+      <div class="mt-10 flex justify-center">
+        <a href="#roles" class="rounded-2xl bg-slate-900 text-white px-8 py-4 text-lg font-semibold shadow-soft hover:bg-slate-800 transition">Explore Simulators</a>
+      </div>
+
+      <!-- Quick Quiz -->
+      <div class="mt-10">
+        <div class="max-w-xl mx-auto bg-white/70 backdrop-blur rounded-2xl shadow-soft p-6">
+          <div class="text-lg font-semibold mb-4 text-slate-900">Какую профессию вы бы попробовали первой?</div>
+          <form id="quiz" class="flex flex-col gap-4">
+            <label>
+              <input type="radio" name="role" value="UX Designer" class="mr-2"> UX Designer
+            </label>
+            <label>
+              <input type="radio" name="role" value="Corporate Lawyer" class="mr-2"> Corporate Lawyer
+            </label>
+            <label>
+              <input type="radio" name="role" value="Other" class="mr-2"> Другая профессия
+            </label>
+            <button type="button" onclick="submitQuiz()" class="mt-4 rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Ответить</button>
+          </form>
+          <div id="quiz-result" class="mt-4 text-brand-700 font-medium hidden"></div>
+        </div>
+      </div>
+      <script>
+        function submitQuiz() {
+          const value = document.querySelector('input[name="role"]:checked');
+          if (value) {
+            document.getElementById('quiz-result').textContent = value.value === 'Other'
+              ? 'Расскажите нам о вашей мечте в форме ниже!'
+              : 'Отличный выбор! Попробуйте себя в профессии: ' + value.value + '.';
+            document.getElementById('quiz-result').classList.remove('hidden');
+          }
+        }
+      </script>
+    </div>
+  </section>
 
   <!-- Roles -->
-  <section id="roles" class="py-12 sm:py-20 bg-white">
+  <section id="roles" class="py-16 sm:py-24 bg-white">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between flex-wrap gap-4">
+      <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
         <div>
           <h2 class="text-3xl font-bold">Try a role</h2>
           <p class="mt-2 text-slate-600">Pick a simulator and start today. No prior experience required.</p>
         </div>
         <a href="#faq" class="text-sm font-medium text-brand-700 hover:text-brand-800">What’s inside each simulator?</a>
       </div>
-
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <!-- UX Designer Card -->
-        <article class="rounded-3xl border border-slate-200 bg-slate-50 shadow-soft overflow-hidden flex flex-col card-hover">
-          <div class="p-6 sm:p-8 flex flex-col flex-1">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-xl grid place-items-center bg-brand-600 text-white font-bold">UX</div>
-              <h3 class="text-xl font-semibold">UX Designer</h3>
-            </div>
-            <p class="mt-3 text-slate-700">Build a quick wireframe for a job-search app, justify decisions, and iterate with feedback.</p>
-            <ul class="mt-4 text-sm text-slate-600 list-disc pl-5 space-y-1">
-              <li>Tasks: brief analysis, low-fi wireframe, copy review</li>
-              <li>Time: ~3× 45–60 min</li>
-              <li>Includes: pro example + international learning path</li>
-            </ul>
-            <div class="flex-1"></div>
-            <div class="mt-6 flex items-center gap-3">
-              <a href="/ux.html" class="rounded-xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-800">Start for $15</a>
-              <a href="#faq" class="text-sm font-medium hover:underline">What you’ll learn</a>
-            </div>
-            <p class="mt-2 text-xs text-slate-500">One-time payment · Lifetime access</p>
+        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+          <h3 class="text-xl font-semibold">UX Designer</h3>
+          <p class="mt-3 text-slate-600 flex-grow">Learn how designers research users, create wireframes, and collaborate with developers. Includes daily tasks and feedback.</p>
+          <div class="mt-6">
+            <span class="block text-lg font-bold text-slate-900 mb-2">$15</span>
+            <a href="/ux-designer.html" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Start now</a>
           </div>
-        </article>
-
+        </div>
         <!-- Corporate Lawyer Card -->
-        <article class="rounded-3xl border border-slate-200 bg-slate-50 shadow-soft overflow-hidden flex flex-col card-hover">
-          <div class="p-6 sm:p-8 flex flex-col flex-1">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-xl grid place-items-center bg-brand-600 text-white font-bold">Law</div>
-              <h3 class="text-xl font-semibold">Corporate Lawyer</h3>
-            </div>
-            <p class="mt-3 text-slate-700">Review a contract clause, assess risk, and propose safer wording.</p>
-            <ul class="mt-4 text-sm text-slate-600 list-disc pl-5 space-y-1">
-              <li>Tasks: clause analysis, risk assessment, safer draft</li>
-              <li>Time: ~3× 45–60 min</li>
-              <li>Includes: pro example + international learning path</li>
-            </ul>
-            <div class="flex-1"></div>
-            <div class="mt-6 flex items-center gap-3">
-              <a href="/law.html" class="rounded-xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-800">Start for $15</a>
-              <a href="#faq" class="text-sm font-medium hover:underline">What you’ll learn</a>
-            </div>
-            <p class="mt-2 text-xs text-slate-500">One-time payment · Lifetime access</p>
+        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+          <h3 class="text-xl font-semibold">Corporate Lawyer</h3>
+          <p class="mt-3 text-slate-600 flex-grow">Understand contracts, compliance, and advising businesses. Experience real tasks lawyers handle in corporate settings.</p>
+          <div class="mt-6">
+            <span class="block text-lg font-bold text-slate-900 mb-2">$15</span>
+            <a href="/corporate-lawyer.html" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Start now</a>
           </div>
-        </article>
-
-        <!-- Coming Soon Card -->
-        <article class="rounded-3xl border border-dashed border-slate-300 bg-white/50 shadow-soft overflow-hidden flex flex-col card-hover">
-          <div class="p-6 sm:p-8 flex flex-col flex-1">
-            <div class="flex items-center gap-3">
-              <div class="h-10 w-10 rounded-xl grid place-items-center bg-slate-200 text-slate-700 font-bold">?</div>
-              <h3 class="text-xl font-semibold">More Roles Coming Soon</h3>
-            </div>
-            <p class="mt-3 text-slate-700">Help us decide the next simulator to build.</p>
-            <div class="flex-1"></div>
-            <div class="mt-6">
-              <a href="mailto:hello@careersim.dev?subject=Suggest%20a%20Profession" class="rounded-xl bg-brand-600 text-white px-5 py-2.5 text-sm font-semibold hover:bg-brand-700">Suggest a Profession</a>
-            </div>
+        </div>
+        <!-- Suggest a Profession Card -->
+        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+          <h3 class="text-xl font-semibold">Your Dream Career</h3>
+          <p class="mt-3 text-slate-600 flex-grow">Didn’t find the profession you’re curious about? Suggest a new role and we might build a simulator for it next.</p>
+          <div class="mt-6">
+            <a href="/suggest.html" class="inline-block w-full text-center rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">Suggest a profession</a>
           </div>
-        </article>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ...rest of sections unchanged... -->
+  <!-- About -->
+  <section id="about" class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold">Why Career Simulator?</h2>
+      <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">We help you make smarter career choices by letting you experience real work before committing. Practical, affordable, and built by professionals.</p>
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-left">
+        <div><h3 class="font-semibold text-slate-900">Hands-on tasks</h3><p class="mt-2 text-slate-600">Do actual work you would in the role, not just theory.</p></div>
+        <div><h3 class="font-semibold text-slate-900">Expert feedback</h3><p class="mt-2 text-slate-600">Get guidance from practitioners who’ve done the job.</p></div>
+        <div><h3 class="font-semibold text-slate-900">Affordable</h3><p class="mt-2 text-slate-600">At $15, test-driving a job costs less than a dinner out.</p></div>
+        <div><h3 class="font-semibold text-slate-900">Risk‑free</h3><p class="mt-2 text-slate-600">Decide if the job fits before quitting or investing big.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="py-20 bg-white border-t border-slate-200">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold">Pricing</h2>
+      <p class="mt-4 text-lg text-slate-600">Simple and transparent pricing. Try one, or save with bundles.</p>
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="bg-slate-50 rounded-2xl shadow-soft p-6 flex flex-col">
+          <h3 class="text-xl font-semibold">Single Simulator</h3>
+          <p class="mt-2 text-slate-600">Access to any one profession of your choice.</p>
+          <div class="mt-6"><span class="block text-2xl font-bold mb-2">$15</span><a href="#roles" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Get started</a></div>
+        </div>
+        <div class="bg-slate-50 rounded-2xl shadow-soft p-6 flex flex-col">
+          <h3 class="text-xl font-semibold">Bundle (2 simulators)</h3>
+          <p class="mt-2 text-slate-600">Try two careers and compare. Save money.</p>
+          <div class="mt-6"><span class="block text-2xl font-bold mb-2">$25</span><button disabled class="inline-block w-full text-center rounded-xl bg-slate-300 text-white px-4 py-2 font-medium">Coming soon</button></div>
+        </div>
+        <div class="bg-slate-50 rounded-2xl shadow-soft p-6 flex flex-col">
+          <h3 class="text-xl font-semibold">All‑Access</h3>
+          <p class="mt-2 text-slate-600">Unlock every simulator we launch.</p>
+          <div class="mt-6"><span class="block text-2xl font-bold mb-2">Notify me</span><a href="#" class="inline-block w-full text-center rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">Join waitlist</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-slate-900 text-white text-center">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold">Start your 3‑day career test‑drive now</h2>
+      <p class="mt-4 text-lg text-slate-300">Pick a profession and see if it fits you before committing.</p>
+      <div class="mt-8"><a href="#roles" class="rounded-2xl bg-white text-slate-900 px-8 py-4 text-lg font-semibold shadow-soft hover:bg-slate-100 transition">Start for $15</a></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-10 border-t border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-600">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="h-8 w-8 grid place-items-center rounded-xl bg-brand-600 text-white font-bold">CS</span>
+          <span>Career Simulator</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="/policy.html" class="hover:underline">Privacy Policy</a>
+          <a href="/terms.html" class="hover:underline">Terms</a>
+          <span class="text-slate-400">© <span id="year"></span> Career Simulator</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script> document.getElementById('year').textContent = new Date().getFullYear(); </script>
 </body>
 </html>
+
 
