@@ -60,26 +60,35 @@
   </header>
   <div class="h-16"></div><!-- spacer for fixed navbar -->
 
-  <!-- HERO (restyled minimal) -->
-  <section class="relative py-24 sm:py-28 bg-slate-100/70 border-b border-slate-200">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+   <!-- HERO (one-line headline + background) -->
+  <section class="relative py-28 bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200 border-b border-slate-200 overflow-hidden">
+    <!-- декоративный фон -->
+    <div aria-hidden="true" class="absolute inset-0 overflow-hidden">
+      <svg width="100%" height="100%" fill="none">
+        <circle cx="85%" cy="20%" r="220" fill="#3b82f610"/>
+        <circle cx="15%" cy="80%" r="160" fill="#2563eb15"/>
+      </svg>
+    </div>
+
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
       <div class="inline-flex items-center gap-2 rounded-full bg-white shadow-soft px-4 py-2 text-sm font-medium text-slate-700">
         Start for $15
       </div>
       <h1 class="mt-6 text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight">
         See what a job is really like
       </h1>
-      <p class="mt-5 text-lg sm:text-xl text-slate-600">
+      <p class="mt-6 text-lg sm:text-xl text-slate-600">
         People spend thousands of dollars and months of effort on career change programs. Research shows
-        <span class="font-semibold">only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023)</span>.
-        With <span class="font-semibold">ProfPilot</span> you can test‑drive a profession before risking your time and money.
+        <span class="font-semibold">only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023)</span>.  
+        With <span class="font-semibold">ProfPilot</span> you can test-drive a profession before risking your time and money.
       </p>
-      <div class="mt-8 flex items-center justify-center gap-4">
-        <a href="#roles" class="rounded-2xl bg-slate-900 text-white px-7 py-3 text-base sm:text-lg font-semibold shadow-soft hover:bg-slate-800 transition">Start for $15</a>
-        <a href="#about" class="rounded-2xl bg-white text-slate-900 px-7 py-3 text-base sm:text-lg font-semibold shadow-soft hover:bg-slate-100 transition">Learn more</a>
+      <div class="mt-10 flex items-center justify-center gap-4">
+        <a href="#roles" class="rounded-2xl bg-slate-900 text-white px-7 py-3 text-lg font-semibold shadow-soft hover:bg-slate-800 transition">Start for $15</a>
+        <a href="#about" class="rounded-2xl bg-white text-slate-900 px-7 py-3 text-lg font-semibold shadow-soft hover:bg-slate-100 transition">Learn more</a>
       </div>
     </div>
   </section>
+
 
   <!-- Roles -->
   <section id="roles" class="py-16 sm:py-24 bg-white">
