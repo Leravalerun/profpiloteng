@@ -2,144 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ProfPilot</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen flex flex-col bg-white">
+<body class="min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="bg-white shadow p-3">
-    <div class="max-w-5xl mx-auto flex items-center gap-3">
-      <!-- Inline SVG Logo: Glass P + Airplane -->
-      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="ProfPilot logo">
-        <defs>
-          <!-- Glassy blue gradient -->
-          <linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#9ed7ff"/>
-            <stop offset="45%" stop-color="#5bb7ff"/>
-            <stop offset="100%" stop-color="#2d8eff"/>
-          </linearGradient>
-          <!-- White highlight -->
-          <linearGradient id="highlight" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-          </linearGradient>
-          <!-- Inner shadow -->
-          <filter id="inner" x="-20%" y="-20%" width="140%" height="140%">
-            <feOffset dx="0" dy="0"/>
-            <feGaussianBlur stdDeviation="1.2" result="blur"/>
-            <feComposite in="SourceGraphic" in2="blur" operator="arithmetic" k2="1" k3="-0.7"/>
-          </filter>
-          <!-- Soft outer shadow -->
-          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1b6bcb" flood-opacity="0.25"/>
-          </filter>
-        </defs>
-
-        <!-- P shape -->
-        <g filter="url(#soft)">
-          <!-- Base P -->
-          <path d="
-            M14 8
-            H32
-            c10 0 18 6.5 18 15
-            s-8 15-18 15
-            H26
-            V56
-            H14
-            Z
-            M26 18
-            h6
-            c5.6 0 10 3.3 10 7
-            s-4.4 7-10 7
-            h-6
-            Z" fill="url(#gradBlue)" stroke="#e6f3ff" stroke-width="0.6" />
-
-          <!-- Glass highlight strip -->
-          <path d="M16 10 H33 c8 0 14 5.3 14 12
-                   c0 0.6 0 1.2-0.1 1.8
-                   c-1.8-6.7-8.3-11.2-16.9-11.2 H16 Z"
-                fill="url(#highlight)" opacity="0.7"/>
-
-          <!-- Rim shine -->
-          <path d="
-            M14 8 H32
-            c10 0 18 6.5 18 15
-            s-8 15-18 15 H26" fill="none" stroke="white" stroke-opacity="0.55" stroke-width="1.1"/>
-
-          <!-- Inner shadow for depth -->
-          <path d="
-            M26 18 h6
-            c5.6 0 10 3.3 10 7
-            s-4.4 7-10 7
-            h-6 Z" fill="rgba(0,0,0,0.08)" filter="url(#inner)"/>
-
-          <!-- Airplane icon inside P -->
-          <g transform="translate(8,4) rotate(12 24 24)">
-            <!-- fuselage -->
-            <rect x="26" y="22" width="12" height="2.2" rx="1.1" fill="#e7f3ff"/>
-            <!-- nose -->
-            <path d="M40 23 l4 -1.1 l-3.8 -1.1 z" fill="#e7f3ff"/>
-            <!-- wings -->
-            <path d="M30 24 l-8 4 l2 1.4 l8 -3 z" fill="#cfe7ff"/>
-            <path d="M30 22 l-8 -4 l2 -1.4 l8 3 z" fill="#cfe7ff"/>
-            <!-- tail -->
-            <path d="M26 22 l-3 -2.2 l1.3 -0.9 l3.2 2.1 z" fill="#cfe7ff"/>
-          </g>
-
-          <!-- Gloss arc -->
-          <path d="M20 42 c8 4 22 1 28 -8" fill="none" stroke="white" stroke-opacity="0.35" stroke-width="1.1"/>
-        </g>
-      </svg>
-
-      <h1 class="text-2xl sm:text-3xl font-bold text-blue-700">ProfPilot</h1>
+  <header class="bg-white shadow p-6">
+    <div class="max-w-5xl mx-auto flex items-center justify-center gap-3">
+      <!-- Логотип рядом с index.html -->
+      <img src="logo.png" alt="ProfPilot logo" class="w-10 h-10 object-contain"/>
+      <div class="text-center">
+        <h1 class="text-3xl font-bold text-blue-700">ProfPilot</h1>
+        <p class="mt-1 text-gray-600">
+          Try 3 days real-life of different jobs before you decide your career path
+        </p>
+      </div>
     </div>
   </header>
 
   <!-- Main -->
-  <main class="flex-grow px-4 py-6">
-    <div class="max-w-3xl mx-auto">
-      <!-- Description (justified, tighter spacing) -->
-      <section class="mb-6">
-        <h2 class="text-xl sm:text-2xl font-semibold text-center mb-3">Why ProfPilot</h2>
-        <div class="text-gray-700 text-justify leading-relaxed space-y-3">
-          <p>
-            People spend thousands of dollars and months of effort on career change programs. Bootcamps often promise high salaries, but research shows only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023).
-          </p>
-          <p>
-            At the same time, student loan debt for reskilling is growing worldwide. Many quit their jobs, take loans, and still fail to transition.
-          </p>
-          <p>
-            With ProfPilot you can test‑drive a profession before risking your time and money. Do real tasks, get guided feedback, and decide if the role fits you.
-          </p>
-        </div>
-      </section>
+  <main class="flex-grow p-6 max-w-4xl mx-auto">
+    <!-- Description -->
+    <section class="mb-10 text-justify leading-relaxed space-y-4">
+      <h2 class="text-2xl font-semibold text-center">Our Mission</h2>
+      <p class="text-gray-700">
+        People spend thousands of dollars and months of effort on career change programs. 
+        Bootcamps often promise high salaries, but research shows only about 27% of graduates 
+        land a job in the new field within 6 months (Course Report, 2023).
+      </p>
+      <p class="text-gray-700">
+        At the same time, student loan debt for reskilling is growing worldwide. Many quit their jobs, 
+        take loans, and still fail to transition.
+      </p>
+      <p class="text-gray-700">
+        With ProfPilot you can test-drive a profession before risking your time and money. 
+        Do real tasks, get guided feedback, and decide if the role fits you.
+      </p>
+    </section>
 
-      <!-- Professions (no interactive widgets; simple cards/links are OK) -->
-      <section class="mb-8">
-        <h2 class="text-xl sm:text-2xl font-semibold text-center mb-4">Available Professions</h2>
-        <div class="grid sm:grid-cols-2 gap-5">
-          <div class="rounded-2xl border border-gray-200 p-5 bg-white">
-            <h3 class="text-lg font-bold">UX/UI Designer</h3>
-            <p class="mt-2 text-gray-600">Learn how designers turn research into wireframes and interfaces.</p>
-          </div>
-          <div class="rounded-2xl border border-gray-200 p-5 bg-white">
-            <h3 class="text-lg font-bold">Lawyer</h3>
-            <p class="mt-2 text-gray-600">Explore legal tasks in advertising and contracts in a real context.</p>
-          </div>
+    <!-- Professions -->
+    <section>
+      <h2 class="text-2xl font-semibold text-center mb-6">Available Professions</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- UX/UI Designer -->
+        <div class="rounded-2xl shadow p-6 bg-white">
+          <h3 class="text-xl font-bold">UX/UI Designer</h3>
+          <p class="mt-2 text-gray-600">
+            Learn how designers turn research into wireframes and interfaces.
+          </p>
         </div>
-      </section>
-    </div>
+
+        <!-- Lawyer -->
+        <div class="rounded-2xl shadow p-6 bg-white">
+          <h3 class="text-xl font-bold">Lawyer</h3>
+          <p class="mt-2 text-gray-600">
+            Explore legal tasks in advertising and contracts in a real context.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-100 p-5 text-center text-sm text-gray-600">
-    <div class="max-w-5xl mx-auto">
-      <a href="/privacy" class="underline mr-4">Privacy Policy</a>
-      <a href="/terms" class="underline">Terms &amp; Conditions</a>
-      <p class="mt-2">© 2025 ProfPilot. All rights reserved.</p>
-    </div>
+  <footer class="bg-gray-100 p-6 text-center text-sm text-gray-600">
+    <a href="/privacy" class="underline mr-4">Privacy Policy</a>
+    <a href="/terms" class="underline">Terms &amp; Conditions</a>
+    <p class="mt-2">© 2025 ProfPilot. All rights reserved.</p>
   </footer>
 </body>
 </html>
