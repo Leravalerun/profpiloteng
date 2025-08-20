@@ -11,7 +11,6 @@
   <!-- Header -->
   <header class="bg-white shadow p-6">
     <div class="max-w-5xl mx-auto flex items-center justify-center gap-3">
-      <!-- Логотип рядом с index.html -->
       <img src="logo.png" alt="ProfPilot logo" class="w-10 h-10 object-contain"/>
       <div class="text-center">
         <h1 class="text-3xl font-bold text-blue-700">ProfPilot</h1>
@@ -23,9 +22,9 @@
   </header>
 
   <!-- Main -->
-  <main class="flex-grow p-6 max-w-4xl mx-auto">
-    <!-- Description -->
-    <section class="mb-10 text-justify leading-relaxed space-y-4">
+  <main class="flex-grow p-8 max-w-5xl mx-auto">
+    <!-- Mission -->
+    <section class="mb-12 text-justify leading-relaxed space-y-4">
       <h2 class="text-2xl font-semibold text-center">Our Mission</h2>
       <p class="text-gray-700">
         People spend thousands of dollars and months of effort on career change programs. 
@@ -52,6 +51,12 @@
           <p class="mt-2 text-gray-600">
             Learn how designers turn research into wireframes and interfaces.
           </p>
+          <a
+            href="/professions/ux-ui-designer"
+            class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg"
+          >
+            Try Simulation
+          </a>
         </div>
 
         <!-- Lawyer -->
@@ -60,8 +65,33 @@
           <p class="mt-2 text-gray-600">
             Explore legal tasks in advertising and contracts in a real context.
           </p>
+          <a
+            href="/professions/lawyer"
+            class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg"
+          >
+            Try Simulation
+          </a>
         </div>
       </div>
+    </section>
+
+    <!-- Suggest a Profession -->
+    <section class="mt-16 text-center">
+      <h2 class="text-2xl font-semibold">Suggest a Profession</h2>
+      <p class="mt-2 text-gray-600">We’re building new scenarios. Tell us what you’d like to try.</p>
+      <form class="mt-4 max-w-md mx-auto flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Your profession idea"
+          class="border rounded-lg p-2"
+        />
+        <button
+          type="submit"
+          class="px-4 py-2 bg-green-600 text-white rounded-lg"
+        >
+          Submit
+        </button>
+      </form>
     </section>
   </main>
 
