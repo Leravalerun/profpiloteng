@@ -1,20 +1,4 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>ProfPilot</title>
-  </head>
-  <body>
-    <h1>Добро пожаловать в ProfPilot 🚀</h1>
-    <ul>
-      <li><a href="career_simulator_landing_index.html">Landing page</a></li>
-      <li><a href="ux_designer_simulator_day1">Day 1 (UX)</a></li>
-      <li><a href="ux_designer_simulator_only_ux_sim.html">Only UX sim</a></li>
-      <li><a href="ux_designer_simulator_overview_ux_about.html">Overview / About</a></li>
-      <li><a href="ux_designer_simulator_page_ux.html">UX Page</a></li>
-    </ul>
-  </body>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -62,7 +46,6 @@
   <header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
     <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
       <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
-        <!-- заменили бейдж CS на твой логотип -->
         <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
         ProfPilot
       </a>
@@ -75,59 +58,26 @@
       <a href="#roles" class="hidden sm:inline-block rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">Start now</a>
     </div>
   </header>
-  <div class="h-16"></div><!-- Spacer for fixed navbar -->
+  <div class="h-16"></div><!-- spacer for fixed navbar -->
 
-  <!-- Hero / Intro -->
-  <section class="relative py-20 sm:py-28 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200 overflow-hidden">
-    <div aria-hidden="true" class="absolute inset-0 pointer-events-none w-full h-full z-0 overflow-hidden">
-      <svg width="100%" height="100%" fill="none">
-        <circle cx="80%" cy="20%" r="180" fill="#3b82f615"/>
-        <circle cx="20%" cy="80%" r="120" fill="#1e40af15"/>
-      </svg>
-    </div>
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-        See what a job is really like — <span class="text-brand-700">in just 3 days</span>
+  <!-- HERO (restyled minimal) -->
+  <section class="relative py-24 sm:py-28 bg-slate-100/70 border-b border-slate-200">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 rounded-full bg-white shadow-soft px-4 py-2 text-sm font-medium text-slate-700">
+        Start for $15
+      </div>
+      <h1 class="mt-6 text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+        See what a job is really like
       </h1>
-      <p class="mt-6 text-xl text-slate-700 max-w-4xl mx-auto">
-        People spend thousands of dollars and months of effort on career change programs. Bootcamps often promise high salaries, but research shows <span class="font-semibold">only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023)</span>.
+      <p class="mt-5 text-lg sm:text-xl text-slate-600">
+        People spend thousands of dollars and months of effort on career change programs. Research shows
+        <span class="font-semibold">only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023)</span>.
+        With <span class="font-semibold">ProfPilot</span> you can test‑drive a profession before risking your time and money.
       </p>
-      <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
-        At the same time, student loan debt for reskilling is growing worldwide. Many quit their jobs, take loans, and still fail to transition.
-      </p>
-      <p class="mt-4 text-lg text-slate-700 max-w-3xl mx-auto">
-        With <span class="font-semibold">ProfPilot</span> you can test‑drive a profession before risking your time and money. Do real tasks, get guided feedback, and decide if the role fits you.
-      </p>
-      <div class="mt-10 flex justify-center">
-        <a href="#roles" class="rounded-2xl bg-slate-900 text-white px-8 py-4 text-lg font-semibold shadow-soft hover:bg-slate-800 transition">Explore Simulators</a>
+      <div class="mt-8 flex items-center justify-center gap-4">
+        <a href="#roles" class="rounded-2xl bg-slate-900 text-white px-7 py-3 text-base sm:text-lg font-semibold shadow-soft hover:bg-slate-800 transition">Start for $15</a>
+        <a href="#about" class="rounded-2xl bg-white text-slate-900 px-7 py-3 text-base sm:text-lg font-semibold shadow-soft hover:bg-slate-100 transition">Learn more</a>
       </div>
-
-      <!-- Quick Quiz — УДАЛЕНО по твоей просьбе -->
-      <!--
-      <div class="mt-10">
-        <div class="max-w-xl mx-auto bg-white/70 backdrop-blur rounded-2xl shadow-soft p-6">
-          <div class="text-lg font-semibold mb-4 text-slate-900">Какую профессию вы бы попробовали первой?</div>
-          <form id="quiz" class="flex flex-col gap-4">
-            <label><input type="radio" name="role" value="UX Designer" class="mr-2"> UX Designer</label>
-            <label><input type="radio" name="role" value="Corporate Lawyer" class="mr-2"> Corporate Lawyer</label>
-            <label><input type="radio" name="role" value="Other" class="mr-2"> Другая профессия</label>
-            <button type="button" onclick="submitQuiz()" class="mt-4 rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Ответить</button>
-          </form>
-          <div id="quiz-result" class="mt-4 text-brand-700 font-medium hidden"></div>
-        </div>
-      </div>
-      <script>
-        function submitQuiz() {
-          const value = document.querySelector('input[name="role"]:checked');
-          if (value) {
-            document.getElementById('quiz-result').textContent = value.value === 'Other'
-              ? 'Расскажите нам о вашей мечте в форме ниже!'
-              : 'Отличный выбор! Попробуйте себя в профессии: ' + value.value + '.';
-            document.getElementById('quiz-result').classList.remove('hidden');
-          }
-        }
-      </script>
-      -->
     </div>
   </section>
 
@@ -225,7 +175,6 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-600">
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div class="flex items-center gap-2">
-          <!-- логотип в подвале тоже обновили -->
           <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
           <span>ProfPilot</span>
         </div>
@@ -237,6 +186,7 @@
       </div>
     </div>
   </footer>
+
   <script> document.getElementById('year').textContent = new Date().getFullYear(); </script>
 </body>
 </html>
