@@ -111,45 +111,176 @@
 
 
   <!-- Roles -->
-  <section id="roles" class="py-16 sm:py-24 bg-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
-        <div>
-          <h2 class="text-3xl font-bold">Try a role</h2>
-          <p class="mt-2 text-slate-600">Pick a simulator and start today. No prior experience required.</p>
-        </div>
-        <a href="#faq" class="text-sm font-medium text-brand-700 hover:text-brand-800">What’s inside each simulator?</a>
+ <section id="roles" class="py-16 sm:py-24 bg-white">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
+      <div>
+        <h2 class="text-3xl font-bold">Try a role</h2>
+        <p class="mt-2 text-slate-600">Pick a simulator and start today. No prior experience required.</p>
       </div>
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- UX Designer Card -->
-        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-          <h3 class="text-xl font-semibold">UX Designer</h3>
-          <p class="mt-3 text-slate-600 flex-grow">Learn how designers research users, create wireframes, and collaborate with developers. Includes daily tasks and feedback.</p>
-          <div class="mt-6">
-            <span class="block text-lg font-bold text-slate-900 mb-2">$15</span>
-            <a href="/ux-designer.html" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Start now</a>
-          </div>
-        </div>
-        <!-- Corporate Lawyer Card -->
-        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-          <h3 class="text-xl font-semibold">Corporate Lawyer</h3>
-          <p class="mt-3 text-slate-600 flex-grow">Understand contracts, compliance, and advising businesses. Experience real tasks lawyers handle in corporate settings.</p>
-          <div class="mt-6">
-            <span class="block text-lg font-bold text-slate-900 mb-2">$15</span>
-            <a href="/corporate-lawyer.html" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Start now</a>
-          </div>
-        </div>
-        <!-- Suggest a Profession Card -->
-        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-          <h3 class="text-xl font-semibold">Your Dream Career</h3>
-          <p class="mt-3 text-slate-600 flex-grow">Didn’t find the profession you’re curious about? Suggest a new role and we might build a simulator for it next.</p>
-          <div class="mt-6">
-            <a href="/suggest.html" class="inline-block w-full text-center rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">Suggest a profession</a>
-          </div>
-        </div>
-      </div>
+      <a href="#faq" class="text-sm font-medium text-brand-700 hover:text-brand-800">What’s inside each simulator?</a>
     </div>
-  </section>
+
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- UX Designer -->
+      <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+        <h3 class="text-xl font-semibold">UX/UI Designer</h3>
+        <p class="mt-3 text-slate-600 flex-grow">
+          Learn how designers research users, create wireframes, and collaborate with developers.
+        </p>
+        <div class="mt-6">
+          <span class="block text-lg font-bold text-slate-900 mb-3">$15</span>
+          <div class="flex gap-3">
+            <!-- сразу на оплату -->
+            <a href="/checkout?role=ux-designer"
+               class="inline-block rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">
+              Start now
+            </a>
+            <!-- страница описания роли -->
+            <a href="/roles/ux-designer"
+               class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Corporate Lawyer -->
+      <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+        <h3 class="text-xl font-semibold">Corporate Lawyer</h3>
+        <p class="mt-3 text-slate-600 flex-grow">
+          Understand contracts, compliance, and advising businesses in corporate settings.
+        </p>
+        <div class="mt-6">
+          <span class="block text-lg font-bold text-slate-900 mb-3">$15</span>
+          <div class="flex gap-3">
+            <a href="/checkout?role=corporate-lawyer"
+               class="inline-block rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">
+              Start now
+            </a>
+            <a href="/roles/corporate-lawyer"
+               class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
+              Learn more
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggest a profession card -->
+<div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+  <h3 class="text-xl font-semibold">Your Dream Career</h3>
+  <p class="mt-3 text-slate-600 flex-grow">
+    Didn’t find the profession you’re curious about? Suggest a new role and we’ll notify you once it’s live.
+  </p>
+  <div class="mt-6 flex gap-3">
+    <button onclick="openSuggestModal()"
+      class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
+      Suggest a profession
+    </button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="suggestModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="suggestTitle">
+  <div id="suggestDialog" class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6 relative">
+    <!-- close button -->
+    <button type="button" onclick="closeSuggestModal()" aria-label="Close"
+      class="absolute right-3 top-3 text-slate-500 hover:text-slate-700 text-2xl leading-none">&times;</button>
+
+    <h2 id="suggestTitle" class="text-lg font-semibold text-slate-900">Suggest a Profession</h2>
+    <p class="mt-1 text-sm text-slate-500">Leave your email — we’ll notify you as soon as the simulator is available.</p>
+
+    <!-- success state -->
+    <div id="suggestSuccess" class="hidden mt-4 rounded-lg bg-green-50 border border-green-200 p-4 text-green-700">
+      ✅ Thanks! We’ve received your suggestion. We’ll email you once it’s live.
+    </div>
+
+    <!-- form -->
+    <form id="suggestForm" class="mt-4 space-y-4" novalidate>
+      <div>
+        <label for="email" class="block text-sm font-medium text-slate-700">Your email</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com"
+          class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600">
+        <p class="text-xs text-slate-500 mt-1">We’ll notify you once the profession is available.</p>
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm font-medium text-slate-700">Profession idea</label>
+        <textarea id="message" name="message" required rows="3"
+          class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600"
+          placeholder="Which career would you like to try?"></textarea>
+      </div>
+
+      <button type="submit"
+        class="w-full rounded-xl bg-brand-600 text-white px-4 py-2 font-semibold hover:bg-brand-700 transition">
+        Send
+      </button>
+
+      <!-- small note -->
+      <p class="text-xs text-slate-400">We send suggestions to careers.inspirante@gmail.com</p>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('suggestModal');
+  const dialog = document.getElementById('suggestDialog');
+  const form = document.getElementById('suggestForm');
+  const success = document.getElementById('suggestSuccess');
+
+  function openSuggestModal() {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.classList.add('overflow-hidden'); // lock scroll
+    setTimeout(() => document.getElementById('email')?.focus(), 0);
+  }
+
+  function closeSuggestModal() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.classList.remove('overflow-hidden'); // unlock scroll
+  }
+
+  // close on overlay click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeSuggestModal();
+  });
+
+  // close on Esc
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('hidden') && e.key === 'Escape') {
+      closeSuggestModal();
+    }
+  });
+
+  // submit via FormSubmit AJAX
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      email: form.email.value.trim(),
+      message: form.message.value.trim(),
+      _subject: 'New profession suggestion from ProfPilot'
+    };
+    if (!data.email || !data.message) return;
+
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/careers.inspirante@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('Network error');
+      form.reset();
+      success.classList.remove('hidden');
+      // auto-close after 2.5s
+      setTimeout(() => { closeSuggestModal(); success.classList.add('hidden'); }, 2500);
+    } catch (err) {
+      alert('Oops, something went wrong. Please try again or email us: careers.inspirante@gmail.com');
+    }
+  });
+</script>
+
+
 
   <!-- About -->
   <section id="about" class="py-20 bg-slate-50 border-t border-slate-200">
