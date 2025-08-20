@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ProfPilot — Try a Job in 3 Days</title>
   <meta name="description" content="Hands-on career simulators. Try the role of a UX Designer or Corporate Lawyer in 3 days with tasks, feedback, and learning paths." />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_32.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="favicon_180.png">
+  <link rel="apple-touch-icon" href="favicon_180.png">
+  <link rel="icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,25 +47,35 @@
 <body class="bg-slate-50 text-slate-900">
 
   <!-- Navbar -->
-  <header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
-    <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
-        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
-        ProfPilot
+<header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
+  <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
+      <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
+      ProfPilot
+    </a>
+
+    <!-- Nav links -->
+    <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
+      <a href="#roles" class="hover:text-brand-700 transition">Simulators</a>
+      <a href="#about" class="hover:text-brand-700 transition">About</a>
+      <a href="#pricing" class="hover:text-brand-700 transition">Pricing</a>
+      <a href="#faq" class="hover:text-brand-700 transition">FAQ</a>
+    </nav>
+
+    <!-- Action buttons -->
+    <div class="hidden sm:flex items-center gap-3">
+      <a href="#roles" class="rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">
+        Start now
       </a>
-      <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
-        <a href="#roles" class="hover:text-brand-700 transition">Simulators</a>
-        <a href="#about" class="hover:text-brand-700 transition">About</a>
-        <a href="#pricing" class="hover:text-brand-700 transition">Pricing</a>
-        <a href="#faq" class="hover:text-brand-700 transition">FAQ</a>
-      </nav>
-      <a href="#roles" class="hidden sm:inline-block rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">Start now</a>
-      <a href="/login.html" class="px-4 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition">
-  Log in
-</a>
+      <a href="/login.html" class="px-5 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition">
+        Log in
+      </a>
     </div>
-  </header>
-  <div class="h-16"></div><!-- spacer for fixed navbar -->
+  </div>
+</header>
+<div class="h-16"></div><!-- spacer for fixed navbar -->
+
 
   <!-- HERO (one-line headline + brand background) -->
   <section class="relative py-28 bg-gradient-to-b from-white via-sky-50 to-sky-100 border-b border-slate-200 overflow-hidden">
