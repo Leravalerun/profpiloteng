@@ -1,228 +1,145 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Career Simulator — Try a Job in 3 Days</title>
-  <meta name="description" content="Hands-on career simulators. Try the role of a UX Designer or Corporate Lawyer in 3 days with tasks, feedback, and learning paths." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProfPilot</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              200: '#bfdbfe',
-              300: '#93c5fd',
-              400: '#60a5fa',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a'
-            }
-          },
-          boxShadow: {
-            soft: '0 10px 30px rgba(2, 6, 23, 0.08)'
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    html, body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .card-hover:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
-  </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="min-h-screen flex flex-col bg-white">
 
-  <!-- Navbar -->
-  <header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
-    <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
-        <span class="h-8 w-8 grid place-items-center rounded-xl bg-brand-600 text-white font-bold">CS</span>
-        Career Simulator
-      </a>
-      <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
-        <a href="#roles" class="hover:text-brand-700 transition">Simulators</a>
-        <a href="#about" class="hover:text-brand-700 transition">About</a>
-        <a href="#pricing" class="hover:text-brand-700 transition">Pricing</a>
-        <a href="#faq" class="hover:text-brand-700 transition">FAQ</a>
-      </nav>
-      <a href="#roles" class="hidden sm:inline-block rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">Start now</a>
+  <!-- Header -->
+  <header class="bg-white shadow p-3">
+    <div class="max-w-5xl mx-auto flex items-center gap-3">
+      <!-- Inline SVG Logo: Glass P + Airplane -->
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="ProfPilot logo">
+        <defs>
+          <!-- Glassy blue gradient -->
+          <linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#9ed7ff"/>
+            <stop offset="45%" stop-color="#5bb7ff"/>
+            <stop offset="100%" stop-color="#2d8eff"/>
+          </linearGradient>
+          <!-- White highlight -->
+          <linearGradient id="highlight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+          <!-- Inner shadow -->
+          <filter id="inner" x="-20%" y="-20%" width="140%" height="140%">
+            <feOffset dx="0" dy="0"/>
+            <feGaussianBlur stdDeviation="1.2" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="arithmetic" k2="1" k3="-0.7"/>
+          </filter>
+          <!-- Soft outer shadow -->
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1b6bcb" flood-opacity="0.25"/>
+          </filter>
+        </defs>
+
+        <!-- P shape -->
+        <g filter="url(#soft)">
+          <!-- Base P -->
+          <path d="
+            M14 8
+            H32
+            c10 0 18 6.5 18 15
+            s-8 15-18 15
+            H26
+            V56
+            H14
+            Z
+            M26 18
+            h6
+            c5.6 0 10 3.3 10 7
+            s-4.4 7-10 7
+            h-6
+            Z" fill="url(#gradBlue)" stroke="#e6f3ff" stroke-width="0.6" />
+
+          <!-- Glass highlight strip -->
+          <path d="M16 10 H33 c8 0 14 5.3 14 12
+                   c0 0.6 0 1.2-0.1 1.8
+                   c-1.8-6.7-8.3-11.2-16.9-11.2 H16 Z"
+                fill="url(#highlight)" opacity="0.7"/>
+
+          <!-- Rim shine -->
+          <path d="
+            M14 8 H32
+            c10 0 18 6.5 18 15
+            s-8 15-18 15 H26" fill="none" stroke="white" stroke-opacity="0.55" stroke-width="1.1"/>
+
+          <!-- Inner shadow for depth -->
+          <path d="
+            M26 18 h6
+            c5.6 0 10 3.3 10 7
+            s-4.4 7-10 7
+            h-6 Z" fill="rgba(0,0,0,0.08)" filter="url(#inner)"/>
+
+          <!-- Airplane icon inside P -->
+          <g transform="translate(8,4) rotate(12 24 24)">
+            <!-- fuselage -->
+            <rect x="26" y="22" width="12" height="2.2" rx="1.1" fill="#e7f3ff"/>
+            <!-- nose -->
+            <path d="M40 23 l4 -1.1 l-3.8 -1.1 z" fill="#e7f3ff"/>
+            <!-- wings -->
+            <path d="M30 24 l-8 4 l2 1.4 l8 -3 z" fill="#cfe7ff"/>
+            <path d="M30 22 l-8 -4 l2 -1.4 l8 3 z" fill="#cfe7ff"/>
+            <!-- tail -->
+            <path d="M26 22 l-3 -2.2 l1.3 -0.9 l3.2 2.1 z" fill="#cfe7ff"/>
+          </g>
+
+          <!-- Gloss arc -->
+          <path d="M20 42 c8 4 22 1 28 -8" fill="none" stroke="white" stroke-opacity="0.35" stroke-width="1.1"/>
+        </g>
+      </svg>
+
+      <h1 class="text-2xl sm:text-3xl font-bold text-blue-700">ProfPilot</h1>
     </div>
   </header>
-  <div class="h-16"></div><!-- Spacer for fixed navbar -->
 
-  <!-- Hero / Intro -->
-  <section class="relative py-20 sm:py-28 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200 overflow-hidden">
-    <div aria-hidden="true" class="absolute inset-0 pointer-events-none w-full h-full z-0 overflow-hidden">
-      <svg width="100%" height="100%" fill="none">
-        <circle cx="80%" cy="20%" r="180" fill="#3b82f615"/>
-        <circle cx="20%" cy="80%" r="120" fill="#1e40af15"/>
-      </svg>
-    </div>
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
-      <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-        See what a job is really like — <span class="text-brand-700">in just 3 days</span>
-      </h1>
-      <p class="mt-6 text-xl text-slate-700 max-w-4xl mx-auto">
-        People spend thousands of dollars and months of effort on career change programs. Bootcamps often promise high salaries, but research shows <span class="font-semibold">only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023)</span>.
-      </p>
-      <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">
-        At the same time, student loan debt for reskilling is growing worldwide. Many quit their jobs, take loans, and still fail to transition.
-      </p>
-      <p class="mt-4 text-lg text-slate-700 max-w-3xl mx-auto">
-        With <span class="font-semibold">Career Simulator</span> you can test‑drive a profession before risking your time and money. Do real tasks, get guided feedback, and decide if the role fits you.
-      </p>
-      <div class="mt-10 flex justify-center">
-        <a href="#roles" class="rounded-2xl bg-slate-900 text-white px-8 py-4 text-lg font-semibold shadow-soft hover:bg-slate-800 transition">Explore Simulators</a>
-      </div>
-
-      <!-- Quick Quiz -->
-      <div class="mt-10">
-        <div class="max-w-xl mx-auto bg-white/70 backdrop-blur rounded-2xl shadow-soft p-6">
-          <div class="text-lg font-semibold mb-4 text-slate-900">Какую профессию вы бы попробовали первой?</div>
-          <form id="quiz" class="flex flex-col gap-4">
-            <label>
-              <input type="radio" name="role" value="UX Designer" class="mr-2"> UX Designer
-            </label>
-            <label>
-              <input type="radio" name="role" value="Corporate Lawyer" class="mr-2"> Corporate Lawyer
-            </label>
-            <label>
-              <input type="radio" name="role" value="Other" class="mr-2"> Другая профессия
-            </label>
-            <button type="button" onclick="submitQuiz()" class="mt-4 rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Ответить</button>
-          </form>
-          <div id="quiz-result" class="mt-4 text-brand-700 font-medium hidden"></div>
+  <!-- Main -->
+  <main class="flex-grow px-4 py-6">
+    <div class="max-w-3xl mx-auto">
+      <!-- Description (justified, tighter spacing) -->
+      <section class="mb-6">
+        <h2 class="text-xl sm:text-2xl font-semibold text-center mb-3">Why ProfPilot</h2>
+        <div class="text-gray-700 text-justify leading-relaxed space-y-3">
+          <p>
+            People spend thousands of dollars and months of effort on career change programs. Bootcamps often promise high salaries, but research shows only about 27% of graduates land a job in the new field within 6 months (Course Report, 2023).
+          </p>
+          <p>
+            At the same time, student loan debt for reskilling is growing worldwide. Many quit their jobs, take loans, and still fail to transition.
+          </p>
+          <p>
+            With ProfPilot you can test‑drive a profession before risking your time and money. Do real tasks, get guided feedback, and decide if the role fits you.
+          </p>
         </div>
-      </div>
-      <script>
-        function submitQuiz() {
-          const value = document.querySelector('input[name="role"]:checked');
-          if (value) {
-            document.getElementById('quiz-result').textContent = value.value === 'Other'
-              ? 'Расскажите нам о вашей мечте в форме ниже!'
-              : 'Отличный выбор! Попробуйте себя в профессии: ' + value.value + '.';
-            document.getElementById('quiz-result').classList.remove('hidden');
-          }
-        }
-      </script>
-    </div>
-  </section>
+      </section>
 
-  <!-- Roles -->
-  <section id="roles" class="py-16 sm:py-24 bg-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
-        <div>
-          <h2 class="text-3xl font-bold">Try a role</h2>
-          <p class="mt-2 text-slate-600">Pick a simulator and start today. No prior experience required.</p>
-        </div>
-        <a href="#faq" class="text-sm font-medium text-brand-700 hover:text-brand-800">What’s inside each simulator?</a>
-      </div>
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- UX Designer Card -->
-        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-          <h3 class="text-xl font-semibold">UX Designer</h3>
-          <p class="mt-3 text-slate-600 flex-grow">Learn how designers research users, create wireframes, and collaborate with developers. Includes daily tasks and feedback.</p>
-          <div class="mt-6">
-            <span class="block text-lg font-bold text-slate-900 mb-2">$15</span>
-            <a href="/ux-designer.html" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Start now</a>
+      <!-- Professions (no interactive widgets; simple cards/links are OK) -->
+      <section class="mb-8">
+        <h2 class="text-xl sm:text-2xl font-semibold text-center mb-4">Available Professions</h2>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div class="rounded-2xl border border-gray-200 p-5 bg-white">
+            <h3 class="text-lg font-bold">UX/UI Designer</h3>
+            <p class="mt-2 text-gray-600">Learn how designers turn research into wireframes and interfaces.</p>
+          </div>
+          <div class="rounded-2xl border border-gray-200 p-5 bg-white">
+            <h3 class="text-lg font-bold">Lawyer</h3>
+            <p class="mt-2 text-gray-600">Explore legal tasks in advertising and contracts in a real context.</p>
           </div>
         </div>
-        <!-- Corporate Lawyer Card -->
-        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-          <h3 class="text-xl font-semibold">Corporate Lawyer</h3>
-          <p class="mt-3 text-slate-600 flex-grow">Understand contracts, compliance, and advising businesses. Experience real tasks lawyers handle in corporate settings.</p>
-          <div class="mt-6">
-            <span class="block text-lg font-bold text-slate-900 mb-2">$15</span>
-            <a href="/corporate-lawyer.html" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Start now</a>
-          </div>
-        </div>
-        <!-- Suggest a Profession Card -->
-        <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-          <h3 class="text-xl font-semibold">Your Dream Career</h3>
-          <p class="mt-3 text-slate-600 flex-grow">Didn’t find the profession you’re curious about? Suggest a new role and we might build a simulator for it next.</p>
-          <div class="mt-6">
-            <a href="/suggest.html" class="inline-block w-full text-center rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">Suggest a profession</a>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
-  </section>
-
-  <!-- About -->
-  <section id="about" class="py-20 bg-slate-50 border-t border-slate-200">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl font-bold">Why Career Simulator?</h2>
-      <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">We help you make smarter career choices by letting you experience real work before committing. Practical, affordable, and built by professionals.</p>
-      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-left">
-        <div><h3 class="font-semibold text-slate-900">Hands-on tasks</h3><p class="mt-2 text-slate-600">Do actual work you would in the role, not just theory.</p></div>
-        <div><h3 class="font-semibold text-slate-900">Expert feedback</h3><p class="mt-2 text-slate-600">Get guidance from practitioners who’ve done the job.</p></div>
-        <div><h3 class="font-semibold text-slate-900">Affordable</h3><p class="mt-2 text-slate-600">At $15, test-driving a job costs less than a dinner out.</p></div>
-        <div><h3 class="font-semibold text-slate-900">Risk‑free</h3><p class="mt-2 text-slate-600">Decide if the job fits before quitting or investing big.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing -->
-  <section id="pricing" class="py-20 bg-white border-t border-slate-200">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl font-bold">Pricing</h2>
-      <p class="mt-4 text-lg text-slate-600">Simple and transparent pricing. Try one, or save with bundles.</p>
-      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="bg-slate-50 rounded-2xl shadow-soft p-6 flex flex-col">
-          <h3 class="text-xl font-semibold">Single Simulator</h3>
-          <p class="mt-2 text-slate-600">Access to any one profession of your choice.</p>
-          <div class="mt-6"><span class="block text-2xl font-bold mb-2">$15</span><a href="#roles" class="inline-block w-full text-center rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">Get started</a></div>
-        </div>
-        <div class="bg-slate-50 rounded-2xl shadow-soft p-6 flex flex-col">
-          <h3 class="text-xl font-semibold">Bundle (2 simulators)</h3>
-          <p class="mt-2 text-slate-600">Try two careers and compare. Save money.</p>
-          <div class="mt-6"><span class="block text-2xl font-bold mb-2">$25</span><button disabled class="inline-block w-full text-center rounded-xl bg-slate-300 text-white px-4 py-2 font-medium">Coming soon</button></div>
-        </div>
-        <div class="bg-slate-50 rounded-2xl shadow-soft p-6 flex flex-col">
-          <h3 class="text-xl font-semibold">All‑Access</h3>
-          <p class="mt-2 text-slate-600">Unlock every simulator we launch.</p>
-          <div class="mt-6"><span class="block text-2xl font-bold mb-2">Notify me</span><a href="#" class="inline-block w-full text-center rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">Join waitlist</a></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="py-20 bg-slate-900 text-white text-center">
-    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold">Start your 3‑day career test‑drive now</h2>
-      <p class="mt-4 text-lg text-slate-300">Pick a profession and see if it fits you before committing.</p>
-      <div class="mt-8"><a href="#roles" class="rounded-2xl bg-white text-slate-900 px-8 py-4 text-lg font-semibold shadow-soft hover:bg-slate-100 transition">Start for $15</a></div>
-    </div>
-  </section>
+  </main>
 
   <!-- Footer -->
-  <footer class="py-10 border-t border-slate-200 bg-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-600">
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
-          <span class="h-8 w-8 grid place-items-center rounded-xl bg-brand-600 text-white font-bold">CS</span>
-          <span>Career Simulator</span>
-        </div>
-        <div class="flex flex-wrap items-center gap-4">
-          <a href="/policy.html" class="hover:underline">Privacy Policy</a>
-          <a href="/terms.html" class="hover:underline">Terms</a>
-          <span class="text-slate-400">© <span id="year"></span> Career Simulator</span>
-        </div>
-      </div>
+  <footer class="bg-gray-100 p-5 text-center text-sm text-gray-600">
+    <div class="max-w-5xl mx-auto">
+      <a href="/privacy" class="underline mr-4">Privacy Policy</a>
+      <a href="/terms" class="underline">Terms &amp; Conditions</a>
+      <p class="mt-2">© 2025 ProfPilot. All rights reserved.</p>
     </div>
   </footer>
-  <script> document.getElementById('year').textContent = new Date().getFullYear(); </script>
 </body>
 </html>
