@@ -181,7 +181,6 @@
 </div>
 
 <!-- Modal -->
-<!-- Modal -->
 <div id="suggestModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="suggestTitle">
   <div id="suggestDialog" class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6 relative">
     <!-- close -->
@@ -309,100 +308,7 @@
 </script>
 
 
-    <!-- form -->
- <form action="https://formsubmit.co/careers.inspirante@gmail.com" method="POST" class="space-y-4">
-  <!-- FormSubmit options -->
-  <input type="hidden" name="_subject" value="New profession suggestion — ProfPilot">
-  <input type="hidden" name="_captcha" value="false">
-  <!-- после отправки редирект на спасибо-страницу (создай файл thank-you.html) -->
-  <input type="hidden" name="_next" value="https://profpilot.co/thank-you.html">
-  <!-- honeypot (боты заполнят, люди — нет) -->
-  <input type="text" name="_honey" style="display:none">
-
-  <div>
-    <label for="email" class="block text-sm font-medium text-slate-700">Your email</label>
-    <input type="email" id="email" name="email" required placeholder="you@example.com"
-      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600">
-    <p class="text-xs text-slate-500 mt-1">We’ll notify you once the profession is available.</p>
-  </div>
-
-  <div>
-    <label for="message" class="block text-sm font-medium text-slate-700">Profession idea</label>
-    <textarea id="message" name="message" required rows="3"
-      class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600"
-      placeholder="Which career would you like to try?"></textarea>
-  </div>
-
-  <button type="submit"
-    class="w-full rounded-xl bg-brand-600 text-white px-4 py-2 font-semibold hover:bg-brand-700 transition">
-    Send
-  </button>
-
-  <p class="text-xs text-slate-400">We’ll email updates from careers.inspirante@gmail.com</p>
-</form>
-
-  </div>
-</div>
-
-<script>
-  const modal = document.getElementById('suggestModal');
-  const dialog = document.getElementById('suggestDialog');
-  const form = document.getElementById('suggestForm');
-  const success = document.getElementById('suggestSuccess');
-
-  function openSuggestModal() {
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-    document.body.classList.add('overflow-hidden'); // lock scroll
-    setTimeout(() => document.getElementById('email')?.focus(), 0);
-  }
-
-  function closeSuggestModal() {
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-    document.body.classList.remove('overflow-hidden'); // unlock scroll
-  }
-
-  // close on overlay click
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeSuggestModal();
-  });
-
-  // close on Esc
-  document.addEventListener('keydown', (e) => {
-    if (!modal.classList.contains('hidden') && e.key === 'Escape') {
-      closeSuggestModal();
-    }
-  });
-
-  // submit via FormSubmit AJAX
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = {
-      email: form.email.value.trim(),
-      message: form.message.value.trim(),
-      _subject: 'New profession suggestion from ProfPilot'
-    };
-    if (!data.email || !data.message) return;
-
-    try {
-      const res = await fetch('https://formsubmit.co/ajax/careers.inspirante@gmail.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (!res.ok) throw new Error('Network error');
-      form.reset();
-      success.classList.remove('hidden');
-      // auto-close after 2.5s
-      setTimeout(() => { closeSuggestModal(); success.classList.add('hidden'); }, 2500);
-    } catch (err) {
-      alert('Oops, something went wrong. Please try again or email us: careers.inspirante@gmail.com');
-    }
-  });
-</script>
-  </div>
-  </section>
+   
 
 
 <!-- Why ProfPilot -->
