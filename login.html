@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Log in — ProfPilot</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <!-- FirebaseUI -->
+  <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css"/>
+  <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+
+  <style>
+    body{font-family:Inter,system-ui,sans-serif;margin:0}
+    .wrap{max-width:420px;margin:40px auto;padding:0 16px}
+    h1{font-size:22px;margin:16px 0}
+    #loader{color:#64748b;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Log in to ProfPilot</h1>
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader">Loading…</div>
+  </div>
+
+  <script>
+    // Вставь свои ключи из Firebase Console → Project settings → Web app
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Только Google
+    const uiConfig = {
+      signInSuccessUrl: '/', // куда вернуть после входа
+      signInOptions: [ firebase.auth.GoogleAuthProvider.PROVIDER_ID ],
+      tosUrl: '/terms.html',
+      privacyPolicyUrl: '/policy.html'
+    };
+
+    const ui = new firebaseui.auth.AuthUI(auth);
+    ui.start('#firebaseui-auth-container', uiConfig);
+
+    auth.onAuthStateChanged(() => {
+      document.getElementById('loader').style.display = 'none';
+    });
+  </script>
+</body>
+</html>
