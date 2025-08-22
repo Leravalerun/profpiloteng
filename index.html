@@ -111,78 +111,66 @@
 
 
   <!-- Roles -->
- <section id="roles" class="py-16 sm:py-24 bg-white">
+<section id="roles" class="py-20 bg-white">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
-      <div>
-        <h2 class="text-3xl font-bold">Try a role</h2>
-        <p class="mt-2 text-slate-600">Pick a simulator and start today. No prior experience required.</p>
-      </div>
-      <a href="#faq" class="text-sm font-medium text-brand-700 hover:text-brand-800">What’s inside each simulator?</a>
-    </div>
+    <h2 class="text-3xl font-bold mb-12 text-center">Try 3-day simulators</h2>
 
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      <!-- UX Designer -->
+    <div class="grid md:grid-cols-3 gap-8">
+      
+      <!-- UX Designer card -->
       <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-        <h3 class="text-xl font-semibold">UX/UI Designer</h3>
+        <h3 class="text-xl font-semibold">UX Designer</h3>
         <p class="mt-3 text-slate-600 flex-grow">
-          Learn how designers research users, create wireframes, and collaborate with developers.
+          Analyze user behavior, fix usability issues, and sketch improvements with guidance from a team.
         </p>
-        <div class="mt-6">
-          <span class="block text-lg font-bold text-slate-900 mb-3">$15</span>
-          <div class="flex gap-3">
-            <!-- сразу на оплату -->
-            <a href="/checkout?role=ux-designer"
-               class="inline-block rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">
-              Start now
-            </a>
-            <!-- страница описания роли -->
-        <a href="ux.html"
-   class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
-  Learn more
-</a>
-          </div>
+        <div class="mt-6 flex gap-3">
+          <a href="/ux.html"
+            class="inline-block rounded-xl border border-slate-300 px-4 py-2 font-medium hover:bg-slate-100">
+            Learn more
+          </a>
+          <a href="/checkout"
+            class="inline-block rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">
+            Start — $15
+          </a>
         </div>
       </div>
 
-      <!-- Corporate Lawyer -->
+      <!-- Corporate Lawyer card -->
       <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
         <h3 class="text-xl font-semibold">Corporate Lawyer</h3>
         <p class="mt-3 text-slate-600 flex-grow">
-          Understand contracts, compliance, and advising businesses in corporate settings.
+          Review contracts, advise colleagues, and balance business needs with legal safety in real scenarios.
         </p>
-        <div class="mt-6">
-          <span class="block text-lg font-bold text-slate-900 mb-3">$15</span>
-          <div class="flex gap-3">
-                   </a>
-            <a href="/checkout?role=corporate-lawyer"
-               class="inline-block rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">
-              Start now
-            </a>
-          <a href="lawyer.html"
-   class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
-  Learn more
-</a>
-          </div>
+        <div class="mt-6 flex gap-3">
+          <a href="/lawyer.html"
+            class="inline-block rounded-xl border border-slate-300 px-4 py-2 font-medium hover:bg-slate-100">
+            Learn more
+          </a>
+          <a href="/checkout"
+            class="inline-block rounded-xl bg-brand-600 text-white px-4 py-2 font-medium hover:bg-brand-700">
+            Start — $15
+          </a>
         </div>
       </div>
 
       <!-- Suggest a profession card -->
-<div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
-  <h3 class="text-xl font-semibold">Your Dream Career</h3>
-  <p class="mt-3 text-slate-600 flex-grow">
-    Didn’t find the profession you’re curious about? Suggest a new role and we’ll notify you once it’s live.
-  </p>
-  <div class="mt-6 flex gap-3">
-    <button onclick="openSuggestModal()"
-      class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
-      Suggest a profession
-    </button>
+      <div class="bg-white rounded-2xl shadow-soft p-6 card-hover flex flex-col">
+        <h3 class="text-xl font-semibold">Your Dream Career</h3>
+        <p class="mt-3 text-slate-600 flex-grow">
+          Didn’t find the profession you’re curious about? Suggest a new role and we’ll notify you once it’s live.
+        </p>
+        <div class="mt-6 flex gap-3">
+          <button onclick="openSuggestModal()"
+            class="inline-block rounded-xl border border-brand-600 text-brand-700 px-4 py-2 font-medium hover:bg-brand-50">
+            Suggest a profession
+          </button>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
-      </div>   <!-- /grid (cards container) -->
-</div>   <!-- /max-w wrapper -->
-</section> <!-- /#roles -->
+</section>
+
 
 <!-- Modal -->
 <div id="suggestModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="suggestTitle">
