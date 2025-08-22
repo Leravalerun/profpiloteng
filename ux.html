@@ -3,8 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UX Designer — Simulator Overview</title>
-  <meta name="description" content="Short overview of the UX Designer simulator: what it is, who it's for, what you'll do, and what you get. Start for free." />
+  <title>ProfPilot — UX Designer Simulator Overview</title>
+  <meta name="description" content="A concise, hands-on UX Designer simulator: what it is, who it's for, what you’ll do, and what you get. Start in minutes." />
+  <!-- Favicons (опционально, если уже подключены глобально — можно убрать) -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_180.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,17 +24,26 @@
       }
     }
   </script>
-  <style> html, body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; } </style>
+  <style>
+    html, body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
+
   <!-- Navbar -->
   <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="/ux.html" class="inline-flex items-center gap-2 font-semibold text-slate-900" title="Back to role overview">
-        <span class="h-8 w-8 grid place-items-center rounded-xl bg-brand-600 text-white font-bold">CS</span>
-        <span>UX Designer — Simulator Overview</span>
+      <!-- Brand -->
+      <a href="/" class="inline-flex items-center gap-2 font-semibold text-slate-900" title="Back to home">
+        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
+        <span>ProfPilot</span>
       </a>
-      <a href="/" class="text-sm hover:underline">All roles</a>
+      <!-- Right -->
+      <nav class="hidden md:flex items-center gap-6 text-slate-700">
+        <a href="/#roles" class="hover:text-brand-700">All roles</a>
+        <a href="/#pricing" class="hover:text-brand-700">Pricing</a>
+        <a href="/login.html" class="px-4 py-2 border border-brand-600 text-brand-700 font-semibold rounded-xl hover:bg-brand-50 transition">Log in</a>
+      </nav>
     </div>
   </header>
 
@@ -37,13 +51,22 @@
   <section class="relative">
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-white via-white to-slate-100"></div>
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <h1 class="text-4xl font-extrabold leading-tight tracking-tight">UX Designer — 3‑Day Simulator</h1>
-      <p class="mt-4 text-lg text-slate-700 max-w-3xl">A concise, hands‑on experience to understand what UX work feels like. You’ll analyze user behavior, propose simple fixes, and show your idea clearly — without heavy tools.</p>
+      <p class="text-sm text-slate-500"><a href="/#roles" class="hover:underline">← Back to all roles</a></p>
+      <h1 class="mt-2 text-4xl font-extrabold leading-tight tracking-tight">UX Designer — 3‑Day Simulator</h1>
+      <p class="mt-4 text-lg text-slate-700 max-w-3xl">
+        A concise, hands‑on experience to feel what UX work is like. Analyze behavior, propose practical fixes, and present your idea clearly — without heavy tools.
+      </p>
       <div class="mt-6 flex flex-wrap items-center gap-3">
-        <a href="/ux-sim.html" class="rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 shadow-soft">Start Simulator (Free)</a>
-        <a href="/ux.html" class="rounded-2xl border border-slate-300 hover:border-slate-400 px-6 py-3 font-semibold">Back to role page</a>
+        <!-- Оплата сразу -->
+        <a href="/checkout?role=ux-designer" class="rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 shadow-soft">
+          Start now — $15
+        </a>
+        <!-- Превью задач (опционально, можно убрать ссылку) -->
+        <a href="/ux-sim.html" class="rounded-2xl border border-slate-300 hover:border-slate-400 px-6 py-3 font-semibold">
+          Preview tasks
+        </a>
       </div>
-      <p class="mt-3 text-xs text-slate-500">For now, full access is free. Billing will appear later.</p>
+      <p class="mt-3 text-xs text-slate-500">Short, practical, and beginner‑friendly.</p>
     </div>
   </section>
 
@@ -114,8 +137,9 @@
           <p class="mt-2 text-sm text-slate-700">Interactive tasks, team feedback, and a concise wrap‑up.</p>
         </div>
       </div>
-      <div class="mt-8">
-        <a href="/ux-sim.html" class="rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 shadow-soft">Start Simulator (Free)</a>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/checkout?role=ux-designer" class="rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 shadow-soft">Start now — $15</a>
+        <a href="/ux-sim.html" class="rounded-2xl border border-slate-300 hover:border-slate-400 px-6 py-3 font-semibold">Preview tasks</a>
       </div>
     </div>
   </section>
@@ -125,13 +149,13 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-600">
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div class="flex items-center gap-2">
-          <span class="h-8 w-8 grid place-items-center rounded-xl bg-brand-600 text-white font-bold">CS</span>
-          <span>Career Simulator</span>
+          <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
+          <span>ProfPilot</span>
         </div>
         <div class="flex flex-wrap items-center gap-4">
           <a href="/policy.html" class="hover:underline">Privacy Policy</a>
           <a href="/terms.html" class="hover:underline">Terms</a>
-          <span class="text-slate-400">© <span id="year"></span> Career Simulator</span>
+          <span class="text-slate-400">© <span id="year"></span> ProfPilot</span>
         </div>
       </div>
     </div>
