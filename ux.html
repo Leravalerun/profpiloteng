@@ -7,83 +7,222 @@
   <meta name="description" content="UX Designer simulator overview: who it's for, what you'll do, and what you get. Start a 3‑day simulator for $15." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: { brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' } },
-          boxShadow: { soft: '0 10px 30px rgba(2, 6, 23, 0.08)' }
+          colors: { 
+            brand: { 
+              50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' 
+            } 
+          },
+          boxShadow: { 
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'bounce-gentle': 'bounceGentle 2s infinite'
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' }
+            },
+            bounceGentle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' }
+            }
+          }
         }
       }
     }
   </script>
-  <style>html,body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}</style>
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      scroll-behavior: smooth;
+    }
+    .card-hover { 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    .card-hover:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
-  <!-- Navbar (same as index) -->
-  <header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
+  <!-- Navbar -->
+  <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
     <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
-        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
+      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700 hover:text-brand-800 transition-colors">
+        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" />
         ProfPilot
       </a>
       <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
-        <a href="/#roles" class="hover:text-brand-700 transition">Simulators</a>
-        <a href="/#about" class="hover:text-brand-700 transition">About</a>
-        <a href="/#pricing" class="hover:text-brand-700 transition">Pricing</a>
-        <a href="/#faq" class="hover:text-brand-700 transition">FAQ</a>
+        <a href="/#roles" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">Simulators</a>
+        <a href="/#about" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">About</a>
+        <a href="/#pricing" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">Pricing</a>
+        <a href="/#faq" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">FAQ</a>
       </nav>
       <div class="hidden sm:flex items-center gap-2">
-        <a href="/checkout?role=ux-designer" class="rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">Start now</a>
-        <a href="/login.html" class="px-4 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition">Log in</a>
+        <a href="/checkout?role=ux-designer" class="rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 hover:shadow-glow transition-all duration-200 transform hover:scale-105">Start now</a>
+        <a href="/login.html" class="px-4 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition-colors duration-200">Log in</a>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-200 px-4 py-4 space-y-3">
+      <a href="/#roles" class="block py-2 text-slate-700 hover:text-brand-700 transition-colors">Simulators</a>
+      <a href="/#about" class="block py-2 text-slate-700 hover:text-brand-700 transition-colors">About</a>
+      <a href="/#pricing" class="block py-2 text-slate-700 hover:text-brand-700 transition-colors">Pricing</a>
+      <a href="/#faq" class="block py-2 text-slate-700 hover:text-brand-700 transition-colors">FAQ</a>
+      <div class="pt-2 space-y-2">
+        <a href="/checkout?role=ux-designer" class="block w-full text-center rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft">
+          Start now
+        </a>
+        <a href="/login.html" class="block w-full text-center px-5 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition-colors">
+          Log in
+        </a>
       </div>
     </div>
   </header>
+
   <div class="h-16"></div><!-- spacer for fixed navbar -->
 
-
   <!-- Hero -->
-  <section class="relative">
+  <section class="relative py-16 sm:py-20">
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-white via-white to-slate-100"></div>
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <h1 class="text-4xl font-extrabold leading-tight tracking-tight">UX Designer — 3-Day Simulator</h1>
-      <p class="mt-4 text-lg text-slate-700 max-w-3xl">A concise, hands-on experience to understand what UX work feels like. You’ll analyze user behavior, propose simple fixes, and show your idea clearly — without heavy tools.</p>
-      <div class="mt-6 flex flex-wrap items-center gap-3">
-        <a href="/checkout" class="rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 shadow-soft">Start Simulator — $15</a>
-        <a href="/" class="rounded-2xl border border-slate-300 hover:border-slate-400 px-6 py-3 font-semibold">Back to all roles</a>
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full bg-brand-50 border border-brand-200 px-4 py-2 text-sm font-medium text-brand-700 mb-6">
+          <span class="w-2 h-2 bg-brand-500 rounded-full animate-pulse"></span>
+          UX Designer Simulator
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-slate-900 mb-6">
+          UX Designer — 
+          <span class="gradient-text">3-Day Simulator</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-slate-700 max-w-3xl mx-auto leading-relaxed">
+          A concise, hands-on experience to understand what UX work feels like. You'll analyze user behavior, propose simple fixes, and show your idea clearly — without heavy tools.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/checkout" class="w-full sm:w-auto rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 shadow-soft hover:shadow-glow transition-all duration-200 transform hover:scale-105">
+          Start Simulator — $15
+        </a>
+        <a href="/" class="w-full sm:w-auto rounded-2xl border border-slate-300 hover:border-slate-400 px-8 py-4 font-bold hover:bg-slate-50 transition-all duration-200">
+          Back to all roles
+        </a>
       </div>
     </div>
   </section>
 
   <!-- What it is -->
-  <section class="py-8">
+  <section class="py-16 bg-white">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
-          <h3 class="font-semibold">What you’ll do</h3>
-          <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc pl-5">
-            <li><strong>Day 1:</strong> Read the problem, inspect analytics, form hypotheses.</li>
-            <li><strong>Day 2:</strong> Pick practical UX fixes (microcopy, small UI tweaks).</li>
-            <li><strong>Day 3:</strong> Sketch how it looks and present a short rationale.</li>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">What you'll experience</h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">Get a realistic taste of UX design work in just 3 days</p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card hover:shadow-soft transition-all duration-200 group">
+          <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-4 text-center">What you'll do</h3>
+          <ul class="text-slate-700 space-y-3 list-none">
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
+              <span><strong>Day 1:</strong> Read the problem, inspect analytics, form hypotheses.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
+              <span><strong>Day 2:</strong> Pick practical UX fixes (microcopy, small UI tweaks).</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
+              <span><strong>Day 3:</strong> Sketch how it looks and present a short rationale.</span>
+            </li>
           </ul>
         </div>
-        <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
-          <h3 class="font-semibold">Who it’s for</h3>
-          <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc pl-5">
-            <li>Career-switchers testing UX without a big commitment</li>
-            <li>Students exploring HCI / product design</li>
-            <li>PMs and founders who want a UX mindset refresher</li>
+        
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card hover:shadow-soft transition-all duration-200 group">
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-4 text-center">Who it's for</h3>
+          <ul class="text-slate-700 space-y-3 list-none">
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Career-switchers testing UX without a big commitment</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Students exploring HCI / product design</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>PMs and founders who want a UX mindset refresher</span>
+            </li>
           </ul>
         </div>
-        <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
-          <h3 class="font-semibold">What you’ll get</h3>
-          <ul class="mt-3 text-sm text-slate-700 space-y-2 list-disc pl-5">
-            <li>Interactive questions with instant feedback</li>
-            <li>Realistic team chat from <strong>Ally</strong> (Lead) and <strong>Josh</strong> (PM)</li>
-            <li>A mini presentation template for your solution</li>
+        
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card hover:shadow-soft transition-all duration-200 group">
+          <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-4 text-center">What you'll get</h3>
+          <ul class="text-slate-700 space-y-3 list-none">
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Interactive questions with instant feedback</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Realistic team chat from <strong>Ally</strong> (Lead) and <strong>Josh</strong> (PM)</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>A mini presentation template for your solution</span>
+            </li>
           </ul>
         </div>
       </div>
@@ -91,46 +230,92 @@
   </section>
 
   <!-- Light FAQ -->
-  <section class="py-8">
+  <section class="py-16 bg-gradient-to-br from-slate-50 to-slate-100">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
-          <h3 class="font-semibold">Time needed</h3>
-          <p class="mt-2 text-sm text-slate-700">3 sessions × 45–60 minutes. Pause anytime.</p>
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">Simulator Details</h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">Everything you need to know before starting</p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-card hover:shadow-soft transition-all duration-200 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2 text-slate-900 text-center">Time needed</h3>
+          <p class="text-slate-700 text-center">3 sessions × 45–60 minutes. Pause anytime.</p>
         </div>
-        <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
-          <h3 class="font-semibold">Level</h3>
-          <p class="mt-2 text-sm text-slate-700">Beginner-friendly. No prior UX experience required.</p>
+        
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-card hover:shadow-soft transition-all duration-200 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2 text-slate-900 text-center">Level</h3>
+          <p class="text-slate-700 text-center">Beginner-friendly. No prior UX experience required.</p>
         </div>
-        <div class="rounded-2xl bg-white border border-slate-200 p-6 shadow-soft">
-          <h3 class="font-semibold">Includes</h3>
-          <p class="mt-2 text-sm text-slate-700">Interactive tasks, team feedback, and a concise wrap-up.</p>
+        
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-card hover:shadow-soft transition-all duration-200 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2 text-slate-900 text-center">Includes</h3>
+          <p class="text-slate-700 text-center">Interactive tasks, team feedback, and a concise wrap-up.</p>
         </div>
       </div>
-      <div class="mt-8">
-        <a href="/checkout" class="rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 shadow-soft">Start Simulator — $15</a>
+      
+      <div class="text-center">
+        <a href="/checkout" class="inline-block rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 shadow-soft hover:shadow-glow transition-all duration-200 transform hover:scale-105">
+          Start Simulator — $15
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-    <footer class="py-10 border-t border-slate-200 bg-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-600">
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
-          <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
-          <span>ProfPilot</span>
+  <footer class="py-12 border-t border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <img src="logo.png" alt="ProfPilot logo" class="h-10 w-10 rounded-xl object-contain" />
+          <div>
+            <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+            <p class="text-sm text-slate-500">Try a job in 3 days</p>
+          </div>
         </div>
-        <div class="flex flex-wrap items-center gap-4">
-          <a href="/policy.html" class="hover:underline">Privacy Policy</a>
-          <a href="/terms.html" class="hover:underline">Terms</a>
+        <div class="flex flex-wrap items-center gap-6 text-sm text-slate-600">
+          <a href="/policy.html" class="hover:text-brand-700 hover:underline transition-colors">Privacy Policy</a>
+          <a href="/terms.html" class="hover:text-brand-700 hover:underline transition-colors">Terms</a>
           <span class="text-slate-400">© <span id="year"></span> ProfPilot</span>
         </div>
       </div>
     </div>
   </footer>
 
+  <!-- Mobile Menu JavaScript -->
   <script>
+    // Mobile menu functionality
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking on links
+    const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // Update year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
