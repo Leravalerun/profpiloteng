@@ -317,7 +317,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                   </svg>
                 </span>
-                AI Mentor - Interactive Chat
+                AI Design Mentor - Interactive Chat
               </h3>
               
               <!-- AI Mentor Chat Interface -->
@@ -332,10 +332,10 @@
                       </svg>
                     </div>
                     <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
-                      <div class="font-semibold text-brand-900 text-sm">AI Mentor</div>
+                      <div class="font-semibold text-brand-900 text-sm">AI Design Mentor</div>
                       <div class="text-brand-800">
-                        Привет! Я твой AI ментор на сегодня. Задавай любые вопросы о UX дизайне, 
-                        аналитике, или работе в команде. Я здесь, чтобы помочь тебе учиться и расти!
+                        Hi! I'm your AI Design Mentor, specializing in UX/UI design, user research, and design thinking. 
+                        Ask me anything about design principles, tools, or creative problem-solving!
                       </div>
                     </div>
                   </div>
@@ -347,27 +347,27 @@
                     <input 
                       type="text" 
                       id="aiChatInput" 
-                      placeholder="Задай вопрос AI ментору..." 
+                      placeholder="Ask your AI Design Mentor..." 
                       class="flex-1 px-4 py-2 border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                     >
                     <button 
                       id="aiChatSend" 
                       class="bg-brand-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Отправить
+                      Send
                     </button>
                   </div>
                   
                   <!-- Suggested Questions -->
                   <div class="mt-3 flex flex-wrap gap-2">
                     <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
-                      Как анализировать heatmap?
+                      How to analyze heatmaps?
                     </button>
                     <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
-                      Что делать с высокой bounce rate?
+                      What to do with high bounce rate?
                     </button>
                     <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
-                      Как улучшить UX формы?
+                      How to improve form UX?
                     </button>
                   </div>
                 </div>
@@ -596,7 +596,7 @@
               </svg>
             </div>
             <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
-              <div class="font-semibold text-brand-900 text-sm">AI Mentor</div>
+              <div class="font-semibold text-brand-900 text-sm">AI Design Mentor</div>
               <div class="text-brand-800">${message}</div>
             </div>
           `;
@@ -640,56 +640,159 @@
       generateAIResponse(userMessage) {
         const message = userMessage.toLowerCase();
         
-        // AI Mentor responses based on user questions
-        if (message.includes('heatmap') || message.includes('анализ')) {
-          return `Отличный вопрос! Heatmap показывает, где пользователи кликают чаще всего. 
-          Красные зоны = высокая активность, синие = низкая. 
-          Смотри на паттерны: если пользователи кликают не там, где должны - это сигнал для улучшения UX.`;
+        // AI Design Mentor specialized responses for UX/UI design
+        if (message.includes('heatmap') || message.includes('analyze') || message.includes('analysis')) {
+          return `As a Design Mentor, here's how to read heatmaps like a pro: 
+          🔴 Red zones = high user engagement (click, scroll, hover)
+          🔵 Blue zones = low engagement 
+          🟡 Yellow = medium activity
+          
+          Look for: 1) Click patterns vs. intended CTAs, 2) Scroll depth, 3) Dead zones
+          Pro tip: Combine with session recordings to understand "why" behind the clicks!`;
         }
         
-        if (message.includes('bounce') || message.includes('отскок')) {
-          return `Высокий bounce rate означает, что пользователи уходят с первой страницы. 
-          Возможные причины: медленная загрузка, непонятный контент, или плохой UX. 
-          Попробуй A/B тесты заголовков и первых экранов.`;
+        if (message.includes('bounce') || message.includes('bounce rate')) {
+          return `High bounce rate? Let's fix this with design thinking! 
+          
+          🎯 First, identify the problem: What's confusing users?
+          🔍 Check your value proposition - is it clear in the first 3 seconds?
+          📱 Test mobile experience (most bounces happen on mobile)
+          🎨 Visual hierarchy: Is your CTA visible and compelling?
+          
+          Remember: Good design reduces cognitive load and guides users naturally!`;
         }
         
-        if (message.includes('форма') || message.includes('ux')) {
-          return `Для улучшения UX формы: 1) Упрости - убирай лишние поля, 2) Добавь прогресс-бар, 
-          3) Используй placeholder текст, 4) Показывай ошибки сразу, 5) Тестируй на реальных пользователях. 
-          Помни: каждая лишняя секунда = потеря пользователя.`;
+        if (message.includes('form') || message.includes('ux') || message.includes('user experience')) {
+          return `Form UX is all about reducing friction! Here's my design framework:
+          
+          🎨 **Visual Design**: Clear hierarchy, proper spacing, readable typography
+          🧠 **Cognitive Load**: Group related fields, use progressive disclosure
+          ✅ **Feedback**: Real-time validation, clear error messages
+          📱 **Mobile First**: Touch-friendly targets, simplified layouts
+          🎯 **Purpose**: Every field should have a clear reason
+          
+          Pro tip: Test with real users - they'll show you what you missed!`;
         }
         
-        if (message.includes('команда') || message.includes('team')) {
-          return `Работа в команде - это ключ к успеху! Общайся с разработчиками, 
-          понимай их ограничения, объясняй свои решения. 
-          Coffee break - отличное время для неформального общения и генерации идей.`;
+        if (message.includes('team') || message.includes('collaboration') || message.includes('communication')) {
+          return `Design is a team sport! Here's how to collaborate effectively:
+          
+          🤝 **Design Handoffs**: Use design systems and clear documentation
+          💬 **Regular Syncs**: Daily standups, weekly design reviews
+          🎭 **Stakeholder Management**: Present solutions, not just designs
+          🔄 **Feedback Loops**: Create safe spaces for honest feedback
+          🎯 **Shared Goals**: Align on user outcomes, not just deliverables
+          
+          Remember: Great design happens when everyone understands the user's journey!`;
         }
         
-        if (message.includes('аналитика') || message.includes('data')) {
-          return `Данные - твой лучший друг! Смотри на метрики: время на странице, 
-          конверсия, путь пользователя. Но не забывай про качественные исследования - 
-          интервью с пользователями дают понимание "почему", а не только "что".`;
+        if (message.includes('analytics') || message.includes('data') || message.includes('metrics')) {
+          return `Data-driven design is powerful! Here's my approach:
+          
+          📊 **Quantitative**: Conversion rates, time on task, error rates
+          🎭 **Qualitative**: User interviews, usability testing, feedback
+          🔍 **Behavioral**: Click paths, scroll patterns, feature usage
+          🎯 **Business**: Revenue impact, user acquisition, retention
+          
+          Pro tip: Start with a hypothesis, test with data, iterate based on insights!
+          Data tells you "what", research tells you "why".`;
         }
         
-        if (message.includes('figma') || message.includes('дизайн')) {
-          return `Figma - мощный инструмент для коллаборации! Используй компоненты, 
-          создавай библиотеки, тестируй прототипы. 
-          Помни: дизайн должен решать проблемы пользователей, а не просто выглядеть красиво.`;
+        if (message.includes('figma') || message.includes('design') || message.includes('prototype')) {
+          return `Figma mastery for UX designers! Here's my workflow:
+          
+          🎨 **Design Systems**: Create reusable components and styles
+          🔗 **Prototyping**: Build interactive flows for user testing
+          👥 **Collaboration**: Use comments, version history, and shared libraries
+          📱 **Responsive Design**: Design for multiple breakpoints
+          🎭 **User Flows**: Map complete user journeys, not just screens
+          
+          Remember: Prototype early, test often, iterate based on feedback!
+          A good prototype is worth 1000 meetings.`;
         }
         
-        // Default response for other questions
+        if (message.includes('user research') || message.includes('testing') || message.includes('feedback')) {
+          return `User research is your superpower! Here's my research framework:
+          
+          🎯 **Discovery**: Understand user needs and pain points
+          🧪 **Testing**: Validate solutions with real users
+          📊 **Analysis**: Find patterns and insights
+          🔄 **Iteration**: Apply learnings to improve design
+          
+          Pro tips: 
+          - Test with 5-8 users (you'll find 80% of issues)
+          - Ask open-ended questions
+          - Watch, don't just listen
+          - Document everything for the team!`;
+        }
+        
+        if (message.includes('wireframe') || message.includes('sketch') || message.includes('mockup')) {
+          return `Sketching is thinking made visible! Here's my process:
+          
+          ✏️ **Rough Sketches**: Quick ideas, multiple variations
+          📐 **Wireframes**: Structure and layout, no colors
+          🎨 **Mockups**: Visual design and branding
+          🔗 **Prototypes**: Interactive behavior and flows
+          
+          Pro tips:
+          - Start with paper and pen (faster iteration)
+          - Focus on structure first, aesthetics later
+          - Get feedback early and often
+          - Don't fall in love with your first idea!`;
+        }
+        
+        if (message.includes('accessibility') || message.includes('a11y') || message.includes('inclusive')) {
+          return `Inclusive design is good design! Here's my accessibility checklist:
+          
+          🎨 **Visual**: Color contrast, typography, focus indicators
+          ⌨️ **Keyboard**: Full navigation without mouse
+          🗣️ **Screen Readers**: Semantic HTML, alt text, ARIA labels
+          🧠 **Cognitive**: Clear language, simple layouts, consistent patterns
+          📱 **Mobile**: Touch targets, gesture alternatives
+          
+          Remember: Accessibility benefits everyone!
+          Test with real users and accessibility tools.`;
+        }
+        
+        if (message.includes('design thinking') || message.includes('process') || message.includes('methodology')) {
+          return `Design thinking is your problem-solving framework! Here's the process:
+          
+          🔍 **Empathize**: Understand your users deeply
+          🎯 **Define**: Frame the problem clearly
+          💡 **Ideate**: Generate many solutions
+          🧪 **Prototype**: Build to learn
+          🧪 **Test**: Validate with users
+          
+          Pro tip: This isn't linear - you'll loop back and forth!
+          The goal is to fail fast and learn quickly.`;
+        }
+        
+        if (message.includes('visual hierarchy') || message.includes('layout') || message.includes('composition')) {
+          return `Visual hierarchy guides the eye! Here's how to master it:
+          
+          📏 **Size**: Bigger = more important
+          🎨 **Color**: High contrast = attention
+          📝 **Typography**: Weight, size, spacing create order
+          📐 **Spacing**: White space organizes content
+          🎯 **Position**: Top-left gets attention first
+          
+          Pro tip: Test your hierarchy by squinting at your design!
+          If you can't tell what's important, users won't either.`;
+        }
+        
+        // Default responses for other questions
         const defaultResponses = [
-          `Интересный вопрос! В UX дизайне важно всегда думать о пользователе. 
-          Что бы ты сделал, если бы был на его месте?`,
+          `Great design question! Remember: good UX is invisible - users should accomplish their goals without thinking about the interface. What problem are you trying to solve?`,
           
-          `Отличная мысль! Помни, что хороший UX - это баланс между красотой и функциональностью. 
-          Всегда тестируй свои идеи на реальных пользователях.`,
+          `Excellent thinking! In UX design, we solve problems, not just make things pretty. Always start with the user's needs and work backwards to the solution.`,
           
-          `Хороший вопрос! В нашей работе важно постоянно учиться и экспериментировать. 
-          Не бойся пробовать новое и получать обратную связь.`,
+          `That's a thoughtful question! Design is about creating experiences that feel natural and intuitive. What would make this easier for your users?`,
           
-          `Отлично! Ты на правильном пути. UX дизайн - это не только про интерфейсы, 
-          но и про понимание психологии пользователей и бизнес-целей.`
+          `Great insight! Remember: design is iterative. Start with a hypothesis, test it, learn from it, and improve. Don't aim for perfection on the first try!`,
+          
+          `Excellent question! As a designer, your job is to bridge the gap between user needs and business goals. How can you create value for both?`,
+          
+          `That's a design challenge! Think about the user's emotional journey. How can you reduce frustration and increase delight? Sometimes the smallest changes make the biggest impact.`
         ];
         
         return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
@@ -860,13 +963,60 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
               </span>
-              AI Mentor Guidance
+              AI Design Mentor - Interactive Chat
             </h3>
             
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-brand-200">
-              <p class="text-slate-700 leading-relaxed italic">
-                "Your role: reduce cognitive load. One big scary task should be transformed into small, guided steps."
-              </p>
+            <!-- AI Mentor Chat Interface -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-brand-200">
+              <!-- Chat Messages -->
+              <div id="aiChatMessages" class="h-64 overflow-y-auto p-4 space-y-4">
+                <!-- Initial AI message -->
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                  </div>
+                  <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
+                    <div class="font-semibold text-brand-900 text-sm">AI Design Mentor</div>
+                    <div class="text-brand-800">
+                      Hi! I'm your AI Design Mentor, specializing in UX/UI design, user research, and design thinking. 
+                      Ask me anything about design principles, tools, or creative problem-solving!
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Chat Input -->
+              <div class="border-t border-brand-200 p-4">
+                <div class="flex gap-3">
+                  <input 
+                    type="text" 
+                    id="aiChatInput" 
+                    placeholder="Ask your AI Design Mentor..." 
+                    class="flex-1 px-4 py-2 border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                  >
+                  <button 
+                    id="aiChatSend" 
+                    class="bg-brand-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Send
+                  </button>
+                </div>
+                
+                <!-- Suggested Questions -->
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                    How to analyze heatmaps?
+                  </button>
+                  <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                    What to do with high bounce rate?
+                  </button>
+                  <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                    How to improve form UX?
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1029,13 +1179,60 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
               </span>
-              AI Mentor Guidance
+              AI Design Mentor - Interactive Chat
             </h3>
             
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-brand-200">
-              <p class="text-slate-700 leading-relaxed italic">
-                "Don't aim for beauty. Clarity > polish. Show how the solution changes the user's journey."
-              </p>
+            <!-- AI Mentor Chat Interface -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-brand-200">
+              <!-- Chat Messages -->
+              <div id="aiChatMessages" class="h-64 overflow-y-auto p-4 space-y-4">
+                <!-- Initial AI message -->
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                  </div>
+                  <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
+                    <div class="font-semibold text-brand-900 text-sm">AI Design Mentor</div>
+                    <div class="text-brand-800">
+                      Hi! I'm your AI Design Mentor, specializing in UX/UI design, user research, and design thinking. 
+                      Ask me anything about design principles, tools, or creative problem-solving!
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Chat Input -->
+              <div class="border-t border-brand-200 p-4">
+                <div class="flex gap-3">
+                  <input 
+                    type="text" 
+                    id="aiChatInput" 
+                    placeholder="Ask your AI Design Mentor..." 
+                    class="flex-1 px-4 py-2 border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                  >
+                  <button 
+                    id="aiChatSend" 
+                    class="bg-brand-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Send
+                  </button>
+                </div>
+                
+                <!-- Suggested Questions -->
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                    How to analyze heatmaps?
+                  </button>
+                  <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                    What to do with high bounce rate?
+                  </button>
+                  <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                    How to improve form UX?
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
