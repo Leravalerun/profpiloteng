@@ -1,220 +1,1142 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>ProfPilot — UX Designer Simulator</title>
-  <meta name="description" content="3-day UX Designer simulator with guided feedback." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UX Designer Simulator — ProfPilot</title>
+  <meta name="description" content="Experience 3 days in the life of a UX Designer. Analyze user behavior, design solutions, and present your ideas to the team." />
+  
+  <!-- Favicons -->
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_32.png">
+  <link rel="manifest" href="site.webmanifest">
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: { brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' } },
-          boxShadow: { soft: '0 10px 30px rgba(2, 6, 23, 0.08)' }
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'bounce-gentle': 'bounceGentle 2s infinite',
+            'typewriter': 'typewriter 2s steps(40) 1s 1 normal both'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+            bounceGentle: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-5px)' } },
+            typewriter: { '0%': { width: '0' }, '100%': { width: '100%' } }
+          }
         }
       }
     }
   </script>
-  <style>html,body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}</style>
+  
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      scroll-behavior: smooth;
+    }
+    
+    .simulator-container {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      min-height: 100vh;
+    }
+    
+    .day-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .day-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .chat-bubble {
+      animation: slideUp 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+    
+    .chat-bubble:nth-child(1) { animation-delay: 0.1s; }
+    .chat-bubble:nth-child(2) { animation-delay: 0.3s; }
+    .chat-bubble:nth-child(3) { animation-delay: 0.5s; }
+    .chat-bubble:nth-child(4) { animation-delay: 0.7s; }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #3b82f6 0%, #1e40af 100%);
+      transition: width 0.8s ease-in-out;
+    }
+    
+    .task-option {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .task-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .task-option.selected {
+      border-color: #3b82f6;
+      background: #eff6ff;
+      transform: scale(1.02);
+    }
+    
+    .task-option.correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+    
+    .task-option.incorrect {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-
-  <!-- Navbar (как на главной) -->
-  <header class="fixed top-0 w-full z-20 backdrop-blur border-b border-slate-200 bg-white/80 transition-all shadow-sm">
+  
+  <!-- Navigation -->
+  <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
     <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700">
-        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
+      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700 hover:text-brand-800 transition-colors">
+        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" />
         ProfPilot
       </a>
       <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
-        <a href="/#roles" class="hover:text-brand-700 transition">Simulators</a>
-        <a href="/#about" class="hover:text-brand-700 transition">About</a>
-        <a href="/#pricing" class="hover:text-brand-700 transition">Pricing</a>
-        <a href="/#faq" class="hover:text-brand-700 transition">FAQ</a>
+        <a href="/#roles" class="hover:text-brand-700 transition-colors duration-200">Simulators</a>
+        <a href="/#about" class="hover:text-brand-700 transition-colors duration-200">About</a>
+        <a href="/#pricing" class="hover:text-brand-700 transition-colors duration-200">Pricing</a>
+        <a href="/#faq" class="hover:text-brand-700 transition-colors duration-200">FAQ</a>
       </nav>
-      <div class="hidden sm:flex items-center gap-2">
-        <a href="/checkout?role=ux-designer" class="rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold shadow-soft hover:bg-brand-700 transition">Start now</a>
-        <a href="/login.html" class="px-4 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition">Log in</a>
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-slate-500">Simulator in progress</span>
+        <a href="/" class="px-4 py-2 border border-slate-300 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors">
+          Exit
+        </a>
       </div>
     </div>
   </header>
+
   <div class="h-16"></div>
 
-  <!-- Hero -->
-  <section class="py-10 bg-gradient-to-b from-white via-white to-slate-100 border-b border-slate-200">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-      <a href="/ux.html" class="text-sm text-slate-500 hover:underline">← Back to overview</a>
-      <h1 class="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight">UX Designer — 3‑Day Simulator</h1>
-      <p class="mt-3 text-slate-700 max-w-3xl">Answer each step. You’ll get instant AI feedback and tips. Your progress saves automatically.</p>
-      <div id="userBadge" class="mt-4 text-sm text-slate-500"></div>
-    </div>
-  </section>
-
-  <!-- Days / Steps -->
-  <main class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-
-    <!-- Day 1 -->
-    <section class="bg-white border border-slate-200 rounded-2xl shadow-soft">
-      <div class="p-6 border-b border-slate-200">
-        <h2 class="text-2xl font-bold">Day 1 — Diagnose the drop‑off</h2>
-        <p class="mt-2 text-slate-600">Users drop off on the onboarding field “About me / Summary”. Form 2–3 hypotheses why.</p>
-      </div>
-
-      <!-- Step d1s1 -->
-      <div class="p-6 space-y-3">
-        <h3 class="font-semibold">Step d1s1 · Hypotheses</h3>
-        <p class="text-sm text-slate-600">Write 2–3 realistic reasons for abandonment, referencing hints (e.g., wall of text, unclear expectations, no examples).</p>
-
-        <textarea id="d1s1" class="w-full rounded-lg border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-brand-600" rows="6" placeholder="Your hypotheses…"></textarea>
-
-        <div class="flex items-center gap-3">
-          <button class="rounded-xl bg-brand-600 text-white px-4 py-2 font-semibold hover:bg-brand-700 transition"
-                  onclick="submitStep('ux-designer',1,'d1s1')"
-                  id="btn-d1s1">Get feedback</button>
-          <span id="loader-d1s1" class="hidden text-sm text-slate-500">Thinking…</span>
+  <!-- Simulator Container -->
+  <div class="simulator-container">
+    
+    <!-- Header Section -->
+    <section class="py-16 bg-white border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center gap-2 rounded-full bg-brand-50 border border-brand-200 px-4 py-2 text-sm font-medium text-brand-700 mb-6">
+          <span class="w-2 h-2 bg-brand-500 rounded-full animate-pulse"></span>
+          UX Designer Simulator
         </div>
-
-        <div id="out-d1s1" class="hidden mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4"></div>
+        
+        <h1 class="text-4xl sm:text-5xl font-black leading-tight tracking-tight text-slate-900 mb-6">
+          3 Days in the Life of a 
+          <span class="gradient-text">UX/UI Designer</span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8">
+          Join the design team of a startup and solve real UX challenges. Analyze user behavior, 
+          design solutions, and present your ideas to the team.
+        </p>
+        
+        <!-- Progress Bar -->
+        <div class="max-w-2xl mx-auto">
+          <div class="flex justify-between text-sm text-slate-600 mb-2">
+            <span>Day <span id="currentDay">1</span> of 3</span>
+            <span id="progressPercent">33%</span>
+          </div>
+          <div class="w-full bg-slate-200 rounded-full h-3">
+            <div id="progressBar" class="progress-bar h-3 rounded-full" style="width: 33%"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Day 2 -->
-    <section class="bg-white border border-slate-200 rounded-2xl shadow-soft">
-      <div class="p-6 border-b border-slate-200">
-        <h2 class="text-2xl font-bold">Day 2 — Propose practical fixes</h2>
-        <p class="mt-2 text-slate-600">Suggest 2–3 low‑effort UX changes (microcopy, progress, examples, placeholders) to reduce friction.</p>
-      </div>
-
-      <!-- Step d2s1 -->
-      <div class="p-6 space-y-3">
-        <h3 class="font-semibold">Step d2s1 · Quick fixes</h3>
-        <textarea id="d2s1" class="w-full rounded-lg border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-brand-600" rows="6" placeholder="Your proposed fixes…"></textarea>
-
-        <div class="flex items-center gap-3">
-          <button class="rounded-xl bg-brand-600 text-white px-4 py-2 font-semibold hover:bg-brand-700 transition"
-                  onclick="submitStep('ux-designer',2,'d2s1')"
-                  id="btn-d2s1">Get feedback</button>
-          <span id="loader-d2s1" class="hidden text-sm text-slate-500">Thinking…</span>
+    <!-- Main Simulator Content -->
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Day Navigation -->
+        <div class="flex justify-center mb-12">
+          <div class="flex space-x-2 bg-white rounded-2xl p-2 shadow-card">
+            <button id="day1Btn" class="day-nav-btn active px-6 py-3 rounded-xl font-medium transition-all duration-200">
+              Day 1
+            </button>
+            <button id="day2Btn" class="day-nav-btn px-6 py-3 rounded-xl font-medium transition-all duration-200">
+              Day 2
+            </button>
+            <button id="day3Btn" class="day-nav-btn px-6 py-3 rounded-xl font-medium transition-all duration-200">
+              Day 3
+            </button>
+          </div>
         </div>
 
-        <div id="out-d2s1" class="hidden mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4"></div>
+        <!-- Day Content Container -->
+        <div id="dayContent" class="space-y-8">
+          
+          <!-- Day 1 Content -->
+          <div id="day1" class="day-content active">
+            
+            <!-- Context Card -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                  <span class="text-white font-bold text-xl">1</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">Find the Drop-off Point</h2>
+                  <p class="text-slate-600">Your first day on the design team</p>
+                </div>
+              </div>
+              
+              <div class="prose prose-slate max-w-none">
+                <p class="text-lg text-slate-700 leading-relaxed mb-6">
+                  You join the design team of a startup. Users begin filling the registration form 
+                  (contacts, skills, summary, work experience). BUT: most quit at the "About Me" section.
+                </p>
+                
+                <div class="bg-slate-50 rounded-2xl p-6 mb-6">
+                  <h4 class="font-semibold text-slate-900 mb-4">📊 Data Analysis:</h4>
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-green-600">93%</div>
+                      <div class="text-sm text-slate-600">Contacts</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-green-600">71%</div>
+                      <div class="text-sm text-slate-600">Skills</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-red-600">38%</div>
+                      <div class="text-sm text-slate-600">About Me</div>
+                    </div>
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-orange-600">36%</div>
+                      <div class="text-sm text-slate-600">Quit Rate</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Team Chat -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                  </svg>
+                </span>
+                Team Chat
+              </h3>
+              
+              <div class="space-y-4">
+                <div class="chat-bubble flex items-start gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white font-bold text-sm">A</span>
+                  </div>
+                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                    <div class="font-semibold text-slate-900 text-sm">Ally (Lead UX)</div>
+                    <div class="text-slate-700">The funnel breaks at 'About Me'. People freeze there.</div>
+                  </div>
+                </div>
+                
+                <div class="chat-bubble flex items-start gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white font-bold text-sm">J</span>
+                  </div>
+                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                    <div class="font-semibold text-slate-900 text-sm">Josh (PM)</div>
+                    <div class="text-slate-700">Yep, data looks bad. Contacts fine, skills fine. But then... they drop.</div>
+                  </div>
+                </div>
+                
+                <div class="chat-bubble flex items-start gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white font-bold text-sm">A</span>
+                  </div>
+                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                    <div class="font-semibold text-slate-900 text-sm">Ally (Lead UX)</div>
+                    <div class="text-slate-700">Classic problem: writing about yourself is HARD.</div>
+                  </div>
+                </div>
+                
+                <div class="chat-bubble flex items-start gap-3">
+                  <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white font-bold text-sm">J</span>
+                  </div>
+                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                    <div class="font-semibold text-slate-900 text-sm">Josh (PM)</div>
+                    <div class="text-slate-700">So, is it bad UI, or just psychology?</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Mentor -->
+            <div class="bg-gradient-to-br from-brand-50 to-blue-50 rounded-3xl border border-brand-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                  </svg>
+                </span>
+                AI Mentor Guidance
+              </h3>
+              
+              <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-brand-200">
+                <p class="text-slate-700 leading-relaxed italic">
+                  "Step into the user's shoes. Imagine you're stressed about finding a job, 
+                  and suddenly you face a blank box saying 'Summarize yourself'. 
+                  Would you feel confident — or freeze?"
+                </p>
+              </div>
+            </div>
+
+            <!-- Task -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </span>
+                Your Task
+              </h3>
+              
+              <div class="mb-6">
+                <h4 class="font-semibold text-slate-900 mb-3">Why do users stop at the 'About Me' field?</h4>
+                <div class="space-y-3" id="task1Options">
+                  <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="A">
+                    <div class="flex items-center gap-3">
+                      <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">A</div>
+                      <span class="text-slate-700">It feels intimidating — 'what if I write it wrong?'</span>
+                    </div>
+                  </div>
+                  
+                  <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="B">
+                    <div class="flex items-center gap-3">
+                      <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">B</div>
+                      <span class="text-slate-700">Form feels too long</span>
+                    </div>
+                  </div>
+                  
+                  <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="C">
+                    <div class="flex items-center gap-3">
+                      <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">C</div>
+                      <span class="text-slate-700">No progress bar</span>
+                    </div>
+                  </div>
+                  
+                  <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="D">
+                    <div class="flex items-center gap-3">
+                      <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">D</div>
+                      <span class="text-slate-700">Save button is hidden</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <button id="submitTask1" class="bg-brand-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                Submit Answer
+              </button>
+              
+              <div id="task1Feedback" class="hidden mt-6 p-4 rounded-xl"></div>
+            </div>
+
+            <!-- Learning Outcomes -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl border border-green-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </span>
+                Learning Outcomes
+              </h3>
+              
+              <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                  <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                  <span class="text-slate-700">Analyzed behavior data (not just guessing visually)</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                  <span class="text-slate-700">Found the exact point of friction</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                  <span class="text-slate-700">Learned that UX blockers are often psychological, not technical</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Day 2 Content (Hidden by default) -->
+          <div id="day2" class="day-content hidden">
+            <!-- Day 2 content will be populated by JavaScript -->
+          </div>
+
+          <!-- Day 3 Content (Hidden by default) -->
+          <div id="day3" class="day-content hidden">
+            <!-- Day 3 content will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-12">
+          <button id="prevDay" class="bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-medium hover:bg-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            ← Previous Day
+          </button>
+          
+          <button id="nextDay" class="bg-brand-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Next Day →
+          </button>
+        </div>
       </div>
     </section>
+  </div>
 
-    <!-- Day 3 -->
-    <section class="bg-white border border-slate-200 rounded-2xl shadow-soft">
-      <div class="p-6 border-b border-slate-200">
-        <h2 class="text-2xl font-bold">Day 3 — Present the idea</h2>
-        <p class="mt-2 text-slate-600">Outline a 1–2 screen sketch and a short rationale for the team. Keep it pragmatic.</p>
-      </div>
-
-      <!-- Step d3s1 -->
-      <div class="p-6 space-y-3">
-        <h3 class="font-semibold">Step d3s1 · Pitch</h3>
-        <textarea id="d3s1" class="w-full rounded-lg border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-brand-600" rows="6" placeholder="How you’ll present…"></textarea>
-
-        <div class="flex items-center gap-3">
-          <button class="rounded-xl bg-brand-600 text-white px-4 py-2 font-semibold hover:bg-brand-700 transition"
-                  onclick="submitStep('ux-designer',3,'d3s1')"
-                  id="btn-d3s1">Get feedback</button>
-          <span id="loader-d3s1" class="hidden text-sm text-slate-500">Thinking…</span>
-        </div>
-
-        <div id="out-d3s1" class="hidden mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4"></div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer (как на главной) -->
-  <footer class="py-10 border-t border-slate-200 bg-white">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-slate-600">
-      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
-          <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
-          <span>ProfPilot</span>
-        </div>
-        <div class="flex flex-wrap items-center gap-4">
-          <a href="/policy.html" class="hover:underline">Privacy Policy</a>
-          <a href="/terms.html" class="hover:underline">Terms</a>
-          <span class="text-slate-400">© <span id="year"></span> ProfPilot</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <!-- Твой общий init (из прошлого шага) -->
-  <script src="/firebase-init.js"></script>
-
+  <!-- Simulator JavaScript -->
   <script>
-    // --- Настройка ---
-    // URL твоей серверной функции: см. deploy из шага с Functions
-    // Пример: https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/aiRespond
-    const API_URL = 'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/aiRespond';
-
-    // Рубрики (можно потом грузить из Firestore /scenarios)
-    const RUBRICS = {
-      'd1s1': `Evaluate on: logic (30), reference to signals/data (30), realism (20), clarity (20). Penalize hand-waving or overclaims.`,
-      'd2s1': `Evaluate on: expected UX impact (40), implementation effort (20), risks & side effects (20), measurability (20).`,
-      'd3s1': `Evaluate on: structure (30), clarity/conciseness (30), value for team (30), risks/next steps (10).`
-    };
-
-    // Проверка логина и бейдж
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.replace('/login.html');
-        return;
+    class UXSimulator {
+      constructor() {
+        this.currentDay = 1;
+        this.maxDays = 3;
+        this.userProgress = {
+          day1: { completed: false, score: 0, tasksCompleted: 0, totalTasks: 1 },
+          day2: { completed: false, score: 0, tasksCompleted: 0, totalTasks: 3 },
+          day3: { completed: false, score: 0, tasksCompleted: 0, totalTasks: 1 }
+        };
+        
+        this.day2Loaded = false;
+        this.day3Loaded = false;
+        
+        this.init();
       }
-      const email = user.email ? user.email.replace(/(.{2}).+(@.+)/,'$1***$2') : 'signed in';
-      document.getElementById('userBadge').textContent = `Signed in · ${email}`;
-      document.getElementById('year').textContent = new Date().getFullYear();
-    });
-
-    async function submitStep(role, day, stepId) {
-      const user = auth.currentUser;
-      if (!user) { window.location.href = '/login.html'; return; }
-
-      // элементы
-      const input = document.getElementById(stepId);
-      const btn = document.getElementById('btn-' + stepId);
-      const out = document.getElementById('out-' + stepId);
-      const loader = document.getElementById('loader-' + stepId);
-
-      const userAnswer = (input.value || '').trim();
-      if (!userAnswer) { input.focus(); return; }
-
-      // UI state
-      btn.disabled = true;
-      loader.classList.remove('hidden');
-
-      try {
-        const idToken = await user.getIdToken();
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          },
-          body: JSON.stringify({
-            role, day, stepId,
-            userAnswer,
-            rubric: RUBRICS[stepId] || ''
-          })
+      
+      init() {
+        this.bindEvents();
+        this.updateProgress();
+        this.loadDayContent();
+        this.updateDayNavigation();
+        this.updateNavigationButtons();
+      }
+      
+      bindEvents() {
+        // Day navigation
+        document.getElementById('day1Btn').addEventListener('click', () => this.goToDay(1));
+        document.getElementById('day2Btn').addEventListener('click', () => this.goToDay(2));
+        document.getElementById('day3Btn').addEventListener('click', () => this.goToDay(3));
+        
+        // Navigation buttons
+        document.getElementById('prevDay').addEventListener('click', () => this.previousDay());
+        document.getElementById('nextDay').addEventListener('click', () => this.nextDay());
+        
+        // Task submission
+        document.getElementById('submitTask1').addEventListener('click', () => this.submitTask1());
+        
+        // Task option selection
+        document.querySelectorAll('#task1Options .task-option').forEach(option => {
+          option.addEventListener('click', () => this.selectTaskOption(option));
         });
+      }
+      
+      goToDay(day) {
+        // Check if user can access this day
+        if (day > 1 && !this.canAccessDay(day)) {
+          this.showDayLockedMessage(day);
+          return;
+        }
+        
+        this.currentDay = day;
+        this.loadDayContent();
+        this.updateProgress();
+        this.updateDayNavigation();
+        this.updateNavigationButtons();
+      }
+      
+      canAccessDay(day) {
+        if (day === 1) return true;
+        
+        // Check if previous day is completed
+        const previousDay = day - 1;
+        return this.userProgress[`day${previousDay}`].completed;
+      }
+      
+      showDayLockedMessage(day) {
+        // Create a modal or notification
+        const message = `You need to complete Day ${day - 1} before accessing Day ${day}.`;
+        
+        // Show a temporary notification
+        this.showNotification(message, 'warning');
+        
+        // Automatically go to the previous incomplete day
+        const previousDay = day - 1;
+        this.goToDay(previousDay);
+      }
+      
+      showNotification(message, type = 'info') {
+        // Remove existing notification
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+          existingNotification.remove();
+        }
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-white font-medium shadow-lg transition-all duration-300 ${
+          type === 'warning' ? 'bg-orange-500' : 
+          type === 'success' ? 'bg-green-500' : 
+          'bg-blue-500'
+        }`;
+        notification.textContent = message;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translate(-50%, -20px)';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+      
+      previousDay() {
+        if (this.currentDay > 1) {
+          this.goToDay(this.currentDay - 1);
+        }
+      }
+      
+      nextDay() {
+        if (this.currentDay < this.maxDays && this.userProgress[`day${this.currentDay}`].completed) {
+          this.goToDay(this.currentDay + 1);
+        }
+      }
+      
+      loadDayContent() {
+        // Hide all day content
+        document.querySelectorAll('.day-content').forEach(content => {
+          content.classList.add('hidden');
+        });
+        
+        // Show current day content
+        document.getElementById(`day${this.currentDay}`).classList.remove('hidden');
+        
+        // Load day-specific content if not already loaded
+        if (this.currentDay === 2 && !this.day2Loaded) {
+          this.loadDay2Content();
+        } else if (this.currentDay === 3 && !this.day3Loaded) {
+          this.loadDay3Content();
+        }
+      }
+      
+      loadDay2Content() {
+        const day2Content = document.getElementById('day2');
+        day2Content.innerHTML = `
+          <!-- Context Card -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
+                <span class="text-white font-bold text-xl">2</span>
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-slate-900">Help Users Get Past 'About Me'</h2>
+                <p class="text-slate-600">Design helper UX solutions</p>
+              </div>
+            </div>
+            
+            <div class="prose prose-slate max-w-none">
+              <p class="text-lg text-slate-700 leading-relaxed mb-6">
+                Yesterday, you found the pain point: users freeze at 'About Me'.
+                Today, task is to design helper UX solutions: lighten, guide, or break down the task.
+              </p>
+            </div>
+          </div>
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Server error');
+          <!-- Team Chat -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+              </span>
+              Team Chat
+            </h3>
+            
+            <div class="space-y-4">
+              <div class="chat-bubble flex items-start gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-white font-bold text-sm">A</span>
+                </div>
+                <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                  <div class="font-semibold text-slate-900 text-sm">Ally (Lead UX)</div>
+                  <div class="text-slate-700">We can't leave users alone with a blank box. Need a nudge.</div>
+                </div>
+              </div>
+              
+              <div class="chat-bubble flex items-start gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-white font-bold text-sm">J</span>
+                </div>
+                <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                  <div class="font-semibold text-slate-900 text-sm">Josh (PM)</div>
+                  <div class="text-slate-700">LinkedIn uses examples, Notion suggests phrases. Can we do something simple?</div>
+                </div>
+              </div>
+              
+              <div class="chat-bubble flex items-start gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-white font-bold text-sm">A</span>
+                </div>
+                <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                  <div class="font-semibold text-slate-900 text-sm">Ally (Lead UX)</div>
+                  <div class="text-slate-700">Exactly. UX is often about small nudges, not big features.</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        // Показать фидбек
-        out.classList.remove('hidden');
-        out.innerHTML = `
-          <div class="text-sm text-slate-500 mb-2">AI feedback · score: <b>${data.score ?? 0}</b></div>
-          <div class="text-slate-800 text-sm leading-6 whitespace-pre-wrap">${(data.aiFeedback || '').trim
+          <!-- AI Mentor -->
+          <div class="bg-gradient-to-br from-brand-50 to-blue-50 rounded-3xl border border-brand-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+              </span>
+              AI Mentor Guidance
+            </h3>
+            
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-brand-200">
+              <p class="text-slate-700 leading-relaxed italic">
+                "Your role: reduce cognitive load. One big scary task should be transformed into small, guided steps."
+              </p>
+            </div>
+          </div>
+
+          <!-- Task 1 -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              Task 1: What could be added inside the text box?
+            </h3>
+            
+            <div class="mb-6">
+              <div class="space-y-3" id="task2aOptions">
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="A">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">A</div>
+                    <span class="text-slate-700">Placeholder: 'I am a marketing specialist with 5 years...'</span>
+                  </div>
+                </div>
+                
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="B">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">B</div>
+                    <span class="text-slate-700">Example displayed on the side</span>
+                  </div>
+                </div>
+                
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="C">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">C</div>
+                    <span class="text-slate-700">Button 'Show Example'</span>
+                  </div>
+                </div>
+                
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="D">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">D</div>
+                    <span class="text-slate-700">Break into 3 smaller questions instead of one big field</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <button id="submitTask2a" class="bg-brand-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              Submit Answer
+            </button>
+            
+            <div id="task2aFeedback" class="hidden mt-6 p-4 rounded-xl"></div>
+          </div>
+
+          <!-- Learning Outcomes -->
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl border border-green-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </span>
+              Learning Outcomes
+            </h3>
+            
+            <ul class="space-y-3">
+              <li class="flex items-start gap-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                <span class="text-slate-700">Learned to brainstorm multiple UX fixes</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                <span class="text-slate-700">Saw power of small nudges in forms</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                <span class="text-slate-700">Compared trade-offs (psychology vs dev cost)</span>
+              </li>
+            </ul>
+          </div>
+        `;
+        
+        // Bind events for Day 2 tasks
+        this.bindDay2Events();
+        
+        this.day2Loaded = true;
+      }
+      
+      bindDay2Events() {
+        // Task 2a option selection
+        document.querySelectorAll('#task2aOptions .task-option').forEach(option => {
+          option.addEventListener('click', () => this.selectTaskOption(option, 'task2a'));
+        });
+        
+        // Task 2a submission
+        document.getElementById('submitTask2a').addEventListener('click', () => this.submitTask2a());
+      }
+      
+      loadDay3Content() {
+        const day3Content = document.getElementById('day3');
+        day3Content.innerHTML = `
+          <!-- Context Card -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center">
+                <span class="text-white font-bold text-xl">3</span>
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-slate-900">Visualizing the Fix</h2>
+                <p class="text-slate-600">Show your solution to the team</p>
+              </div>
+            </div>
+            
+            <div class="prose prose-slate max-w-none">
+              <p class="text-lg text-slate-700 leading-relaxed mb-6">
+                Yesterday you proposed UX ideas. Today you must SHOW them.
+                Even a napkin sketch is enough — the goal is clarity for the team.
+              </p>
+            </div>
+          </div>
+
+          <!-- Team Chat -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+              </span>
+              Team Chat
+            </h3>
+            
+            <div class="space-y-4">
+              <div class="chat-bubble flex items-start gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-white font-bold text-sm">J</span>
+                </div>
+                <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                  <div class="font-semibold text-slate-900 text-sm">Josh (PM)</div>
+                  <div class="text-slate-700">Great ideas yesterday. Now I need to SEE what it looks like.</div>
+                </div>
+              </div>
+              
+              <div class="chat-bubble flex items-start gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-white font-bold text-sm">A</span>
+                </div>
+                <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
+                  <div class="font-semibold text-slate-900 text-sm">Ally (UX Lead)</div>
+                  <div class="text-slate-700">Yes, even a simple mockup is fine. We can't test what we can't visualize.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Mentor -->
+          <div class="bg-gradient-to-br from-brand-50 to-blue-50 rounded-3xl border border-brand-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+              </span>
+              AI Mentor Guidance
+            </h3>
+            
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-brand-200">
+              <p class="text-slate-700 leading-relaxed italic">
+                "Don't aim for beauty. Clarity > polish. Show how the solution changes the user's journey."
+              </p>
+            </div>
+          </div>
+
+          <!-- Final Task -->
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </span>
+              Final Task: How would you visualize your solution?
+            </h3>
+            
+            <div class="mb-6">
+              <div class="space-y-3" id="task3Options">
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="A">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">A</div>
+                    <span class="text-slate-700">Grey placeholder inside text box ('I'm a data analyst with 3 years…')</span>
+                  </div>
+                </div>
+                
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="B">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">B</div>
+                    <span class="text-slate-700">Button near heading: 'Show Example'</span>
+                  </div>
+                </div>
+                
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="C">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">C</div>
+                    <span class="text-slate-700">Break one field → three small input fields</span>
+                  </div>
+                </div>
+                
+                <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="D">
+                  <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">D</div>
+                    <span class="text-slate-700">Friendly tip text below field</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <button id="submitTask3" class="bg-brand-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              Submit Answer
+            </button>
+            
+            <div id="task3Feedback" class="hidden mt-6 p-4 rounded-xl"></div>
+          </div>
+
+          <!-- Final Learning Outcomes -->
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl border border-green-200 p-8 shadow-card day-card">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+              <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </span>
+              Learning Outcomes
+            </h3>
+            
+            <ul class="space-y-3">
+              <li class="flex items-start gap-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                <span class="text-slate-700">Practiced turning abstract idea → concrete UI</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                <span class="text-slate-700">Prepared a clear pitch to team</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                <span class="text-slate-700">Learned that UX design = empathy + clarity, not just visuals</span>
+              </li>
+            </ul>
+          </div>
+        `;
+        
+        // Bind events for Day 3 tasks
+        this.bindDay3Events();
+        
+        this.day3Loaded = true;
+      }
+      
+      bindDay3Events() {
+        // Task 3 option selection
+        document.querySelectorAll('#task3Options .task-option').forEach(option => {
+          option.addEventListener('click', () => this.selectTaskOption(option, 'task3'));
+        });
+        
+        // Task 3 submission
+        document.getElementById('submitTask3').addEventListener('click', () => this.submitTask3());
+      }
+      
+      selectTaskOption(option, taskId = 'task1') {
+        // Remove previous selection for this specific task
+        const taskContainer = option.closest('.day-card');
+        taskContainer.querySelectorAll('.task-option').forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        
+        // Select new option
+        option.classList.add('selected');
+        
+        // Enable submit button for this task
+        const submitBtn = taskContainer.querySelector('button[id^="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+        }
+      }
+      
+      submitTask1() {
+        const selectedOption = document.querySelector('#task1Options .task-option.selected');
+        if (!selectedOption) return;
+        
+        const userAnswer = selectedOption.dataset.option;
+        const correctAnswer = 'A';
+        const isCorrect = userAnswer === correctAnswer;
+        
+        // Show feedback
+        const feedbackDiv = document.getElementById('task1Feedback');
+        feedbackDiv.classList.remove('hidden');
+        
+        if (isCorrect) {
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200';
+          feedbackDiv.innerHTML = `
+            <div class="flex items-center gap-3 text-green-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="font-semibold">Correct!</span>
+            </div>
+            <p class="mt-2 text-green-700">
+              Psychological barrier: self-presentation creates anxiety. 
+              Data shows the drop is at a single field, not overall fatigue.
+            </p>
+          `;
+          
+          // Mark day as completed
+          this.userProgress.day1.completed = true;
+          this.userProgress.day1.score = 100;
+          this.userProgress.day1.tasksCompleted = 1;
+          this.updateProgress();
+          this.showNotification('Day 1 completed! You can now proceed to Day 2.', 'success');
+        } else {
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-red-50 border border-red-200';
+          feedbackDiv.innerHTML = `
+            <div class="flex items-center gap-3 text-red-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              <span class="font-semibold">Not quite right</span>
+            </div>
+            <p class="mt-2 text-red-700">
+              Think about the psychology. The data shows users freeze at a specific field, 
+              not because the form is too long or technical issues.
+            </p>
+          `;
+        }
+        
+        // Disable submit button
+        document.getElementById('submitTask1').disabled = true;
+      }
+      
+      submitTask2a() {
+        const selectedOption = document.querySelector('#task2aOptions .task-option.selected');
+        if (!selectedOption) return;
+        
+        const userAnswer = selectedOption.dataset.option;
+        const correctAnswers = ['A', 'D']; // Multiple correct answers
+        const isCorrect = correctAnswers.includes(userAnswer);
+        
+        // Show feedback
+        const feedbackDiv = document.getElementById('task2aFeedback');
+        feedbackDiv.classList.remove('hidden');
+        
+        if (isCorrect) {
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200';
+          feedbackDiv.innerHTML = `
+            <div class="flex items-center gap-3 text-green-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="font-semibold">Great thinking!</span>
+            </div>
+            <p class="mt-2 text-green-700">
+              Both placeholder text and breaking into smaller questions are excellent UX solutions. 
+              They reduce cognitive load and give users clear starting points.
+            </p>
+          `;
+          
+          // Update progress
+          this.userProgress.day2.tasksCompleted = Math.min(this.userProgress.day2.tasksCompleted + 1, this.userProgress.day2.totalTasks);
+          
+          // Check if day is completed
+          if (this.userProgress.day2.tasksCompleted >= this.userProgress.day2.totalTasks) {
+            this.userProgress.day2.completed = true;
+            this.userProgress.day2.score = 100;
+            this.showNotification('Day 2 completed! You can now proceed to Day 3.', 'success');
+          }
+          
+          this.updateProgress();
+        } else {
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-red-50 border border-red-200';
+          feedbackDiv.innerHTML = `
+            <div class="flex items-center gap-3 text-red-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              <span class="font-semibold">Not quite right</span>
+            </div>
+            <p class="mt-2 text-red-700">
+              Think about reducing cognitive load. Users need help getting started, 
+              not just more options to choose from.
+            </p>
+          `;
+        }
+        
+        // Disable submit button
+        document.getElementById('submitTask2a').disabled = true;
+      }
+      
+      submitTask3() {
+        const selectedOption = document.querySelector('#task3Options .task-option.selected');
+        if (!selectedOption) return;
+        
+        const userAnswer = selectedOption.dataset.option;
+        const correctAnswers = ['A', 'C']; // Multiple correct answers
+        const isCorrect = correctAnswers.includes(userAnswer);
+        
+        // Show feedback
+        const feedbackDiv = document.getElementById('task3Feedback');
+        feedbackDiv.classList.remove('hidden');
+        
+        if (isCorrect) {
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200';
+          feedbackDiv.innerHTML = `
+            <div class="flex items-center gap-3 text-green-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="font-semibold">Excellent!</span>
+            </div>
+            <p class="mt-2 text-green-700">
+              Perfect! You've identified the most effective visual solutions. 
+              Both placeholder text and breaking into smaller fields provide clear visual guidance.
+            </p>
+          `;
+          
+          // Mark day as completed
+          this.userProgress.day3.completed = true;
+          this.userProgress.day3.score = 100;
+          this.userProgress.day3.tasksCompleted = 1;
+          this.updateProgress();
+          this.showNotification('Congratulations! You have completed the UX Designer Simulator!', 'success');
+        } else {
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-red-50 border border-red-200';
+          feedbackDiv.innerHTML = `
+            <div class="flex items-center gap-3 text-red-700">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              <span class="font-semibold">Not quite right</span>
+            </div>
+            <p class="mt-2 text-red-700">
+              Think about what provides the most immediate visual help to users. 
+              They need clear starting points, not just additional buttons or text.
+            </p>
+          `;
+        }
+        
+        // Disable submit button
+        document.getElementById('submitTask3').disabled = true;
+      }
+      
+      updateProgress() {
+        const completedDays = Object.values(this.userProgress).filter(day => day.completed).length;
+        const progressPercent = Math.round((completedDays / this.maxDays) * 100);
+        
+        document.getElementById('currentDay').textContent = this.currentDay;
+        document.getElementById('progressPercent').textContent = `${progressPercent}%`;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+        
+        // Update navigation buttons
+        this.updateNavigationButtons();
+      }
+      
+      updateNavigationButtons() {
+        document.getElementById('prevDay').disabled = this.currentDay === 1;
+        document.getElementById('nextDay').disabled = !this.userProgress[`day${this.currentDay}`].completed || this.currentDay === this.maxDays;
+      }
+      
+      updateDayNavigation() {
+        document.querySelectorAll('.day-nav-btn').forEach((btn, index) => {
+          const dayNumber = index + 1;
+          btn.classList.remove('active', 'bg-brand-600', 'text-white', 'bg-green-500', 'bg-slate-100', 'text-slate-700');
+          
+          if (dayNumber === this.currentDay) {
+            btn.classList.add('active', 'bg-brand-600', 'text-white');
+          } else if (this.userProgress[`day${dayNumber}`].completed) {
+            btn.classList.add('bg-green-500', 'text-white');
+          } else if (this.canAccessDay(dayNumber)) {
+            btn.classList.add('bg-slate-100', 'text-slate-700');
+          } else {
+            btn.classList.add('bg-slate-300', 'text-slate-500');
+            btn.disabled = true;
+          }
+        });
+      }
+    }
+    
+    // Initialize simulator when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      new UXSimulator();
+    });
+  </script>
+</body>
+</html>
