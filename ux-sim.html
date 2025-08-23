@@ -317,15 +317,60 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                   </svg>
                 </span>
-                AI Mentor Guidance
+                AI Mentor - Interactive Chat
               </h3>
               
-              <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-brand-200">
-                <p class="text-slate-700 leading-relaxed italic">
-                  "Step into the user's shoes. Imagine you're stressed about finding a job, 
-                  and suddenly you face a blank box saying 'Summarize yourself'. 
-                  Would you feel confident — or freeze?"
-                </p>
+              <!-- AI Mentor Chat Interface -->
+              <div class="bg-white/80 backdrop-blur-sm rounded-2xl border border-brand-200">
+                <!-- Chat Messages -->
+                <div id="aiChatMessages" class="h-64 overflow-y-auto p-4 space-y-4">
+                  <!-- Initial AI message -->
+                  <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                      </svg>
+                    </div>
+                    <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
+                      <div class="font-semibold text-brand-900 text-sm">AI Mentor</div>
+                      <div class="text-brand-800">
+                        Привет! Я твой AI ментор на сегодня. Задавай любые вопросы о UX дизайне, 
+                        аналитике, или работе в команде. Я здесь, чтобы помочь тебе учиться и расти!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="border-t border-brand-200 p-4">
+                  <div class="flex gap-3">
+                    <input 
+                      type="text" 
+                      id="aiChatInput" 
+                      placeholder="Задай вопрос AI ментору..." 
+                      class="flex-1 px-4 py-2 border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                    >
+                    <button 
+                      id="aiChatSend" 
+                      class="bg-brand-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Отправить
+                    </button>
+                  </div>
+                  
+                  <!-- Suggested Questions -->
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                      Как анализировать heatmap?
+                    </button>
+                    <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                      Что делать с высокой bounce rate?
+                    </button>
+                    <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
+                      Как улучшить UX формы?
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -476,6 +521,178 @@
         document.querySelectorAll('#task1Options .task-option').forEach(option => {
           option.addEventListener('click', () => this.selectTaskOption(option));
         });
+        
+        // AI Mentor Chat
+        this.bindAIMentorEvents();
+      }
+      
+      bindAIMentorEvents() {
+        const chatInput = document.getElementById('aiChatInput');
+        const sendButton = document.getElementById('aiChatSend');
+        const suggestedQuestions = document.querySelectorAll('.suggested-question');
+        
+        // Send message on Enter key
+        chatInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            this.sendAIMessage();
+          }
+        });
+        
+        // Send message on button click
+        sendButton.addEventListener('click', () => {
+          this.sendAIMessage();
+        });
+        
+        // Suggested questions
+        suggestedQuestions.forEach(btn => {
+          btn.addEventListener('click', () => {
+            chatInput.value = btn.textContent;
+            this.sendAIMessage();
+          });
+        });
+      }
+      
+      sendAIMessage() {
+        const chatInput = document.getElementById('aiChatInput');
+        const message = chatInput.value.trim();
+        
+        if (!message) return;
+        
+        // Add user message to chat
+        this.addChatMessage(message, 'user');
+        
+        // Clear input
+        chatInput.value = '';
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+        
+        // Simulate AI thinking and response
+        setTimeout(() => {
+          this.hideTypingIndicator();
+          const aiResponse = this.generateAIResponse(message);
+          this.addChatMessage(aiResponse, 'ai');
+        }, 1500 + Math.random() * 1000); // Random delay for realism
+      }
+      
+      addChatMessage(message, sender) {
+        const chatMessages = document.getElementById('aiChatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex items-start gap-3';
+        
+        if (sender === 'user') {
+          messageDiv.innerHTML = `
+            <div class="ml-auto">
+              <div class="bg-brand-600 text-white rounded-2xl px-4 py-3 max-w-md">
+                <div class="text-sm">${message}</div>
+              </div>
+            </div>
+          `;
+        } else {
+          messageDiv.innerHTML = `
+            <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
+              <div class="font-semibold text-brand-900 text-sm">AI Mentor</div>
+              <div class="text-brand-800">${message}</div>
+            </div>
+          `;
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      
+      showTypingIndicator() {
+        const chatMessages = document.getElementById('aiChatMessages');
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typingIndicator';
+        typingDiv.className = 'flex items-start gap-3';
+        typingDiv.innerHTML = `
+          <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <div class="bg-brand-100 rounded-2xl px-4 py-3">
+            <div class="flex space-x-1">
+              <div class="w-2 h-2 bg-brand-400 rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-brand-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+              <div class="w-2 h-2 bg-brand-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+          </div>
+        `;
+        
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      
+      hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+      
+      generateAIResponse(userMessage) {
+        const message = userMessage.toLowerCase();
+        
+        // AI Mentor responses based on user questions
+        if (message.includes('heatmap') || message.includes('анализ')) {
+          return `Отличный вопрос! Heatmap показывает, где пользователи кликают чаще всего. 
+          Красные зоны = высокая активность, синие = низкая. 
+          Смотри на паттерны: если пользователи кликают не там, где должны - это сигнал для улучшения UX.`;
+        }
+        
+        if (message.includes('bounce') || message.includes('отскок')) {
+          return `Высокий bounce rate означает, что пользователи уходят с первой страницы. 
+          Возможные причины: медленная загрузка, непонятный контент, или плохой UX. 
+          Попробуй A/B тесты заголовков и первых экранов.`;
+        }
+        
+        if (message.includes('форма') || message.includes('ux')) {
+          return `Для улучшения UX формы: 1) Упрости - убирай лишние поля, 2) Добавь прогресс-бар, 
+          3) Используй placeholder текст, 4) Показывай ошибки сразу, 5) Тестируй на реальных пользователях. 
+          Помни: каждая лишняя секунда = потеря пользователя.`;
+        }
+        
+        if (message.includes('команда') || message.includes('team')) {
+          return `Работа в команде - это ключ к успеху! Общайся с разработчиками, 
+          понимай их ограничения, объясняй свои решения. 
+          Coffee break - отличное время для неформального общения и генерации идей.`;
+        }
+        
+        if (message.includes('аналитика') || message.includes('data')) {
+          return `Данные - твой лучший друг! Смотри на метрики: время на странице, 
+          конверсия, путь пользователя. Но не забывай про качественные исследования - 
+          интервью с пользователями дают понимание "почему", а не только "что".`;
+        }
+        
+        if (message.includes('figma') || message.includes('дизайн')) {
+          return `Figma - мощный инструмент для коллаборации! Используй компоненты, 
+          создавай библиотеки, тестируй прототипы. 
+          Помни: дизайн должен решать проблемы пользователей, а не просто выглядеть красиво.`;
+        }
+        
+        // Default response for other questions
+        const defaultResponses = [
+          `Интересный вопрос! В UX дизайне важно всегда думать о пользователе. 
+          Что бы ты сделал, если бы был на его месте?`,
+          
+          `Отличная мысль! Помни, что хороший UX - это баланс между красотой и функциональностью. 
+          Всегда тестируй свои идеи на реальных пользователях.`,
+          
+          `Хороший вопрос! В нашей работе важно постоянно учиться и экспериментировать. 
+          Не бойся пробовать новое и получать обратную связь.`,
+          
+          `Отлично! Ты на правильном пути. UX дизайн - это не только про интерфейсы, 
+          но и про понимание психологии пользователей и бизнес-целей.`
+        ];
+        
+        return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
       }
       
       goToDay(day) {
