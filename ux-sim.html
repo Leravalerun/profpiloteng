@@ -596,6 +596,83 @@
         animation-delay: 0.1s !important;
       }
     }
+    
+    /* AI Agent Styles */
+    #aiAgentCircle {
+      animation: floating 3s ease-in-out infinite;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    }
+    
+    #aiAgentCircle:hover {
+      animation: none;
+      transform: scale(1.1);
+    }
+    
+    #aiAgentModal {
+      backdrop-filter: blur(8px);
+    }
+    
+    #aiAgentModal .bg-white {
+      animation: slideInUp 0.3s ease-out;
+    }
+    
+    #aiChatMessages {
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f1f5f9;
+    }
+    
+    #aiChatMessages::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #aiChatMessages::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    
+    #aiChatMessages::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    
+    #aiChatMessages::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    .suggested-question {
+      transition: all 0.2s ease;
+    }
+    
+    .suggested-question:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Assignment completion styles */
+    .assignment-completed {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border-color: #10b981;
+    }
+    
+    .assignment-completed .text-slate-700 {
+      color: white;
+    }
+    
+    .assignment-completed .text-slate-900 {
+      color: white;
+    }
+    
+    /* Coffee break enhancement */
+    .coffee-break-card {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #f59e0b;
+    }
+    
+    .coffee-break-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2);
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -1116,9 +1193,32 @@
         this.currentDay = 1;
         this.maxDays = 3;
         this.userProgress = {
-          day1: { completed: false, score: 0, tasksCompleted: 0, totalTasks: 1 },
-          day2: { completed: false, score: 0, tasksCompleted: 0, totalTasks: 3 },
-          day3: { completed: false, score: 0, tasksCompleted: 0, totalTasks: 1 }
+          day1: {
+            completed: false,
+            score: 0,
+            tasksCompleted: 0,
+            totalTasks: 1,
+            assignments: {
+              assignment1: false, // Onboarding microcopy
+              assignment2: false, // Design psychology
+              assignment3: false, // Help text strategy
+              final: false        // Day reflection
+            }
+          },
+          day2: {
+            completed: false,
+            score: 0,
+            tasksCompleted: 0,
+            totalTasks: 1,
+            assignments: {}
+          },
+          day3: {
+            completed: false,
+            score: 0,
+            tasksCompleted: 0,
+            totalTasks: 1,
+            assignments: {}
+          }
         };
         
         this.day2Loaded = false;
@@ -1129,12 +1229,18 @@
       
       init() {
         this.bindEvents();
+        this.bindDay1Events();
+        this.bindDay2Events();
+        this.bindDay3Events();
         this.updateProgress();
-        this.loadDayContent();
-        this.updateDayNavigation();
         this.updateNavigationButtons();
         this.initAnimations();
         this.initScrollAnimations();
+        this.initMicroInteractions();
+        this.initAIAgent(); // Initialize AI Agent
+        
+        // Show Day 1 by default
+        this.goToDay(1);
       }
       
       initAnimations() {
@@ -2439,22 +2545,58 @@
       }
       
       updateProgress() {
-        const completedDays = Object.values(this.userProgress).filter(day => day.completed).length;
-        const progressPercent = Math.round((completedDays / this.maxDays) * 100);
+        const progressBar = document.querySelector('.progress-bar-fill');
+        const progressText = document.querySelector('.progress-text');
         
-        document.getElementById('currentDay').textContent = this.currentDay;
-        document.getElementById('progressPercent').textContent = `${progressPercent}%`;
+        let totalCompleted = 0;
+        let totalAssignments = 0;
         
-        const progressBar = document.getElementById('progressBar');
-        if (progressBar) {
-          progressBar.style.width = `${progressPercent}%`;
-          
-          // Add enhanced progress bar effects
-          this.enhanceProgressBar();
-        }
+        // Count completed assignments across all days
+        Object.values(this.userProgress).forEach(day => {
+          if (day.assignments) {
+            Object.values(day.assignments).forEach(completed => {
+              totalAssignments++;
+              if (completed) totalCompleted++;
+            });
+          }
+        });
         
-        // Update navigation buttons
-        this.updateNavigationButtons();
+        const progressPercentage = totalAssignments > 0 ? (totalCompleted / totalAssignments) * 100 : 0;
+        
+        progressBar.style.width = `${progressPercentage}%`;
+        progressText.textContent = `${totalCompleted}/${totalAssignments} assignments completed`;
+        
+        // Update assignment status display
+        this.updateAssignmentStatus();
+        
+        // Enhance progress bar with shimmer
+        this.enhanceProgressBar();
+      }
+      
+      // Update assignment status display
+      updateAssignmentStatus() {
+        const day1Assignments = document.querySelectorAll('[id*="assignment"]');
+        
+        day1Assignments.forEach(assignment => {
+          const assignmentId = assignment.id;
+          if (assignmentId.includes('assignment')) {
+            const assignmentNumber = assignmentId.replace('assignment', '');
+            const isCompleted = this.userProgress.day1.assignments[`assignment${assignmentNumber}`];
+            
+            if (isCompleted) {
+              assignment.classList.add('assignment-completed');
+              // Add completion checkmark
+              const checkmark = assignment.querySelector('.completion-checkmark');
+              if (!checkmark) {
+                const checkDiv = document.createElement('div');
+                checkDiv.className = 'completion-checkmark absolute top-4 right-4 w-6 h-6 bg-white rounded-full flex items-center justify-center';
+                checkDiv.innerHTML = '<span class="text-green-600 text-sm">✓</span>';
+                assignment.style.position = 'relative';
+                assignment.appendChild(checkDiv);
+              }
+            }
+          }
+        });
       }
       
       updateNavigationButtons() {
@@ -3014,6 +3156,278 @@
         document.getElementById('submitFeedback').disabled = true;
         document.getElementById('submitFeedback').textContent = 'Feedback Submitted ✓';
       }
+      
+      // Initialize AI Agent
+      initAIAgent() {
+        const aiAgentCircle = document.getElementById('aiAgentCircle');
+        const aiAgentModal = document.getElementById('aiAgentModal');
+        const closeAIModal = document.getElementById('closeAIModal');
+        
+        // Open AI Agent
+        aiAgentCircle.addEventListener('click', () => {
+          aiAgentModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        });
+        
+        // Close AI Agent
+        closeAIModal.addEventListener('click', () => {
+          aiAgentModal.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        });
+        
+        // Close on outside click
+        aiAgentModal.addEventListener('click', (e) => {
+          if (e.target === aiAgentModal) {
+            aiAgentModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+          }
+        });
+        
+        // Bind AI chat events
+        this.bindAIChatEvents();
+      }
+      
+      // Bind AI Chat Events
+      bindAIChatEvents() {
+        const aiChatInput = document.getElementById('aiChatInput');
+        const aiChatSend = document.getElementById('aiChatSend');
+        const suggestedQuestions = document.querySelectorAll('.suggested-question');
+        
+        // Send message on Enter
+        aiChatInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            this.sendAIMessage();
+          }
+        });
+        
+        // Send message on button click
+        aiChatSend.addEventListener('click', () => {
+          this.sendAIMessage();
+        });
+        
+        // Suggested questions
+        suggestedQuestions.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const question = btn.dataset.question;
+            aiChatInput.value = question;
+            this.sendAIMessage();
+          });
+        });
+      }
+      
+      // Send AI Message
+      sendAIMessage() {
+        const input = document.getElementById('aiChatInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        // Add user message
+        this.addAIChatMessage(message, 'user');
+        input.value = '';
+        
+        // Show typing indicator
+        this.showAITypingIndicator();
+        
+        // Generate AI response
+        setTimeout(() => {
+          this.hideAITypingIndicator();
+          const response = this.generateAIResponse(message);
+          this.addAIChatMessage(response, 'ai');
+          
+          // Check if this completes an assignment
+          this.checkAssignmentCompletion(message, response);
+        }, 1500);
+      }
+      
+      // Add AI Chat Message
+      addAIChatMessage(message, sender) {
+        const chatMessages = document.getElementById('aiChatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex items-start gap-3 mb-4 ${sender === 'user' ? 'justify-end' : ''}`;
+        
+        if (sender === 'user') {
+          messageDiv.innerHTML = `
+            <div class="bg-brand-600 text-white rounded-2xl p-3 max-w-xs">
+              <p class="text-sm">${message}</p>
+            </div>
+            <div class="w-8 h-8 bg-gradient-to-br from-slate-500 to-slate-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-xs">👤</span>
+            </div>
+          `;
+        } else {
+          messageDiv.innerHTML = `
+            <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-sm">🤖</span>
+            </div>
+            <div class="bg-slate-100 rounded-2xl p-3 max-w-xs">
+              <p class="text-slate-700 text-sm">${message}</p>
+            </div>
+          `;
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      
+      // Show AI Typing Indicator
+      showAITypingIndicator() {
+        const chatMessages = document.getElementById('aiChatMessages');
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'aiTypingIndicator';
+        typingDiv.className = 'flex items-start gap-3 mb-4';
+        typingDiv.innerHTML = `
+          <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-sm">🤖</span>
+          </div>
+          <div class="bg-slate-100 rounded-2xl p-3">
+            <div class="flex space-x-1">
+              <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+              <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+          </div>
+        `;
+        
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+      
+      // Hide AI Typing Indicator
+      hideAITypingIndicator() {
+        const typingIndicator = document.getElementById('aiTypingIndicator');
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+      
+      // Generate AI Response
+      generateAIResponse(userMessage) {
+        const message = userMessage.toLowerCase();
+        
+        // Assignment-specific responses
+        if (message.includes('onboarding') && message.includes('microcopy')) {
+          return "Great question! Good onboarding microcopy should be welcoming, not overwhelming. Think about using friendly language like 'Tell us a bit about yourself' instead of 'Complete your profile.' The key is reducing cognitive load while making users feel supported. What specific microcopy ideas did you come up with?";
+        }
+        
+        if (message.includes('red') && message.includes('button')) {
+          return "Interesting question! Red buttons can create urgency but also anxiety. In UX, red often means 'danger' or 'stop.' For a Save button, consider your brand's color psychology and accessibility. You could test this with A/B testing - measure completion rates, user feedback, and accessibility compliance. What's your hypothesis about why red might work?";
+        }
+        
+        if (message.includes('help text') && message.includes('balance')) {
+          return "Excellent question! The balance depends on your users' expertise level. Beginners need more guidance, experts prefer minimal text. Use progressive disclosure - show essential info first, then offer 'Learn more' options. Test with real users to find the sweet spot. What specific help text are you debating?";
+        }
+        
+        if (message.includes('learning') && message.includes('points')) {
+          return "Based on your day, here are your key learnings: 1) UX problems are often psychological, not just visual 2) Microcopy and guidance matter as much as design 3) Team collaboration fuels creativity 4) Data analysis reveals real user pain points. What surprised you most today?";
+        }
+        
+        // General UX responses
+        if (message.includes('design thinking')) {
+          return "Design thinking is all about empathy first! Start by understanding your users' real problems, not just the symptoms. Then ideate multiple solutions, prototype quickly, and test with real people. Remember: fail fast, learn faster!";
+        }
+        
+        if (message.includes('user research')) {
+          return "User research is the foundation of good UX! Methods include interviews, surveys, usability testing, and analytics. The key is asking 'why' repeatedly to get to the root cause. What specific research question are you exploring?";
+        }
+        
+        if (message.includes('wireframe')) {
+          return "Wireframes are your design skeleton! Start with low-fidelity sketches to focus on structure and flow, not visual details. Use them to test information architecture and user flows before adding polish. What are you wireframing today?";
+        }
+        
+        if (message.includes('accessibility')) {
+          return "Accessibility isn't just good practice - it's essential! Consider color contrast, keyboard navigation, screen readers, and cognitive load. Remember: accessible design is good design for everyone. What accessibility aspect are you working on?";
+        }
+        
+        // Default response
+        return "That's a great question! In UX design, context is everything. Could you tell me more about the specific problem you're trying to solve? That way I can give you more targeted advice.";
+      }
+      
+      // Check Assignment Completion
+      checkAssignmentCompletion(userMessage, aiResponse) {
+        const message = userMessage.toLowerCase();
+        
+        // Check if user completed Assignment 1 (onboarding microcopy)
+        if (message.includes('onboarding') && message.includes('microcopy') && !this.userProgress.day1.assignments?.assignment1) {
+          this.completeAssignment(1, 'assignment1');
+        }
+        
+        // Check if user completed Assignment 2 (red button psychology)
+        if (message.includes('red') && message.includes('button') && !this.userProgress.day1.assignments?.assignment2) {
+          this.completeAssignment(1, 'assignment2');
+        }
+        
+        // Check if user completed Assignment 3 (help text balance)
+        if (message.includes('help text') && message.includes('balance') && !this.userProgress.day1.assignments?.assignment3) {
+          this.completeAssignment(1, 'assignment3');
+        }
+        
+        // Check if user completed Final Assignment (day reflection)
+        if (message.includes('learning') && message.includes('points') && !this.userProgress.day1.assignments?.final) {
+          this.completeAssignment(1, 'final');
+        }
+      }
+      
+      // Complete Assignment
+      completeAssignment(day, assignmentName) {
+        if (!this.userProgress[`day${day}`].assignments) {
+          this.userProgress[`day${day}`].assignments = {};
+        }
+        
+        this.userProgress[`day${day}`].assignments[assignmentName] = true;
+        
+        // Show completion notification
+        this.showEnhancedNotification(`✅ Assignment completed: ${this.getAssignmentTitle(assignmentName)}`, 'success');
+        
+        // Check if all assignments are complete
+        this.checkDayCompletion(day);
+        
+        // Update progress
+        this.updateProgress();
+      }
+      
+      // Get Assignment Title
+      getAssignmentTitle(assignmentName) {
+        const titles = {
+          'assignment1': 'Onboarding Microcopy',
+          'assignment2': 'Design Psychology',
+          'assignment3': 'Help Text Strategy',
+          'final': 'Day Reflection'
+        };
+        return titles[assignmentName] || assignmentName;
+      }
+      
+      // Check Day Completion
+      checkDayCompletion(day) {
+        const dayProgress = this.userProgress[`day${day}`];
+        const assignments = dayProgress.assignments || {};
+        
+        // Check if all required assignments are complete
+        const requiredAssignments = this.getRequiredAssignments(day);
+        const allComplete = requiredAssignments.every(assignment => assignments[assignment]);
+        
+        if (allComplete) {
+          dayProgress.completed = true;
+          dayProgress.score = 100;
+          this.showEnhancedNotification(`🎉 Day ${day} completed! All assignments finished.`, 'success');
+          
+          // Enable next day if available
+          if (day < 3) {
+            setTimeout(() => {
+              this.showEnhancedNotification(`🚀 Day ${day + 1} is now unlocked!`, 'info');
+            }, 2000);
+          }
+        }
+      }
+      
+      // Get Required Assignments for Day
+      getRequiredAssignments(day) {
+        if (day === 1) {
+          return ['assignment1', 'assignment2', 'assignment3', 'final'];
+        }
+        // Add other days as needed
+        return [];
+      }
     }
     
     // Initialize simulator when page loads
@@ -3021,5 +3435,77 @@
       new UXSimulator();
     });
   </script>
+
+  <!-- Floating AI Agent -->
+  <div id="aiAgentCircle" class="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full shadow-2xl cursor-pointer z-50 hover:scale-110 transition-transform duration-300 flex items-center justify-center">
+    <span class="text-white text-2xl">🤖</span>
+  </div>
+
+  <!-- AI Agent Chat Modal -->
+  <div id="aiAgentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <span class="text-xl">🤖</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold">AI Design Mentor</h3>
+                <p class="text-brand-100 text-sm">Your constant companion throughout the day</p>
+              </div>
+            </div>
+            <button id="closeAIModal" class="text-white hover:text-brand-100 transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div id="aiChatMessages" class="p-6 h-96 overflow-y-auto">
+          <div class="flex items-start gap-3 mb-4">
+            <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <span class="text-white text-sm">🤖</span>
+            </div>
+            <div class="bg-slate-100 rounded-2xl p-3 max-w-xs">
+              <p class="text-slate-700 text-sm">Hi! I'm your AI Design Mentor. I'm here to help you throughout your UX journey today. What would you like to discuss?</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chat Input -->
+        <div class="p-6 border-t border-slate-200">
+          <div class="flex gap-3">
+            <input 
+              type="text" 
+              id="aiChatInput" 
+              placeholder="Ask me anything about UX design..." 
+              class="flex-1 px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+            >
+            <button id="aiChatSend" class="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
+              Send
+            </button>
+          </div>
+          
+          <!-- Suggested Questions -->
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button class="suggested-question px-3 py-2 text-sm bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors" data-question="How do I make onboarding less intimidating for new users?">
+              Onboarding tips
+            </button>
+            <button class="suggested-question px-3 py-2 text-sm bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors" data-question="What's the psychology behind button colors in UX?">
+              Button psychology
+            </button>
+            <button class="suggested-question px-3 py-2 text-sm bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors" data-question="How do I balance detailed help text with simplicity?">
+              Help text balance
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
