@@ -56,61 +56,32 @@
       scroll-behavior: smooth;
     }
     
-    .simulator-container {
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      min-height: 100vh;
+    /* Enhanced Card Hover Effects */
+    .card-hover { 
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+      transform-origin: center;
+    }
+    .card-hover:hover { 
+      transform: translateY(-8px) scale(1.02); 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     }
     
-    .day-card {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Gradient Text Animation */
+    .gradient-text {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease-in-out infinite;
     }
     
-    .day-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
     
-    .chat-bubble {
-      animation: slideUp 0.5s ease-out;
-      animation-fill-mode: both;
-    }
-    
-    .chat-bubble:nth-child(1) { animation-delay: 0.1s; }
-    .chat-bubble:nth-child(2) { animation-delay: 0.3s; }
-    .chat-bubble:nth-child(3) { animation-delay: 0.5s; }
-    .chat-bubble:nth-child(4) { animation-delay: 0.7s; }
-    
-    .progress-bar {
-      background: linear-gradient(90deg, #3b82f6 0%, #1e40af 100%);
-      transition: width 0.8s ease-in-out;
-    }
-    
-    .task-option {
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    
-    .task-option:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-    
-    .task-option.selected {
-      border-color: #3b82f6;
-      background: #eff6ff;
-      transform: scale(1.02);
-    }
-    
-    .task-option.correct {
-      border-color: #10b981;
-      background: #ecfdf5;
-    }
-    
-    .task-option.incorrect {
-      border-color: #ef4444;
-      background: #fef2f2;
-    }
-    
+    /* Floating Animation */
     .floating {
       animation: floating 3s ease-in-out infinite;
     }
@@ -120,11 +91,510 @@
       50% { transform: translateY(-10px); }
     }
     
-    .gradient-text {
-      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    /* Enhanced Entrance Animations */
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .animate-slide-up {
+      animation: slideUp 0.8s ease-out forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .animate-scale-in {
+      animation: scaleIn 0.6s ease-out forwards;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    
+    .animate-bounce-gentle {
+      animation: bounceGentle 2s ease-in-out infinite;
+    }
+    
+    /* Staggered Animation Delays */
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    
+    /* Enhanced Keyframes */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes scaleIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes bounceGentle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    /* Pulse Animation for Interactive Elements */
+    .pulse-gentle {
+      animation: pulseGentle 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulseGentle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    /* Shimmer Effect for Loading States */
+    .shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    /* Enhanced Task Option Interactions */
+    .task-option {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .task-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .task-option:hover::before {
+      left: 100%;
+    }
+    
+    .task-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .task-option.selected {
+      border-color: #3b82f6;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+    }
+    
+    .task-option.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      animation: scaleIn 0.3s ease-out;
+    }
+    
+    /* Enhanced Button Interactions */
+    .btn-primary {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+    
+    .btn-primary:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    /* Enhanced Chat Bubbles */
+    .chat-bubble {
+      animation: slideInLeft 0.5s ease-out forwards;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    
+    .chat-bubble:nth-child(1) { animation-delay: 0.1s; }
+    .chat-bubble:nth-child(2) { animation-delay: 0.3s; }
+    .chat-bubble:nth-child(3) { animation-delay: 0.5s; }
+    .chat-bubble:nth-child(4) { animation-delay: 0.7s; }
+    
+    @keyframes slideInLeft {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    /* Enhanced Progress Bar */
+    .progress-bar-container {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: progressShimmer 2s infinite;
+    }
+    
+    @keyframes progressShimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    /* Enhanced Day Navigation */
+    .day-nav-btn {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    
+    .day-nav-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: #3b82f6;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+    
+    .day-nav-btn:hover::after {
+      width: 100%;
+    }
+    
+    .day-nav-btn.active::after {
+      width: 100%;
+    }
+    
+    /* Enhanced AI Mentor Chat */
+    .ai-mentor-typing {
+      animation: typingPulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes typingPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    
+    /* Enhanced Notifications */
+    .notification {
+      animation: slideInDown 0.5s ease-out, slideOutUp 0.5s ease-in 2.5s forwards;
+    }
+    
+    @keyframes slideInDown {
+      from {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOutUp {
+      to {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+      }
+    }
+    
+    /* Enhanced Loading States */
+    .loading-dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+    
+    .loading-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: loadingBounce 1.4s ease-in-out infinite both;
+    }
+    
+    .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+    
+    @keyframes loadingBounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+      }
+      40% {
+        transform: scale(1);
+      }
+    }
+    
+    /* Enhanced Hover Effects for Cards */
+    .day-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+    }
+    
+    .day-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Enhanced Form Elements */
+    input, textarea {
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+    
+    input:focus, textarea:focus {
+      transform: scale(1.02);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    /* Enhanced Suggested Questions */
+    .suggested-question {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .suggested-question::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .suggested-question:hover::before {
+      left: 100%;
+    }
+    
+    .suggested-question:hover {
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Enhanced Success/Error States */
+    .success-animation {
+      animation: successPulse 0.6s ease-out;
+    }
+    
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .error-shake {
+      animation: errorShake 0.6s ease-out;
+    }
+    
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    /* Enhanced Scroll Animations */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Enhanced Mobile Menu */
+    .mobile-menu {
+      animation: slideInRight 0.3s ease-out;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    /* Enhanced Focus States */
+    .focus-ring:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      transform: scale(1.02);
+    }
+    
+    /* Enhanced Transitions for All Interactive Elements */
+    * {
+      transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+    
+    /* Confetti Animation */
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Ripple Effect */
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    /* Enhanced Progress Bar */
+    .progress-bar {
+      background: linear-gradient(90deg, #3b82f6 0%, #1e40af 100%);
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Enhanced Simulator Container */
+    .simulator-container {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      min-height: 100vh;
+    }
+    
+    /* Enhanced Day Cards */
+    .day-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .day-card.animate-fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    
+    .day-card.stagger-1 { animation-delay: 0.1s; }
+    .day-card.stagger-2 { animation-delay: 0.2s; }
+    .day-card.stagger-3 { animation-delay: 0.3s; }
+    .day-card.stagger-4 { animation-delay: 0.4s; }
+    .day-card.stagger-5 { animation-delay: 0.5s; }
+    
+    /* Enhanced Task Options */
+    .task-option.correct {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      animation: successPulse 0.6s ease-out;
+    }
+    
+    .task-option.incorrect {
+      border-color: #ef4444;
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      animation: errorShake 0.6s ease-out;
+    }
+    
+    /* Enhanced Chat Bubbles */
+    .chat-bubble {
+      animation: slideInLeft 0.5s ease-out forwards;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    
+    .chat-bubble:nth-child(1) { animation-delay: 0.1s; }
+    .chat-bubble:nth-child(2) { animation-delay: 0.3s; }
+    .chat-bubble:nth-child(3) { animation-delay: 0.5s; }
+    .chat-bubble:nth-child(4) { animation-delay: 0.7s; }
+    
+    /* Enhanced AI Mentor Typing */
+    .ai-mentor-typing .loading-dots span {
+      animation: typingPulse 1.5s ease-in-out infinite;
+    }
+    
+    .ai-mentor-typing .loading-dots span:nth-child(1) { animation-delay: 0s; }
+    .ai-mentor-typing .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-mentor-typing .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    
+    /* Enhanced Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .day-card {
+        margin: 1rem 0;
+      }
+      
+      .chat-bubble {
+        animation-delay: 0.1s !important;
+      }
+      
+      .stagger-1, .stagger-2, .stagger-3, .stagger-4, .stagger-5 {
+        animation-delay: 0.1s !important;
+      }
     }
   </style>
 </head>
@@ -211,105 +681,262 @@
         <div id="dayContent" class="space-y-8">
           
           <!-- Day 1 Content -->
-          <div id="day1" class="day-content active">
-            
+          <div id="day1" class="day-content">
             <!-- Context Card -->
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
               <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center">
                   <span class="text-white font-bold text-xl">1</span>
                 </div>
                 <div>
-                  <h2 class="text-2xl font-bold text-slate-900">Find the Drop-off Point</h2>
+                  <h2 class="text-2xl font-bold text-slate-900">Day 1 — Problem Discovery & Daily Routines</h2>
                   <p class="text-slate-600">Your first day on the design team</p>
                 </div>
               </div>
               
               <div class="prose prose-slate max-w-none">
                 <p class="text-lg text-slate-700 leading-relaxed mb-6">
-                  You join the design team of a startup. Users begin filling the registration form 
-                  (contacts, skills, summary, work experience). BUT: most quit at the "About Me" section.
+                  Welcome to your first day as a UX Designer! Today you'll experience the real rhythm of design work: 
+                  morning routines, team meetings, coffee breaks, and deep analysis sessions. 
+                  Your AI mentor will be with you throughout the day to guide and support you.
                 </p>
-                
-                <div class="bg-slate-50 rounded-2xl p-6 mb-6">
-                  <h4 class="font-semibold text-slate-900 mb-4">📊 Data Analysis:</h4>
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="text-center">
-                      <div class="text-2xl font-bold text-green-600">93%</div>
-                      <div class="text-sm text-slate-600">Contacts</div>
-                    </div>
-                    <div class="text-center">
-                      <div class="text-2xl font-bold text-green-600">71%</div>
-                      <div class="text-sm text-slate-600">Skills</div>
-                    </div>
-                    <div class="text-center">
-                      <div class="text-2xl font-bold text-red-600">38%</div>
-                      <div class="text-sm text-slate-600">About Me</div>
-                    </div>
-                    <div class="text-center">
-                      <div class="text-2xl font-bold text-orange-600">36%</div>
-                      <div class="text-sm text-slate-600">Quit Rate</div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
-            <!-- Team Chat -->
+            <!-- Morning Activities -->
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
               <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center">
                   <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M3 12h1m18 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </span>
-                Team Chat
+                Morning Activities (9:00 AM)
               </h3>
               
               <div class="space-y-4">
-                <div class="chat-bubble flex items-start gap-3">
-                  <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white font-bold text-sm">A</span>
-                  </div>
-                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
-                    <div class="font-semibold text-slate-900 text-sm">Ally (Lead UX)</div>
-                    <div class="text-slate-700">The funnel breaks at 'About Me'. People freeze there.</div>
+                <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl">
+                  <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Office arrival & setup</p>
+                    <p class="text-slate-700 text-sm">Set up your laptop, pour coffee, check emails</p>
                   </div>
                 </div>
                 
-                <div class="chat-bubble flex items-start gap-3">
-                  <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white font-bold text-sm">J</span>
-                  </div>
-                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
-                    <div class="font-semibold text-slate-900 text-sm">Josh (PM)</div>
-                    <div class="text-slate-700">Yep, data looks bad. Contacts fine, skills fine. But then... they drop.</div>
+                <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+                  <div class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Team sync meeting</p>
+                    <p class="text-slate-700 text-sm">Discuss registration funnel analytics with data analyst</p>
                   </div>
                 </div>
                 
-                <div class="chat-bubble flex items-start gap-3">
-                  <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white font-bold text-sm">A</span>
-                  </div>
-                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
-                    <div class="font-semibold text-slate-900 text-sm">Ally (Lead UX)</div>
-                    <div class="text-slate-700">Classic problem: writing about yourself is HARD.</div>
-                  </div>
-                </div>
-                
-                <div class="chat-bubble flex items-start gap-3">
-                  <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white font-bold text-sm">J</span>
-                  </div>
-                  <div class="bg-slate-100 rounded-2xl px-4 py-3 max-w-md">
-                    <div class="font-semibold text-slate-900 text-sm">Josh (PM)</div>
-                    <div class="text-slate-700">So, is it bad UI, or just psychology?</div>
+                <div class="flex items-start gap-3 p-4 bg-purple-50 rounded-xl">
+                  <div class="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Initial data review</p>
+                    <p class="text-slate-700 text-sm">Skim meeting notes, start ambient playlist for focus</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- AI Mentor -->
+            <!-- Coffee Break 1 -->
+            <div class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-3xl border border-orange-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                </span>
+                Coffee Break (10:30 AM)
+              </h3>
+              
+              <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-orange-200">
+                <p class="text-slate-700 leading-relaxed mb-4">
+                  <strong>Team gathering:</strong> The team meets in the lounge for coffee and casual conversation. 
+                  New interns join, and everyone chats about last night's TV show.
+                </p>
+                
+                <div class="bg-orange-100 rounded-xl p-4">
+                  <h4 class="font-semibold text-orange-900 mb-2">Quick Brainstorming:</h4>
+                  <p class="text-orange-800 text-sm">
+                    How can we make onboarding less intimidating for new users? 
+                    Create two fun microcopy ideas for onboarding tips.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Late Morning Work -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </span>
+                Late Morning Work (11:00 AM)
+              </h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl">
+                  <div class="w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Design tasks</p>
+                    <p class="text-slate-700 text-sm">Deliver SVG icons, help fix Figma bugs</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-3 p-4 bg-teal-50 rounded-xl">
+                  <div class="w-6 h-6 bg-teal-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Deep data analysis</p>
+                    <p class="text-slate-700 text-sm">Dive into heatmaps and click maps tracking user actions</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl">
+                  <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Team collaboration</p>
+                    <p class="text-slate-700 text-sm">Join Figma Jam session, start Slack polls</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lunch Break -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl border border-green-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                </span>
+                Lunch Break (1:00 PM)
+              </h3>
+              
+              <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-green-200">
+                <p class="text-slate-700 leading-relaxed mb-4">
+                  <strong>Team lunch:</strong> UI designers, developers, and HR gather around the table. 
+                  Someone shares a funny meme about dark mode debates.
+                </p>
+                
+                <div class="bg-green-100 rounded-xl p-4">
+                  <h4 class="font-semibold text-green-900 mb-2">Lunch Discussion:</h4>
+                  <p class="text-green-800 text-sm">
+                    Discuss new Figma plugin features and get inspired for micro-tests. 
+                    What would happen if we make the 'Save' button bright red?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Afternoon Sprint -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </span>
+                Afternoon Sprint (2:00 PM)
+              </h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 p-4 bg-purple-50 rounded-xl">
+                  <div class="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Mini sprint kick-off</p>
+                    <p class="text-slate-700 text-sm">Team debates quick UX tweaks and task assignments</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-3 p-4 bg-pink-50 rounded-xl">
+                  <div class="w-6 h-6 bg-pink-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Wireframe creation</p>
+                    <p class="text-slate-700 text-sm">Create two variations for the 'About Me' section</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-3 p-4 bg-indigo-50 rounded-xl">
+                  <div class="w-6 h-6 bg-indigo-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Content writing</p>
+                    <p class="text-slate-700 text-sm">Write beginner's guide: 'How to Not Be Afraid to Write About Yourself'</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Coffee Break 2 -->
+            <div class="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-3xl border border-orange-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-orange-500 to-yellow-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                </span>
+                Second Coffee Break (4:00 PM)
+              </h3>
+              
+              <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-orange-200">
+                <p class="text-slate-700 leading-relaxed mb-4">
+                  <strong>Afternoon refresh:</strong> Second coffee break with pastries. 
+                  An informal debate starts: should the 'About Me' field be optional at all?
+                </p>
+                
+                <div class="bg-yellow-100 rounded-xl p-4">
+                  <h4 class="font-semibold text-yellow-900 mb-2">Team Discussion:</h4>
+                  <p class="text-yellow-800 text-sm">
+                    Discuss ideas for Saturday team hackathon and challenge Ally over help-text length — 
+                    too detailed or just right?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- End of Day -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
+              <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span class="w-8 h-8 bg-gradient-to-br from-slate-500 to-gray-600 rounded-full flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                </span>
+                End of Day (5:00 PM)
+              </h3>
+              
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+                  <div class="w-6 h-6 bg-slate-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                  <div>
+                    <p class="font-medium text-slate-900">End-of-day sync</p>
+                    <p class="text-slate-700 text-sm">Everyone shares accomplishments and blockers</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+                  <div class="w-6 h-6 bg-gray-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Key insight summary</p>
+                    <p class="text-slate-700 text-sm">Summarize the day's main insight in one sentence</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start gap-3 p-4 bg-blue-50 rounded-xl">
+                  <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
+                  <div>
+                    <p class="font-medium text-slate-900">Documentation</p>
+                    <p class="text-slate-700 text-sm">Save all sketches, drafts, and notes for tomorrow</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Mentor - Constant Companion -->
             <div class="bg-gradient-to-br from-brand-50 to-blue-50 rounded-3xl border border-brand-200 p-8 shadow-card day-card">
               <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
                 <span class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
@@ -317,7 +944,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                   </svg>
                 </span>
-                AI Design Mentor - Interactive Chat
+                Your AI Mentor - Constant Companion
               </h3>
               
               <!-- AI Mentor Chat Interface -->
@@ -332,10 +959,11 @@
                       </svg>
                     </div>
                     <div class="bg-brand-100 rounded-2xl px-4 py-3 max-w-md">
-                      <div class="font-semibold text-brand-900 text-sm">AI Design Mentor</div>
+                      <div class="font-semibold text-brand-900 text-sm">AI Mentor</div>
                       <div class="text-brand-800">
-                        Hi! I'm your AI Design Mentor, specializing in UX/UI design, user research, and design thinking. 
-                        Ask me anything about design principles, tools, or creative problem-solving!
+                        Welcome to your first day! I'm here to guide you through every step. 
+                        Ask me anything about UX design, team dynamics, or today's challenges. 
+                        How are you feeling about the registration funnel analysis?
                       </div>
                     </div>
                   </div>
@@ -347,7 +975,7 @@
                     <input 
                       type="text" 
                       id="aiChatInput" 
-                      placeholder="Ask your AI Design Mentor..." 
+                      placeholder="Ask your AI Mentor anything..." 
                       class="flex-1 px-4 py-2 border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                     >
                     <button 
@@ -361,20 +989,20 @@
                   <!-- Suggested Questions -->
                   <div class="mt-3 flex flex-wrap gap-2">
                     <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
-                      How to analyze heatmaps?
+                      How to analyze user drop-off data?
                     </button>
                     <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
-                      What to do with high bounce rate?
+                      What makes a good team meeting?
                     </button>
                     <button class="suggested-question text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full hover:bg-brand-200 transition-colors">
-                      How to improve form UX?
+                      How to handle design feedback?
                     </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Task -->
+            <!-- Task 1: Identify the Problem -->
             <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-card day-card">
               <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
                 <span class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
@@ -382,11 +1010,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </span>
-                Your Task
+                Task 1: What's the main problem with the 'About Me' field?
               </h3>
               
               <div class="mb-6">
-                <h4 class="font-semibold text-slate-900 mb-3">Why do users stop at the 'About Me' field?</h4>
                 <div class="space-y-3" id="task1Options">
                   <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="A">
                     <div class="flex items-center gap-3">
@@ -405,7 +1032,7 @@
                   <div class="task-option border-2 border-slate-200 rounded-xl p-4 hover:border-slate-300" data-option="C">
                     <div class="flex items-center gap-3">
                       <div class="w-6 h-6 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-bold">C</div>
-                      <span class="text-slate-700">No progress bar</span>
+                      <span class="text-slate-700">Technical issues with the field</span>
                     </div>
                   </div>
                   
@@ -433,21 +1060,25 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                 </span>
-                Learning Outcomes
+                Day 1 Learning Outcomes
               </h3>
               
               <ul class="space-y-3">
                 <li class="flex items-start gap-3">
                   <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span class="text-slate-700">Analyzed behavior data (not just guessing visually)</span>
+                  <span class="text-slate-700">Experienced real UX work juggling analytics, creativity, support, and documentation</span>
                 </li>
                 <li class="flex items-start gap-3">
                   <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span class="text-slate-700">Found the exact point of friction</span>
+                  <span class="text-slate-700">Felt both the routine and exciting sides of the role</span>
                 </li>
                 <li class="flex items-start gap-3">
                   <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
-                  <span class="text-slate-700">Learned that UX blockers are often psychological, not technical</span>
+                  <span class="text-slate-700">Practiced receiving and using feedback effectively</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+                  <span class="text-slate-700">Understood the vital role of communication — from coffee breaks to standups</span>
                 </li>
               </ul>
             </div>
@@ -502,6 +1133,56 @@
         this.loadDayContent();
         this.updateDayNavigation();
         this.updateNavigationButtons();
+        this.initAnimations();
+        this.initScrollAnimations();
+      }
+      
+      initAnimations() {
+        // Add entrance animations to cards
+        document.querySelectorAll('.day-card').forEach((card, index) => {
+          card.classList.add('animate-fade-in', `stagger-${index + 1}`);
+        });
+        
+        // Add floating animation to logo
+        const logo = document.querySelector('.floating');
+        if (logo) {
+          logo.classList.add('floating');
+        }
+        
+        // Add gradient text animation to main heading
+        const mainHeading = document.querySelector('h1');
+        if (mainHeading) {
+          mainHeading.classList.add('gradient-text');
+        }
+      }
+      
+      initScrollAnimations() {
+        // Intersection Observer for scroll-triggered animations
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              
+              // Add staggered animations to child elements
+              const animatedChildren = entry.target.querySelectorAll('.animate-on-scroll');
+              animatedChildren.forEach((child, index) => {
+                setTimeout(() => {
+                  child.classList.add('animate-fade-in');
+                }, index * 100);
+              });
+            }
+          });
+        }, observerOptions);
+        
+        // Observe elements for scroll animations
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+          observer.observe(el);
+        });
       }
       
       bindEvents() {
@@ -824,8 +1505,8 @@
         // Create a modal or notification
         const message = `You need to complete Day ${day - 1} before accessing Day ${day}.`;
         
-        // Show a temporary notification
-        this.showNotification(message, 'warning');
+        // Show a temporary notification with enhanced animations
+        this.showEnhancedNotification(message, 'warning');
         
         // Automatically go to the previous incomplete day
         const previousDay = day - 1;
@@ -833,30 +1514,8 @@
       }
       
       showNotification(message, type = 'info') {
-        // Remove existing notification
-        const existingNotification = document.querySelector('.notification');
-        if (existingNotification) {
-          existingNotification.remove();
-        }
-        
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `notification fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-white font-medium shadow-lg transition-all duration-300 ${
-          type === 'warning' ? 'bg-orange-500' : 
-          type === 'success' ? 'bg-green-500' : 
-          'bg-blue-500'
-        }`;
-        notification.textContent = message;
-        
-        // Add to page
-        document.body.appendChild(notification);
-        
-        // Auto-remove after 3 seconds
-        setTimeout(() => {
-          notification.style.opacity = '0';
-          notification.style.transform = 'translate(-50%, -20px)';
-          setTimeout(() => notification.remove(), 300);
-        }, 3000);
+        // Use enhanced notification system
+        this.showEnhancedNotification(message, type);
       }
       
       previousDay() {
@@ -879,6 +1538,12 @@
         
         // Show current day content
         document.getElementById(`day${this.currentDay}`).classList.remove('hidden');
+        
+        // Add entrance animations to new content
+        setTimeout(() => {
+          this.initAnimations();
+          this.initMicroInteractions();
+        }, 100);
         
         // Load day-specific content if not already loaded
         if (this.currentDay === 2 && !this.day2Loaded) {
@@ -1239,12 +1904,12 @@
         const correctAnswers = ['A', 'B', 'C', 'D']; // All answers are valid approaches
         const isCorrect = correctAnswers.includes(userAnswer);
         
-        // Show feedback
+        // Show feedback with enhanced animations
         const feedbackDiv = document.getElementById('task2Feedback');
         feedbackDiv.classList.remove('hidden');
         
         if (isCorrect) {
-          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200';
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200 success-animation';
           feedbackDiv.innerHTML = `
             <div class="flex items-center gap-3 text-green-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1263,7 +1928,7 @@
           this.userProgress.day2.score = 100;
           this.userProgress.day2.tasksCompleted = 1;
           this.updateProgress();
-          this.showNotification('Day 2 completed! You can now proceed to Day 3.', 'success');
+          this.showEnhancedNotification('Day 2 completed! You can now proceed to Day 3.', 'success');
         }
         
         // Disable submit button
@@ -1278,12 +1943,12 @@
         const correctAnswers = ['A', 'B', 'C', 'D']; // All answers are valid strategies
         const isCorrect = correctAnswers.includes(userAnswer);
         
-        // Show feedback
+        // Show feedback with enhanced animations
         const feedbackDiv = document.getElementById('task3Feedback');
         feedbackDiv.classList.remove('hidden');
         
         if (isCorrect) {
-          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200';
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200 success-animation';
           feedbackDiv.innerHTML = `
             <div class="flex items-center gap-3 text-green-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1303,7 +1968,7 @@
           this.userProgress.day3.score = 100;
           this.userProgress.day3.tasksCompleted = 1;
           this.updateProgress();
-          this.showNotification('🎉 Congratulations! You have completed the UX Designer Simulator!', 'success');
+          this.showEnhancedNotification('🎉 Congratulations! You have completed the UX Designer Simulator!', 'success');
         }
         
         // Disable submit button
@@ -1723,12 +2388,12 @@
         const correctAnswer = 'A';
         const isCorrect = userAnswer === correctAnswer;
         
-        // Show feedback
+        // Show feedback with enhanced animations
         const feedbackDiv = document.getElementById('task1Feedback');
         feedbackDiv.classList.remove('hidden');
         
         if (isCorrect) {
-          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200';
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-green-50 border border-green-200 success-animation';
           feedbackDiv.innerHTML = `
             <div class="flex items-center gap-3 text-green-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1747,9 +2412,9 @@
           this.userProgress.day1.score = 100;
           this.userProgress.day1.tasksCompleted = 1;
           this.updateProgress();
-          this.showNotification('Day 1 completed! You can now proceed to Day 2.', 'success');
+          this.showEnhancedNotification('Day 1 completed! You can now proceed to Day 2.', 'success');
         } else {
-          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-red-50 border border-red-200';
+          feedbackDiv.className = 'mt-6 p-4 rounded-xl bg-red-50 border border-red-200 error-shake';
           feedbackDiv.innerHTML = `
             <div class="flex items-center gap-3 text-red-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1774,7 +2439,14 @@
         
         document.getElementById('currentDay').textContent = this.currentDay;
         document.getElementById('progressPercent').textContent = `${progressPercent}%`;
-        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+        
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+          progressBar.style.width = `${progressPercent}%`;
+          
+          // Add enhanced progress bar effects
+          this.enhanceProgressBar();
+        }
         
         // Update navigation buttons
         this.updateNavigationButtons();
@@ -1799,6 +2471,212 @@
           } else {
             btn.classList.add('bg-slate-300', 'text-slate-500');
             btn.disabled = true;
+          }
+        });
+      }
+      
+      addEnhancedTaskOption(option) {
+        // Add ripple effect
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple-effect';
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(59, 130, 246, 0.3);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          pointer-events: none;
+        `;
+        
+        option.appendChild(ripple);
+        
+        // Trigger ripple animation
+        const rect = option.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        
+        // Remove ripple after animation
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      }
+      
+      showEnhancedNotification(message, type = 'info') {
+        // Remove existing notification
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+          existingNotification.remove();
+        }
+        
+        // Create enhanced notification
+        const notification = document.createElement('div');
+        notification.className = `notification fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-xl text-white font-medium shadow-lg transition-all duration-300 ${
+          type === 'warning' ? 'bg-orange-500' : 
+          type === 'success' ? 'bg-green-500' : 
+          'bg-blue-500'
+        }`;
+        
+        // Add icon based on type
+        const icon = type === 'success' ? '🎉' : type === 'warning' ? '⚠️' : 'ℹ️';
+        notification.innerHTML = `${icon} ${message}`;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Enhanced exit animation
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translate(-50%, -20px) scale(0.95)';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+      
+      enhanceProgressBar() {
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+          // Add shimmer effect
+          progressBar.classList.add('progress-bar-container');
+          
+          // Animate progress with easing
+          const currentWidth = progressBar.style.width;
+          progressBar.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
+          
+          // Add completion celebration
+          if (currentWidth === '100%') {
+            this.celebrateCompletion();
+          }
+        }
+      }
+      
+      celebrateCompletion() {
+        // Create confetti effect
+        this.createConfetti();
+        
+        // Add success animation to progress bar
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+          progressBar.classList.add('success-animation');
+          setTimeout(() => {
+            progressBar.classList.remove('success-animation');
+          }, 600);
+        }
+      }
+      
+      createConfetti() {
+        const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+        
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement('div');
+          confetti.style.cssText = `
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            top: -10px;
+            left: ${Math.random() * 100}vw;
+            pointer-events: none;
+            z-index: 1000;
+            animation: confettiFall 3s linear forwards;
+          `;
+          
+          document.body.appendChild(confetti);
+          
+          // Remove confetti after animation
+          setTimeout(() => {
+            confetti.remove();
+          }, 3000);
+        }
+      }
+      
+      enhanceButtonInteractions() {
+        // Add enhanced button classes
+        document.querySelectorAll('button').forEach(btn => {
+          if (btn.classList.contains('bg-brand-600')) {
+            btn.classList.add('btn-primary');
+          }
+          btn.classList.add('focus-ring');
+        });
+        
+        // Add enhanced input classes
+        document.querySelectorAll('input, textarea').forEach(input => {
+          input.classList.add('focus-ring');
+        });
+      }
+      
+      enhanceDayNavigation() {
+        // Add enhanced navigation effects
+        document.querySelectorAll('.day-nav-btn').forEach(btn => {
+          btn.addEventListener('mouseenter', () => {
+            btn.style.transform = 'scale(1.05)';
+          });
+          
+          btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'scale(1)';
+          });
+        });
+      }
+      
+      addLoadingStates() {
+        // Add shimmer effect to loading elements
+        document.querySelectorAll('.loading').forEach(el => {
+          el.classList.add('shimmer');
+        });
+        
+        // Enhanced loading dots
+        document.querySelectorAll('.loading-dots').forEach(el => {
+          el.innerHTML = `
+            <span></span>
+            <span></span>
+            <span></span>
+          `;
+        });
+      }
+      
+      enhanceFormSubmissions() {
+        // Add success/error animations
+        document.querySelectorAll('form').forEach(form => {
+          form.addEventListener('submit', (e) => {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+              submitBtn.classList.add('pulse-gentle');
+              setTimeout(() => {
+                submitBtn.classList.remove('pulse-gentle');
+              }, 2000);
+            }
+          });
+        });
+      }
+      
+      addHoverEffects() {
+        // Enhanced card hover effects
+        document.querySelectorAll('.card-hover').forEach(card => {
+          card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-8px) scale(1.02)';
+          });
+          
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) scale(1)';
+          });
+        });
+      }
+      
+      initMicroInteractions() {
+        // Initialize all enhanced interactions
+        this.enhanceButtonInteractions();
+        this.enhanceDayNavigation();
+        this.addLoadingStates();
+        this.enhanceFormSubmissions();
+        this.addHoverEffects();
+        
+        // Add enhanced task option interactions
+        document.addEventListener('click', (e) => {
+          if (e.target.closest('.task-option')) {
+            this.addEnhancedTaskOption(e.target.closest('.task-option'));
           }
         });
       }
