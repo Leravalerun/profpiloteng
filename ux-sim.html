@@ -678,23 +678,21 @@
 <body class="bg-slate-50 text-slate-900">
   
   <!-- Navigation -->
-  <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
-    <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700 hover:text-brand-800 transition-colors">
-        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" />
-        ProfPilot
-      </a>
-      <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
-        <a href="/#roles" class="hover:text-brand-700 transition-colors duration-200">Simulators</a>
-        <a href="/#about" class="hover:text-brand-700 transition-colors duration-200">About</a>
-        <a href="/#pricing" class="hover:text-brand-700 transition-colors duration-200">Pricing</a>
-        <a href="/#faq" class="hover:text-brand-700 transition-colors duration-200">FAQ</a>
-      </nav>
-      <div class="flex items-center gap-3">
-        <span class="text-sm text-slate-500">Simulator in progress</span>
-        <a href="/" class="px-4 py-2 border border-slate-300 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors">
-          Exit
-        </a>
+  <header class="bg-white shadow-lg border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <img src="logo.png" alt="ProfPilot" class="h-8 w-auto">
+          <span class="ml-3 text-xl font-bold text-slate-900">ProfPilot</span>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <a href="index.html" class="text-slate-600 hover:text-slate-900 transition-colors">Home</a>
+          <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 transition-colors">Dashboard</a>
+          <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -1227,7 +1225,9 @@
         this.init();
       }
       
-      init() {
+      // Initialize simulator
+      async init() {
+        await this.loadProgress(); // Load progress from Firebase
         this.bindEvents();
         this.bindDay1Events();
         this.bindDay2Events();
@@ -1241,6 +1241,32 @@
         
         // Show Day 1 by default
         this.goToDay(1);
+      }
+      
+      // Go to specific day
+      goToDay(day) {
+        if (!this.canAccessDay(day)) {
+          this.showDayLockedMessage(day);
+          return;
+        }
+        
+        this.currentDay = day;
+        this.updateNavigationButtons();
+        
+        // Load day content
+        if (day === 1) {
+          this.showDay1();
+        } else if (day === 2) {
+          this.showDay2();
+        } else if (day === 3) {
+          this.showDay3();
+        }
+        
+        // Initialize animations and micro-interactions for the new content
+        setTimeout(() => {
+          this.initAnimations();
+          this.initMicroInteractions();
+        }, 100);
       }
       
       initAnimations() {
@@ -1583,20 +1609,6 @@
         ];
         
         return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-      }
-      
-      goToDay(day) {
-        // Check if user can access this day
-        if (day > 1 && !this.canAccessDay(day)) {
-          this.showDayLockedMessage(day);
-          return;
-        }
-        
-        this.currentDay = day;
-        this.loadDayContent();
-        this.updateProgress();
-        this.updateDayNavigation();
-        this.updateNavigationButtons();
       }
       
       canAccessDay(day) {
@@ -3382,8 +3394,9 @@
         // Check if all assignments are complete
         this.checkDayCompletion(day);
         
-        // Update progress
+        // Update progress and save to Firebase
         this.updateProgress();
+        this.saveProgress();
       }
       
       // Get Assignment Title
@@ -3417,6 +3430,9 @@
               this.showEnhancedNotification(`🚀 Day ${day + 1} is now unlocked!`, 'info');
             }, 2000);
           }
+          
+          // Save progress to Firebase
+          this.saveProgress();
         }
       }
       
@@ -3427,6 +3443,48 @@
         }
         // Add other days as needed
         return [];
+      }
+      
+      // Save progress to Firebase
+      async saveProgress() {
+        try {
+          const user = firebase.auth().currentUser;
+          if (!user) return;
+          
+          await firebase.firestore()
+            .collection('users')
+            .doc(user.uid)
+            .set({
+              progress: {
+                ux: this.userProgress
+              },
+              lastUpdated: new Date()
+            }, { merge: true });
+          
+          console.log('Progress saved to Firebase');
+        } catch (error) {
+          console.error('Error saving progress:', error);
+        }
+      }
+      
+      // Load progress from Firebase
+      async loadProgress() {
+        try {
+          const user = firebase.auth().currentUser;
+          if (!user) return;
+          
+          const userDoc = await firebase.firestore()
+            .collection('users')
+            .doc(user.uid)
+            .get();
+          
+          if (userDoc.exists && userDoc.data().progress?.ux) {
+            this.userProgress = userDoc.data().progress.ux;
+            console.log('Progress loaded from Firebase');
+          }
+        } catch (error) {
+          console.error('Error loading progress:', error);
+        }
       }
     }
     
