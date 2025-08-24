@@ -17,10 +17,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
 
   <!-- FirebaseUI -->
   <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css"/>
@@ -38,12 +38,66 @@
       padding: 0;
     }
     
+    .header {
+      background: white;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid #e2e8f0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 4rem;
+    }
+    
+    .logo-section-header {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-header {
+      height: 2rem;
+      width: auto;
+      margin-right: 0.75rem;
+    }
+    
+    .brand-name-header {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e40af;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-link {
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-link:hover {
+      color: #1e293b;
+    }
+    
     .login-container {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 6rem 20px 20px;
     }
     
     .login-card {
@@ -98,128 +152,72 @@
       font-size: 24px;
       font-weight: 700;
       color: #1e293b;
-      text-align: center;
       margin: 0 0 8px 0;
     }
     
     .login-subtitle {
       color: #64748b;
-      text-align: center;
-      margin: 0 0 32px 0;
       font-size: 16px;
-    }
-    
-    .firebaseui-container {
-      margin-bottom: 24px;
+      margin: 0 0 32px 0;
     }
     
     .back-link {
-      display: block;
-      text-align: center;
+      display: inline-block;
+      margin-top: 24px;
       color: #64748b;
       text-decoration: none;
       font-weight: 500;
-      padding: 12px;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
+      transition: color 0.2s;
     }
     
     .back-link:hover {
       color: #1e40af;
-      background: #f1f5f9;
-      border-color: #e2e8f0;
     }
     
     .loader {
       text-align: center;
-      color: #64748b;
-      font-size: 16px;
       padding: 20px;
+      color: #64748b;
     }
     
     .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #e2e8f0;
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #3b82f6;
       border-radius: 50%;
-      border-top-color: #3b82f6;
-      animation: spin 1s ease-in-out infinite;
-      margin-right: 8px;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
     }
     
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     
-    /* Custom FirebaseUI styling */
-    .firebaseui-idp-button {
-      border-radius: 12px !important;
-      padding: 16px 24px !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
-      transition: all 0.2s ease !important;
-      border: 1px solid #e2e8f0 !important;
-      background: white !important;
-      color: #374151 !important;
-    }
-    
-    .firebaseui-idp-button:hover {
-      transform: translateY(-2px) !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-      border-color: #3b82f6 !important;
-      color: #1e40af !important;
-    }
-    
-    .firebaseui-idp-icon {
-      width: 24px !important;
-      height: 24px !important;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 640px) {
-      .login-card {
-        padding: 32px 24px;
-        margin: 20px;
-        border-radius: 20px;
-      }
-      
-      .logo {
-        width: 56px;
-        height: 56px;
-      }
-      
-      .brand-name {
-        font-size: 24px;
-      }
-      
-      .login-title {
-        font-size: 20px;
-      }
+    #firebaseui-auth-container {
+      margin-bottom: 24px;
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section-header">
+        <img src="logo.png" alt="ProfPilot" class="logo-header">
+        <span class="brand-name-header">ProfPilot</span>
+      </div>
+      
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+  
   <div class="login-container">
     <div class="login-card">
-      <!-- Header -->
-      <header class="bg-white shadow-lg border-b border-slate-200">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                  <div class="flex items-center">
-                      <img src="logo.png" alt="ProfPilot" class="h-8 w-auto">
-                      <span class="ml-3 text-xl font-bold text-slate-900">ProfPilot</span>
-                  </div>
-                  
-                  <div class="flex items-center space-x-4">
-                      <a href="index.html" class="text-slate-600 hover:text-slate-900 transition-colors">Home</a>
-                      <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 transition-colors">Dashboard</a>
-                  </div>
-              </div>
-          </div>
-      </header>
-      
       <!-- Logo and Brand -->
       <div class="logo-section">
         <img src="logo.png" alt="ProfPilot logo" class="logo" />
@@ -238,91 +236,151 @@
       </div>
       
       <!-- Back to Home -->
-      <a href="/" class="back-link">
+      <a href="index.html" class="back-link">
         ← Back to home
       </a>
     </div>
   </div>
 
   <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      appId: "YOUR_APP_ID",
-    };
-    
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // Initialize FirebaseUI
-    const ui = new firebaseui.auth.AuthUI(firebase.auth());
-    
-    // Configure FirebaseUI
-    const uiConfig = {
-      signInOptions: [
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID
-      ],
-      signInFlow: 'popup',
-      callbacks: {
-        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-          // User successfully signed in
-          console.log('Sign in successful:', authResult.user.email);
-          
-          // Save user data to Firestore
-          saveUserData({
-            email: authResult.user.email,
-            displayName: authResult.user.displayName || authResult.user.email,
-            photoURL: authResult.user.photoURL,
-            lastSignIn: firebase.firestore.FieldValue.serverTimestamp(),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          
-          // Track sign in
-          trackUserAction('user_sign_in', {
-            method: authResult.additionalUserInfo?.providerId || 'email'
-          });
-          
-          // Redirect to dashboard
-          window.location.href = 'dashboard.html';
-          return false;
-        },
-        signInFailure: function(error) {
-          console.error('Sign in failed:', error);
-          showNotification(handleFirebaseError(error), 'error');
-        }
+    // Wait for Firebase to be initialized
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if Firebase is initialized
+      if (typeof firebase === 'undefined') {
+        console.error('Firebase not loaded');
+        document.getElementById('loader').innerHTML = `
+          <div style="color: #dc2626; padding: 16px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;">
+            <strong>Error:</strong> Firebase failed to load. Please refresh the page.
+          </div>
+        `;
+        return;
       }
-    };
-    
-    // Start FirebaseUI
-    ui.start('#firebaseui-auth-container', uiConfig);
 
-    // Auth state change listener
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in
-        document.getElementById('loader').style.display = 'none';
-        console.log('User is signed in:', user.email);
-      } else {
-        // User is signed out
-        document.getElementById('loader').style.display = 'block';
+      try {
+        // Initialize FirebaseUI
+        const ui = new firebaseui.auth.AuthUI(firebase.auth());
+        
+        // Configure FirebaseUI
+        const uiConfig = {
+          signInOptions: [
+            firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID
+          ],
+          signInFlow: 'popup',
+          callbacks: {
+            signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+              // User successfully signed in
+              console.log('Sign in successful:', authResult.user.email);
+              
+              // Save user data to Firestore
+              saveUserData({
+                email: authResult.user.email,
+                displayName: authResult.user.displayName || authResult.user.email,
+                photoURL: authResult.user.photoURL,
+                lastSignIn: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+              
+              // Track sign in
+              trackUserAction('user_sign_in', {
+                method: authResult.additionalUserInfo?.providerId || 'email'
+              });
+              
+              // Redirect to dashboard
+              window.location.href = 'dashboard.html';
+              return false;
+            },
+            signInFailure: function(error) {
+              console.error('Sign in failed:', error);
+              showNotification(handleFirebaseError(error), 'error');
+            }
+          }
+        };
+        
+        // Start FirebaseUI
+        ui.start('#firebaseui-auth-container', uiConfig);
+
+        // Auth state change listener
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            // User is signed in
+            document.getElementById('loader').style.display = 'none';
+            console.log('User is signed in:', user.email);
+          } else {
+            // User is signed out
+            document.getElementById('loader').style.display = 'block';
+          }
+        }, (error) => {
+          console.error('Authentication error:', error);
+          document.getElementById('loader').innerHTML = `
+            <div style="color: #dc2626; padding: 16px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;">
+              <strong>Authentication Error:</strong> ${error.message}
+            </div>
+          `;
+        });
+
+      } catch (error) {
+        console.error('Error initializing FirebaseUI:', error);
+        document.getElementById('loader').innerHTML = `
+          <div style="color: #dc2626; padding: 16px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;">
+            <strong>Initialization Error:</strong> ${error.message}
+          </div>
+        `;
       }
     });
 
-    // Handle errors
-    auth.onAuthStateChanged((user) => {
-      // Handle auth state changes
-    }, (error) => {
-      console.error('Authentication error:', error);
-      document.getElementById('loader').innerHTML = `
-        <div style="color: #dc2626; padding: 16px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;">
-          <strong>Authentication Error:</strong> ${error.message}
-        </div>
+    // Helper functions (these should be defined in firebase-init.js)
+    function saveUserData(userData) {
+      if (typeof firebase !== 'undefined' && firebase.firestore) {
+        firebase.firestore().collection('users').doc(userData.email).set(userData, { merge: true })
+          .then(() => console.log('User data saved'))
+          .catch(error => console.error('Error saving user data:', error));
+      }
+    }
+
+    function trackUserAction(action, data) {
+      if (typeof firebase !== 'undefined' && firebase.analytics) {
+        firebase.analytics().logEvent(action, data);
+      }
+    }
+
+    function handleFirebaseError(error) {
+      switch (error.code) {
+        case 'auth/user-not-found':
+          return 'No account found with this email address.';
+        case 'auth/wrong-password':
+          return 'Incorrect password.';
+        case 'auth/invalid-email':
+          return 'Invalid email address.';
+        case 'auth/too-many-requests':
+          return 'Too many failed attempts. Please try again later.';
+        default:
+          return 'An error occurred during sign in. Please try again.';
+      }
+    }
+
+    function showNotification(message, type) {
+      // Simple notification display
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px;
+        border-radius: 8px;
+        color: white;
+        background: ${type === 'error' ? '#dc2626' : '#059669'};
+        z-index: 1000;
+        max-width: 300px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       `;
-    });
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+    }
   </script>
 </body>
 </html>
