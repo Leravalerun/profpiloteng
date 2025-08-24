@@ -17,13 +17,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics-compat.js"></script>
 
   <!-- FirebaseUI -->
   <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css"/>
   <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+  
+  <!-- Custom Firebase Configuration -->
+  <script src="firebase-init.js"></script>
   
   <style>
     html, body {
@@ -199,6 +203,23 @@
 <body>
   <div class="login-container">
     <div class="login-card">
+      <!-- Header -->
+      <header class="bg-white shadow-lg border-b border-slate-200">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="flex justify-between items-center h-16">
+                  <div class="flex items-center">
+                      <img src="logo.png" alt="ProfPilot" class="h-8 w-auto">
+                      <span class="ml-3 text-xl font-bold text-slate-900">ProfPilot</span>
+                  </div>
+                  
+                  <div class="flex items-center space-x-4">
+                      <a href="index.html" class="text-slate-600 hover:text-slate-900 transition-colors">Home</a>
+                      <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 transition-colors">Dashboard</a>
+                  </div>
+              </div>
+          </div>
+      </header>
+      
       <!-- Logo and Brand -->
       <div class="logo-section">
         <img src="logo.png" alt="ProfPilot logo" class="logo" />
@@ -236,28 +257,47 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // FirebaseUI configuration
+    // Initialize FirebaseUI
+    const ui = new firebaseui.auth.AuthUI(firebase.auth());
+    
+    // Configure FirebaseUI
     const uiConfig = {
-      signInSuccessUrl: '/', // Redirect after successful sign-in
-      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
-      tosUrl: '/terms.html',
-      privacyPolicyUrl: '/policy.html',
+      signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+      ],
       signInFlow: 'popup',
       callbacks: {
         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-          // Handle successful sign-in
-          console.log('User signed in successfully:', authResult.user.email);
-          return true; // Allow redirect
+          // User successfully signed in
+          console.log('Sign in successful:', authResult.user.email);
+          
+          // Save user data to Firestore
+          saveUserData({
+            email: authResult.user.email,
+            displayName: authResult.user.displayName || authResult.user.email,
+            photoURL: authResult.user.photoURL,
+            lastSignIn: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          
+          // Track sign in
+          trackUserAction('user_sign_in', {
+            method: authResult.additionalUserInfo?.providerId || 'email'
+          });
+          
+          // Redirect to dashboard
+          window.location.href = 'dashboard.html';
+          return false;
         },
-        uiShown: function() {
-          // Hide loader when UI is shown
-          document.getElementById('loader').style.display = 'none';
+        signInFailure: function(error) {
+          console.error('Sign in failed:', error);
+          showNotification(handleFirebaseError(error), 'error');
         }
       }
     };
-
-    // Initialize FirebaseUI
-    const ui = new firebaseui.auth.AuthUI(auth);
+    
+    // Start FirebaseUI
     ui.start('#firebaseui-auth-container', uiConfig);
 
     // Auth state change listener
