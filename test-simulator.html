@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simulator - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+    <script src="firebase-config-local.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="progress-manager.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .task-card {
+            transition: all 0.3s ease;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .task-completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .task-locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-slate-600 hover:text-slate-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </a>
+                    <h1 class="text-2xl font-bold gradient-text">Test Simulator</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userEmail" class="text-slate-600"></span>
+                    <button id="logoutBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Overview -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Your Progress</h2>
+                <div class="flex items-center gap-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600" id="currentLevel">1</div>
+                        <div class="text-sm text-slate-600">Level</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600" id="currentExperience">0</div>
+                        <div class="text-sm text-slate-600">Experience</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="w-full bg-slate-200 rounded-full h-4 mb-4">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-500" id="levelProgressBar" style="width: 0%"></div>
+            </div>
+            <div class="text-center text-sm text-slate-600">
+                <span id="levelProgressText">0/100 XP to next level</span>
+            </div>
+        </div>
+
+        <!-- Tasks Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Task 1: Basic Introduction -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg" id="task1">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">Task 1</span>
+                    <span class="text-2xl">📚</span>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Basic Introduction</h3>
+                <p class="text-slate-600 mb-4">Learn the fundamentals of the simulator and complete your first task.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Reward: 25 XP</span>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" onclick="completeTask('task1', 25)">
+                        Start Task
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task 2: Practice Exercise -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="task2">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">Task 2</span>
+                    <span class="text-2xl">🎯</span>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Practice Exercise</h3>
+                <p class="text-slate-600 mb-4">Complete a hands-on exercise to test your knowledge.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Reward: 35 XP</span>
+                    <button class="px-4 py-2 bg-slate-400 text-white rounded-lg cursor-not-allowed" disabled>
+                        Locked
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task 3: Advanced Challenge -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="task3">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">Task 3</span>
+                    <span class="text-2xl">🚀</span>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Advanced Challenge</h3>
+                <p class="text-slate-600 mb-4">Take on a complex challenge to prove your skills.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Reward: 50 XP</span>
+                    <button class="px-4 py-2 bg-slate-400 text-white rounded-lg cursor-not-allowed" disabled>
+                        Locked
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task 4: Expert Level -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="task4">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">Task 4</span>
+                    <span class="text-2xl">👑</span>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Expert Level</h3>
+                <p class="text-slate-600 mb-4">Master the most advanced concepts and techniques.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Reward: 75 XP</span>
+                    <button class="px-4 py-2 bg-slate-400 text-white rounded-lg cursor-not-allowed" disabled>
+                        Locked
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task 5: Final Test -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="task5">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">Task 5</span>
+                    <span class="text-2xl">🏆</span>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Final Test</h3>
+                <p class="text-slate-600 mb-4">Complete the final assessment to earn your certificate.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Reward: 100 XP</span>
+                    <button class="px-4 py-2 bg-slate-400 text-white rounded-lg cursor-not-allowed" disabled>
+                        Locked
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task 6: Bonus Challenge -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="task6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-pink-100 text-pink-800 text-sm rounded-full">Bonus</span>
+                    <span class="text-2xl">💎</span>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-900 mb-2">Bonus Challenge</h3>
+                <p class="text-slate-600 mb-4">Extra challenge for those who want to go beyond.</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Reward: 150 XP</span>
+                    <button class="px-4 py-2 bg-slate-400 text-white rounded-lg cursor-not-allowed" disabled>
+                        Locked
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievement Display -->
+        <div class="mt-12 bg-white rounded-3xl border border-slate-200 p-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Recent Achievements</h2>
+            <div id="achievementsDisplay" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="text-center py-8 text-slate-500" id="noAchievements">
+                    <div class="text-4xl mb-2">🏆</div>
+                    <p>Complete tasks to unlock achievements!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentUser = null;
+        let startTime = Date.now();
+        
+        // Add debug panel
+        function addDebugPanel() {
+            const debugPanel = document.createElement('div');
+            debugPanel.id = 'debugPanel';
+            debugPanel.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                width: 400px;
+                max-height: 300px;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 15px;
+                border-radius: 8px;
+                font-family: monospace;
+                font-size: 12px;
+                overflow-y: auto;
+                z-index: 10000;
+                border: 2px solid #ff6b6b;
+            `;
+            debugPanel.innerHTML = '<h3 style="color: #ff6b6b; margin: 0 0 10px 0;">🔍 DEBUG PANEL</h3><div id="debugLogs"></div>';
+            document.body.appendChild(debugPanel);
+        }
+        
+        function addDebugLog(message) {
+            const logsDiv = document.getElementById('debugLogs');
+            if (logsDiv) {
+                const logEntry = document.createElement('div');
+                logEntry.style.cssText = 'margin: 5px 0; padding: 5px; border-left: 2px solid #4ecdc4;';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                logsDiv.appendChild(logEntry);
+                logsDiv.scrollTop = logsDiv.scrollHeight;
+            }
+            console.log(message);
+        }
+        
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', () => {
+            addDebugPanel();
+            addDebugLog('🚀 Test Simulator page loaded');
+            
+                    // Check if progress-manager.js loaded
+        addDebugLog(`📁 ProgressManager class: ${typeof ProgressManager}`);
+        addDebugLog(`📁 window.progressManager: ${typeof window.progressManager}`);
+        addDebugLog(`📁 window.ProgressManager: ${typeof window.ProgressManager}`);
+        
+        // If ProgressManager not loaded, create a simple one
+        if (typeof ProgressManager === 'undefined') {
+            addDebugLog('🔧 ProgressManager not loaded, creating simple version...');
+            createSimpleProgressManager();
+        }
+            
+            // Check Firebase status
+            if (typeof firebase !== 'undefined') {
+                addDebugLog('✅ Firebase object available');
+                if (firebase.apps.length > 0) {
+                    addDebugLog('✅ Firebase app initialized');
+                } else {
+                    addDebugLog('❌ Firebase app not initialized');
+                }
+            } else {
+                addDebugLog('❌ Firebase not available');
+            }
+            firebase.auth().onAuthStateChanged((user) => {
+                addDebugLog(`🔍 Auth state changed: ${user ? `User: ${user.email}` : 'No user'}`);
+                if (user) {
+                    currentUser = user;
+                    addDebugLog(`✅ User authenticated: ${user.email}`);
+                    document.getElementById('userEmail').textContent = user.email;
+                    initializeSimulator();
+                } else {
+                    addDebugLog('❌ No user, redirecting to login...');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    await firebase.auth().signOut();
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                }
+            });
+        });
+        
+        function initializeSimulator() {
+            addDebugLog('🚀 Initializing simulator...');
+            
+            // Check if progress-manager.js loaded
+            addDebugLog(`📁 ProgressManager class available: ${typeof ProgressManager}`);
+            addDebugLog(`📁 window.progressManager: ${typeof window.progressManager}`);
+            addDebugLog(`📁 window.ProgressManager: ${typeof window.ProgressManager}`);
+            
+            // Wait for progress manager to be ready
+            const waitForProgress = () => {
+                addDebugLog('⏳ Waiting for progress manager...');
+                if (window.progressManager && window.progressManager.progressData) {
+                    addDebugLog('✅ Progress manager ready');
+                    updateProgressDisplay();
+                    unlockNextTask();
+                } else {
+                    addDebugLog('⏳ Progress manager not ready, waiting...');
+                    // Stop waiting after 10 seconds to prevent infinite loop
+                    if (Date.now() - startTime > 10000) {
+                        addDebugLog('❌ Progress manager timeout - creating manual instance');
+                        createManualProgressManager();
+                        return;
+                    }
+                    setTimeout(waitForProgress, 500);
+                }
+            };
+            waitForProgress();
+        }
+        
+        function createSimpleProgressManager() {
+            addDebugLog('🔧 Creating simple progress manager...');
+            try {
+                // Create a simple progress manager
+                window.progressManager = {
+                    progressData: {
+                        testSimulator: {
+                            level: 1,
+                            experience: 0,
+                            completedTasks: 0,
+                            totalTasks: 6,
+                            timeSpent: 0,
+                            lastActivity: null,
+                            achievements: [],
+                            currentTask: 1
+                        }
+                    },
+                    updateSimulatorProgress: async function(simulatorName, taskData) {
+                        addDebugLog(`📊 Updating progress for ${simulatorName}`);
+                        const simulator = this.progressData[simulatorName];
+                        if (simulator) {
+                            simulator.completedTasks++;
+                            simulator.experience += taskData.experience || 10;
+                            simulator.timeSpent += taskData.timeSpent || 0;
+                            simulator.lastActivity = new Date();
+                            
+                            // Calculate new level
+                            const newLevel = Math.floor(simulator.experience / 100) + 1;
+                            if (newLevel > simulator.level) {
+                                simulator.level = newLevel;
+                                addDebugLog(`🎉 Level up! New level: ${newLevel}`);
+                            }
+                            
+                            addDebugLog(`✅ Progress updated: Level ${simulator.level}, XP ${simulator.experience}`);
+                        }
+                    },
+                    getStatistics: function() {
+                        return {
+                            totalLevel: this.progressData.testSimulator.level,
+                            totalExperience: this.progressData.testSimulator.experience,
+                            totalTimeSpent: this.progressData.testSimulator.timeSpent
+                        };
+                    }
+                };
+                
+                addDebugLog('✅ Simple progress manager created');
+                addDebugLog(`📊 Initial progress: Level ${window.progressManager.progressData.testSimulator.level}, XP ${window.progressManager.progressData.testSimulator.experience}`);
+                
+            } catch (error) {
+                addDebugLog(`❌ Error creating simple progress manager: ${error.message}`);
+            }
+        }
+        
+        function createManualProgressManager() {
+            addDebugLog('🔧 Creating manual progress manager...');
+            try {
+                if (typeof ProgressManager !== 'undefined') {
+                    window.progressManager = new ProgressManager();
+                    addDebugLog('✅ Manual progress manager created');
+                } else {
+                    addDebugLog('❌ ProgressManager class not available');
+                }
+            } catch (error) {
+                addDebugLog(`❌ Error creating manual progress manager: ${error.message}`);
+            }
+        }
+        
+        function updateProgressDisplay() {
+            if (!window.progressManager || !window.progressManager.progressData) return;
+            
+            const progress = window.progressManager.progressData.testSimulator || {
+                level: 1,
+                experience: 0,
+                completedTasks: 0
+            };
+            
+            // Update level and experience
+            document.getElementById('currentLevel').textContent = progress.level;
+            document.getElementById('currentExperience').textContent = progress.experience;
+            
+            // Update progress bar
+            const experienceToNext = progress.experience % 100;
+            const progressPercent = (experienceToNext / 100) * 100;
+            document.getElementById('levelProgressBar').style.width = `${progressPercent}%`;
+            document.getElementById('levelProgressText').textContent = `${experienceToNext}/100 XP to next level`;
+            
+            // Update achievements
+            updateAchievementsDisplay();
+        }
+        
+        function unlockNextTask() {
+            if (!window.progressManager || !window.progressManager.progressData) return;
+            
+            const progress = window.progressManager.progressData.testSimulator || { completedTasks: 0 };
+            const nextTask = progress.completedTasks + 1;
+            
+            // Unlock next task
+            if (nextTask <= 6) {
+                const taskElement = document.getElementById(`task${nextTask}`);
+                if (taskElement) {
+                    taskElement.classList.remove('task-locked');
+                    const button = taskElement.querySelector('button');
+                    button.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors';
+                    button.disabled = false;
+                    button.textContent = 'Start Task';
+                    button.onclick = () => completeTask(`task${nextTask}`, getTaskReward(nextTask));
+                }
+            }
+        }
+        
+        function getTaskReward(taskNumber) {
+            const rewards = [25, 35, 50, 75, 100, 150];
+            return rewards[taskNumber - 1] || 25;
+        }
+        
+        async function completeTask(taskId, experience) {
+            addDebugLog(`🎯 Completing task: ${taskId} for ${experience} XP`);
+            if (!currentUser || !window.progressManager) {
+                addDebugLog(`❌ Cannot complete task: currentUser=${!!currentUser}, progressManager=${!!window.progressManager}`);
+                return;
+            }
+            
+            try {
+                addDebugLog('✅ Starting task completion...');
+                // Simulate task completion
+                const taskElement = document.getElementById(taskId);
+                taskElement.classList.add('task-completed');
+                const button = taskElement.querySelector('button');
+                button.textContent = 'Completed!';
+                button.disabled = true;
+                button.className = 'px-4 py-2 bg-green-600 text-white rounded-lg cursor-not-allowed';
+                
+                // Calculate time spent
+                const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+                addDebugLog(`⏱️ Time spent: ${timeSpent} seconds`);
+                
+                // Update progress
+                addDebugLog('📊 Updating progress in Firestore...');
+                await window.progressManager.updateSimulatorProgress('testSimulator', {
+                    experience: experience,
+                    timeSpent: timeSpent
+                });
+                addDebugLog('✅ Progress updated successfully');
+                
+                // Update display
+                updateProgressDisplay();
+                
+                // Unlock next task
+                unlockNextTask();
+                
+                // Show completion notification
+                showNotification(`Task completed! +${experience} XP`, 'success');
+                addDebugLog('🎉 Task completion finished');
+                
+            } catch (error) {
+                addDebugLog(`❌ Error completing task: ${error.message}`);
+                console.error('Error completing task:', error);
+                showNotification('Error completing task', 'error');
+            }
+        }
+        
+        function updateAchievementsDisplay() {
+            if (!window.progressManager || !window.progressManager.progressData) return;
+            
+            const progress = window.progressManager.progressData.testSimulator || { achievements: [] };
+            const achievementsDisplay = document.getElementById('achievementsDisplay');
+            const noAchievements = document.getElementById('noAchievements');
+            
+            if (progress.achievements && progress.achievements.length > 0) {
+                noAchievements.style.display = 'none';
+                achievementsDisplay.innerHTML = '';
+                
+                progress.achievements.forEach(achievementId => {
+                    const achievement = window.progressManager.achievements?.milestones[achievementId];
+                    if (achievement) {
+                        const achievementDiv = document.createElement('div');
+                        achievementDiv.className = 'bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl p-4 text-center';
+                        achievementDiv.innerHTML = `
+                            <div class="text-3xl mb-2">${achievement.icon}</div>
+                            <h3 class="font-semibold mb-1">${achievement.title}</h3>
+                            <p class="text-sm opacity-90">${achievement.description}</p>
+                        `;
+                        achievementsDisplay.appendChild(achievementDiv);
+                    }
+                });
+            } else {
+                noAchievements.style.display = 'block';
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 ${
+                type === 'success' ? 'bg-green-600' : 
+                type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Auto-update progress every 10 seconds
+        setInterval(() => {
+            if (window.progressManager && window.progressManager.progressData) {
+                updateProgressDisplay();
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

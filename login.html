@@ -27,6 +27,7 @@
   <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
   
   <!-- Custom Firebase Configuration -->
+  <script src="firebase-config-local.js"></script>
   <script src="firebase-init.js"></script>
   
   <style>
@@ -243,11 +244,53 @@
   </div>
 
   <script>
-    // Wait for Firebase to be initialized
-    document.addEventListener('DOMContentLoaded', function() {
+          // Check if user was logged out due to inactivity
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('reason') === 'inactivity') {
+        addDebugLog('🔒 User logged out due to inactivity');
+        showNotification('Your session expired due to inactivity. Please sign in again.', 'warning');
+      }
+      
+      // Wait for Firebase to be initialized
+      document.addEventListener('DOMContentLoaded', function() {
+      // Add debug panel to page
+      const debugPanel = document.createElement('div');
+      debugPanel.id = 'debugPanel';
+      debugPanel.style.cssText = `
+          position: fixed;
+          top: 10px;
+          right: 10px;
+          width: 400px;
+          max-height: 300px;
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 15px;
+          border-radius: 8px;
+          font-family: monospace;
+          font-size: 12px;
+          overflow-y: auto;
+          z-index: 10000;
+          border: 2px solid #4ecdc4;
+      `;
+      debugPanel.innerHTML = '<h3 style="color: #4ecdc4; margin: 0 0 10px 0;">🔍 LOGIN DEBUG</h3><div id="debugLogs"></div>';
+      document.body.appendChild(debugPanel);
+
+      // Function to add debug logs
+      function addDebugLog(message) {
+          const logsDiv = document.getElementById('debugLogs');
+          const logEntry = document.createElement('div');
+          logEntry.style.cssText = 'margin: 5px 0; padding: 5px; border-left: 2px solid #4ecdc4;';
+          logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+          logsDiv.appendChild(logEntry);
+          logsDiv.scrollTop = logsDiv.scrollHeight;
+          
+          // Also log to console
+          console.log(message);
+        }
+
       // Check if Firebase is initialized
       if (typeof firebase === 'undefined') {
-        console.error('Firebase not loaded');
+        addDebugLog('❌ Firebase SDK not loaded! Check your script tags.');
         document.getElementById('loader').innerHTML = `
           <div style="color: #dc2626; padding: 16px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;">
             <strong>Error:</strong> Firebase failed to load. Please refresh the page.
@@ -257,61 +300,114 @@
       }
 
       try {
+        addDebugLog('🔧 Initializing FirebaseUI...');
+        
         // Initialize FirebaseUI
         const ui = new firebaseui.auth.AuthUI(firebase.auth());
+        addDebugLog('✅ FirebaseUI initialized');
         
         // Configure FirebaseUI
+        addDebugLog('⚙️ Configuring FirebaseUI...');
         const uiConfig = {
           signInOptions: [
             firebase.auth.EmailAuthProvider.PROVIDER_ID,
             firebase.auth.GoogleAuthProvider.PROVIDER_ID
           ],
-          signInFlow: 'popup',
+          signInFlow: 'popup', // Changed back to popup for better callback support
           callbacks: {
             signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+              addDebugLog('🎯 signInSuccessWithAuthResult callback triggered!');
               // User successfully signed in
-              console.log('Sign in successful:', authResult.user.email);
+              addDebugLog(`✅ Sign in successful: ${authResult.user.email}`);
+              addDebugLog(`User UID: ${authResult.user.uid}`);
+              addDebugLog(`Redirect URL: ${redirectUrl}`);
               
-              // Save user data to Firestore
-              saveUserData({
-                email: authResult.user.email,
-                displayName: authResult.user.displayName || authResult.user.email,
-                photoURL: authResult.user.photoURL,
-                lastSignIn: firebase.firestore.FieldValue.serverTimestamp(),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-              });
+              try {
+                // Save user data to Firestore
+                addDebugLog('💾 Saving user data to Firestore...');
+                saveUserData({
+                  email: authResult.user.email,
+                  displayName: authResult.user.displayName || authResult.user.email,
+                  photoURL: authResult.user.photoURL,
+                  lastSignIn: firebase.firestore.FieldValue.serverTimestamp(),
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Track sign in
+                addDebugLog('📊 Tracking user action...');
+                trackUserAction('user_sign_in', {
+                  method: authResult.additionalUserInfo?.providerId || 'email'
+                });
+                
+                addDebugLog('✅ User data saved, redirecting to dashboard...');
+                
+                // Use setTimeout to ensure all operations complete
+                setTimeout(() => {
+                  addDebugLog('🚀 Executing redirect to dashboard...');
+                  window.location.href = 'dashboard.html';
+                }, 100);
+                
+              } catch (error) {
+                addDebugLog(`❌ Error in sign in success callback: ${error.message}`);
+                // Still redirect even if saving fails
+                window.location.href = 'dashboard.html';
+              }
               
-              // Track sign in
-              trackUserAction('user_sign_in', {
-                method: authResult.additionalUserInfo?.providerId || 'email'
-              });
-              
-              // Redirect to dashboard
-              window.location.href = 'dashboard.html';
               return false;
             },
             signInFailure: function(error) {
-              console.error('Sign in failed:', error);
+              addDebugLog('💥 signInFailure callback triggered!');
+              addDebugLog(`❌ Sign in failed: ${error.message}`);
+              addDebugLog(`Error code: ${error.code}`);
+              addDebugLog(`Error details: ${JSON.stringify(error)}`);
               showNotification(handleFirebaseError(error), 'error');
             }
           }
         };
         
         // Start FirebaseUI
-        ui.start('#firebaseui-auth-container', uiConfig);
+        addDebugLog('🚀 Starting FirebaseUI...');
+        try {
+          ui.start('#firebaseui-auth-container', uiConfig);
+          addDebugLog('✅ FirebaseUI started');
+          
+          // Check if FirebaseUI is working
+          setTimeout(() => {
+            const container = document.getElementById('firebaseui-auth-container');
+            if (container && container.children.length > 0) {
+              addDebugLog('✅ FirebaseUI container has content');
+            } else {
+              addDebugLog('❌ FirebaseUI container is empty');
+            }
+          }, 1000);
+          
+        } catch (error) {
+          addDebugLog(`💥 Error starting FirebaseUI: ${error.message}`);
+          addDebugLog(`Error details: ${JSON.stringify(error)}`);
+        }
 
         // Auth state change listener
         firebase.auth().onAuthStateChanged((user) => {
           if (user) {
             // User is signed in
             document.getElementById('loader').style.display = 'none';
-            console.log('User is signed in:', user.email);
+            addDebugLog(`👤 User is signed in: ${user.email}`);
+            
+            // Check if we're on login page and should redirect
+            if (window.location.pathname.includes('login.html')) {
+              addDebugLog('🔄 User already signed in, redirecting to dashboard...');
+              setTimeout(() => {
+                addDebugLog('🚀 Executing redirect to dashboard...');
+                window.location.href = 'dashboard.html';
+              }, 500);
+            }
           } else {
             // User is signed out
             document.getElementById('loader').style.display = 'block';
+            addDebugLog('👤 User is signed out');
           }
         }, (error) => {
-          console.error('Authentication error:', error);
+          addDebugLog(`❌ Authentication error: ${error.message}`);
           document.getElementById('loader').innerHTML = `
             <div style="color: #dc2626; padding: 16px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca;">
               <strong>Authentication Error:</strong> ${error.message}
@@ -339,8 +435,13 @@
     }
 
     function trackUserAction(action, data) {
-      if (typeof firebase !== 'undefined' && firebase.analytics) {
-        firebase.analytics().logEvent(action, data);
+      // Track user action if analytics is available
+      try {
+        if (typeof firebase !== 'undefined' && firebase.analytics) {
+          firebase.analytics().logEvent(action, data);
+        }
+      } catch (error) {
+        console.warn('⚠️ Analytics tracking failed:', error.message);
       }
     }
 

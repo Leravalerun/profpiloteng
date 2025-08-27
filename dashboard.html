@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Dashboard - ProfPilot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+    <script src="firebase-config-local.js"></script>
     <script src="firebase-init.js"></script>
+    <script src="progress-manager.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
@@ -207,19 +209,37 @@
                         </button>
                     </div>
 
+                    <!-- Overall Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+                            <div class="text-3xl font-bold text-blue-600" id="totalLevel">1</div>
+                            <div class="text-sm text-blue-700">Total Level</div>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
+                            <div class="text-3xl font-bold text-green-600" id="totalExperience">0</div>
+                            <div class="text-sm text-green-700">Experience</div>
+                        </div>
+                        <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
+                            <div class="text-3xl font-bold text-purple-600" id="totalTime">0h</div>
+                            <div class="text-sm text-purple-700">Time Spent</div>
+                        </div>
+                    </div>
+
                     <!-- UX Designer Simulator Progress -->
                     <div class="mb-6">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-lg font-semibold text-slate-900">UX Designer Simulator</h3>
-                            <span class="text-sm text-slate-500" id="uxProgressText">0/3 days</span>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full" id="uxLevel">Level 1</span>
+                                <span class="text-sm text-slate-500" id="uxProgressText">0/10 tasks</span>
+                            </div>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-3">
-                            <div class="bg-gradient-to-r from-brand-500 to-brand-600 h-3 rounded-full transition-all duration-500" id="uxProgressBar" style="width: 0%"></div>
+                            <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-500" id="uxProgressBar" style="width: 0%"></div>
                         </div>
                         <div class="flex justify-between mt-2 text-sm text-slate-600">
-                            <span>Day 1</span>
-                            <span>Day 2</span>
-                            <span>Day 3</span>
+                            <span id="uxExperience">0 XP</span>
+                            <span id="uxTime">0h</span>
                         </div>
                     </div>
 
@@ -227,15 +247,35 @@
                     <div class="mb-6">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-lg font-semibold text-slate-900">Lawyer Simulator</h3>
-                            <span class="text-sm text-slate-500" id="lawyerProgressText">0/3 days</span>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full" id="lawyerLevel">Level 1</span>
+                                <span class="text-sm text-slate-500" id="lawyerProgressText">0/8 tasks</span>
+                            </div>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-3">
-                            <div class="bg-gradient-to-r from-brand-500 to-brand-600 h-3 rounded-full transition-all duration-500" id="lawyerProgressBar" style="width: 0%"></div>
+                            <div class="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-500" id="lawyerProgressBar" style="width: 0%"></div>
                         </div>
                         <div class="flex justify-between mt-2 text-sm text-slate-600">
-                            <span>Day 1</span>
-                            <span>Day 2</span>
-                            <span>Day 3</span>
+                            <span id="lawyerExperience">0 XP</span>
+                            <span id="lawyerTime">0h</span>
+                        </div>
+                    </div>
+
+                    <!-- Career Simulator Progress -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-lg font-semibold text-slate-900">Career Simulator</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full" id="careerLevel">Level 1</span>
+                                <span class="text-sm text-slate-500" id="careerProgressText">0/12 tasks</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500" id="careerProgressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-sm text-slate-600">
+                            <span id="careerExperience">0 XP</span>
+                            <span id="careerTime">0h</span>
                         </div>
                     </div>
 
@@ -258,37 +298,17 @@
 
                 <!-- Recent Achievements -->
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg card-hover animate-scale-in" style="animation-delay: 0.2s">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6">Recent Achievements</h2>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-slate-900">Recent Achievements</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm rounded-full" id="achievementProgress">0/6</span>
+                        </div>
+                    </div>
                     
                     <div class="space-y-4" id="achievementsList">
-                        <div class="achievement-badge rounded-xl p-4 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                                <span class="text-2xl">🎉</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">First Day Complete!</h3>
-                                <p class="text-sm opacity-90">Completed your first simulation day</p>
-                            </div>
-                        </div>
-                        
-                        <div class="achievement-badge rounded-xl p-4 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                                <span class="text-2xl">🚀</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">Simulation Master</h3>
-                                <p class="text-sm opacity-90">Completed 3 simulation days</p>
-                            </div>
-                        </div>
-                        
-                        <div class="achievement-badge rounded-xl p-4 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                                <span class="text-2xl">💡</span>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">AI Mentor Pro</h3>
-                                <p class="text-sm opacity-90">Used AI mentor 10+ times</p>
-                            </div>
+                        <div class="text-center py-8 text-slate-500" id="noAchievements">
+                            <div class="text-4xl mb-2">🏆</div>
+                            <p>Complete tasks to unlock achievements!</p>
                         </div>
                     </div>
                 </div>
@@ -299,7 +319,7 @@
                     
                     <div class="space-y-4">
                         <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                            <div class="w-10 h-10 bg-brand-600 rounded-full flex items-center justify-center">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                                 <span class="text-white font-bold">1</span>
                             </div>
                             <div class="flex-1">
@@ -307,33 +327,33 @@
                                 <p class="text-sm text-slate-600">Learn UX fundamentals through hands-on simulation</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-sm text-brand-600 font-medium" id="uxPathStatus">In Progress</span>
+                                <span class="text-sm text-blue-600 font-medium" id="uxPathStatus">In Progress</span>
                             </div>
                         </div>
                         
                         <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                            <div class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center">
-                                <span class="text-slate-600 font-bold">2</span>
+                            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold">2</span>
                             </div>
                             <div class="flex-1">
                                 <h3 class="font-semibold text-slate-900">Lawyer Simulator</h3>
                                 <p class="text-sm text-slate-600">Experience corporate law practice scenarios</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-sm text-slate-500 font-medium" id="lawyerPathStatus">Not Started</span>
+                                <span class="text-sm text-green-600 font-medium" id="lawyerPathStatus">Not Started</span>
                             </div>
                         </div>
                         
-                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl opacity-50">
-                            <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center">
-                                <span class="text-slate-400 font-bold">3</span>
+                        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                            <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold">3</span>
                             </div>
                             <div class="flex-1">
-                                <h3 class="font-semibold text-slate-400">Product Manager Simulator</h3>
-                                <p class="text-sm text-slate-400">Coming soon - Product strategy and management</p>
+                                <h3 class="font-semibold text-slate-900">Career Simulator</h3>
+                                <p class="text-sm text-slate-600">Master career development and job search</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-sm text-slate-400 font-medium">Coming Soon</span>
+                                <span class="text-sm text-purple-600 font-medium" id="careerPathStatus">Not Started</span>
                             </div>
                         </div>
                     </div>
@@ -391,6 +411,10 @@
                             Start Lawyer Simulator
                         </a>
                         
+                        <a href="test-simulator.html" class="block w-full bg-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors text-center">
+                            Test Simulator
+                        </a>
+                        
                         <button class="w-full bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition-colors">
                             Download Certificate
                         </button>
@@ -446,6 +470,16 @@
                 this.bindEvents();
                 this.loadUserData();
                 this.updateDashboard();
+                
+                // Wait for progress manager to be ready and update display
+                const waitForProgress = () => {
+                    if (window.progressManager && window.progressManager.progressData) {
+                        updateProgressDisplay();
+                    } else {
+                        setTimeout(waitForProgress, 500);
+                    }
+                };
+                waitForProgress();
             }
             
             async checkAuth() {
@@ -470,9 +504,12 @@
             
             async logout() {
                 try {
+                    addDebugLog('🚪 Logging out user...');
                     await firebase.auth().signOut();
-                    window.location.href = 'index.html';
+                    addDebugLog('✅ User signed out, redirecting to login...');
+                    window.location.href = 'login.html';
                 } catch (error) {
+                    addDebugLog(`❌ Logout error: ${error.message}`);
                     console.error('Logout error:', error);
                 }
             }
@@ -623,10 +660,241 @@
             }
         }
         
-        // Initialize dashboard when page loads
+        // Check authentication before initializing dashboard
         document.addEventListener('DOMContentLoaded', () => {
-            new Dashboard();
+            // Add debug panel to page
+            const debugPanel = document.createElement('div');
+            debugPanel.id = 'debugPanel';
+            debugPanel.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                width: 400px;
+                max-height: 300px;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 15px;
+                border-radius: 8px;
+                font-family: monospace;
+                font-size: 12px;
+                overflow-y: auto;
+                z-index: 10000;
+                border: 2px solid #ff6b6b;
+            `;
+            debugPanel.innerHTML = '<h3 style="color: #ff6b6b; margin: 0 0 10px 0;">🔍 DEBUG PANEL</h3><div id="debugLogs"></div>';
+            document.body.appendChild(debugPanel);
+
+            // Function to add debug logs
+            function addDebugLog(message) {
+                const logsDiv = document.getElementById('debugLogs');
+                const logEntry = document.createElement('div');
+                logEntry.style.cssText = 'margin: 5px 0; padding: 5px; border-left: 2px solid #4ecdc4;';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                logsDiv.appendChild(logEntry);
+                logsDiv.scrollTop = logsDiv.scrollHeight;
+                
+                // Also log to console
+                console.log(message);
+            }
+            // Wait for Firebase to be ready
+            const checkAuth = () => {
+                addDebugLog('🔍 Checking Firebase availability...');
+                addDebugLog(`Firebase object: ${typeof firebase}`);
+                addDebugLog(`Firebase auth: ${firebase?.auth ? 'Available' : 'Not available'}`);
+                addDebugLog(`Firebase config: ${typeof getFirebaseConfig}`);
+                addDebugLog(`Current hostname: ${window.location.hostname}`);
+                
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    addDebugLog('✅ Firebase ready, checking auth state...');
+                    
+                    // Check if user is already signed in
+                    const currentUser = firebase.auth().currentUser;
+                    addDebugLog(`Current user: ${currentUser ? currentUser.email : 'None'}`);
+                    
+                    firebase.auth().onAuthStateChanged((user) => {
+                        addDebugLog(`🔍 Dashboard auth state changed: ${user ? `User: ${user.email}` : 'No user'}`);
+                        addDebugLog(`📍 Dashboard page: ${window.location.pathname}`);
+                        addDebugLog(`User UID: ${user ? user.uid : 'None'}`);
+                        
+                        if (user) {
+                            addDebugLog('✅ User authenticated, initializing dashboard...');
+                            new Dashboard();
+                        } else {
+                            addDebugLog('❌ User not authenticated, redirecting to login...');
+                            addDebugLog('🔍 Debug: Waiting 5 seconds before redirect...');
+                            // Add delay to see what's happening
+                            setTimeout(() => {
+                                addDebugLog('🔄 Redirecting to login now...');
+                                window.location.href = 'login.html';
+                            }, 5000);
+                        }
+                    });
+                } else {
+                    // Firebase not ready yet, wait a bit
+                    addDebugLog('⏳ Firebase not ready, waiting...');
+                    addDebugLog(`Firebase SDK loaded: ${typeof firebase !== 'undefined'}`);
+                    addDebugLog(`Firebase auth loaded: ${firebase?.auth ? 'Yes' : 'No'}`);
+                    setTimeout(checkAuth, 100);
+                }
+            };
+            
+            checkAuth();
         });
+        
+        // Progress update functions
+        function updateProgressDisplay() {
+            if (!window.progressManager || !window.progressManager.progressData) {
+                console.log('⏳ Progress manager not ready yet...');
+                setTimeout(updateProgressDisplay, 1000);
+                return;
+            }
+            
+            const progress = window.progressManager.progressData;
+            const stats = window.progressManager.getStatistics();
+            const achievements = window.progressManager.getAchievementProgress();
+            
+            // Update overall stats
+            document.getElementById('totalLevel').textContent = stats.totalLevel;
+            document.getElementById('totalExperience').textContent = stats.totalExperience;
+            document.getElementById('totalTime').textContent = formatTime(stats.totalTimeSpent);
+            
+            // Update UX Designer progress
+            const ux = progress.uxDesigner;
+            document.getElementById('uxLevel').textContent = `Level ${ux.level}`;
+            document.getElementById('uxProgressText').textContent = `${ux.completedTasks}/${ux.totalTasks} tasks`;
+            document.getElementById('uxProgressBar').style.width = `${(ux.completedTasks / ux.totalTasks) * 100}%`;
+            document.getElementById('uxExperience').textContent = `${ux.experience} XP`;
+            document.getElementById('uxTime').textContent = formatTime(ux.timeSpent);
+            
+            // Update Lawyer progress
+            const lawyer = progress.lawyer;
+            document.getElementById('lawyerLevel').textContent = `Level ${lawyer.level}`;
+            document.getElementById('lawyerProgressText').textContent = `${lawyer.completedTasks}/${lawyer.totalTasks} tasks`;
+            document.getElementById('lawyerProgressBar').style.width = `${(lawyer.completedTasks / lawyer.totalTasks) * 100}%`;
+            document.getElementById('lawyerExperience').textContent = `${lawyer.experience} XP`;
+            document.getElementById('lawyerTime').textContent = formatTime(lawyer.timeSpent);
+            
+            // Update Career progress
+            const career = progress.careerSimulator;
+            document.getElementById('careerLevel').textContent = `Level ${career.level}`;
+            document.getElementById('careerProgressText').textContent = `${career.completedTasks}/${career.totalTasks} tasks`;
+            document.getElementById('careerProgressBar').style.width = `${(career.completedTasks / career.totalTasks) * 100}%`;
+            document.getElementById('careerExperience').textContent = `${career.experience} XP`;
+            document.getElementById('careerTime').textContent = formatTime(career.timeSpent);
+            
+            // Update overall progress ring
+            const totalProgress = (stats.totalExperience / 1000) * 100; // Assuming 1000 XP = 100%
+            document.getElementById('overallProgressPercent').textContent = `${Math.min(Math.round(totalProgress), 100)}%`;
+            
+            // Update learning path statuses
+            updateLearningPathStatus(ux, lawyer, career);
+            
+            // Update achievements
+            updateAchievementsDisplay(achievements, progress);
+            
+            console.log('✅ Progress display updated');
+        }
+        
+        function updateLearningPathStatus(ux, lawyer, career) {
+            // UX Designer status
+            const uxStatus = document.getElementById('uxPathStatus');
+            if (ux.completedTasks > 0) {
+                uxStatus.textContent = 'In Progress';
+                uxStatus.className = 'text-sm text-blue-600 font-medium';
+            } else {
+                uxStatus.textContent = 'Not Started';
+                uxStatus.className = 'text-sm text-slate-500 font-medium';
+            }
+            
+            // Lawyer status
+            const lawyerStatus = document.getElementById('lawyerPathStatus');
+            if (lawyer.completedTasks > 0) {
+                lawyerStatus.textContent = 'In Progress';
+                lawyerStatus.className = 'text-sm text-green-600 font-medium';
+            } else {
+                lawyerStatus.textContent = 'Not Started';
+                lawyerStatus.className = 'text-sm text-slate-500 font-medium';
+            }
+            
+            // Career status
+            const careerStatus = document.getElementById('careerPathStatus');
+            if (career.completedTasks > 0) {
+                careerStatus.textContent = 'In Progress';
+                careerStatus.className = 'text-sm text-purple-600 font-medium';
+            } else {
+                careerStatus.textContent = 'Not Started';
+                careerStatus.className = 'text-sm text-purple-600 font-medium';
+            }
+        }
+        
+        function updateAchievementsDisplay(achievements, progress) {
+            const achievementsList = document.getElementById('achievementsList');
+            const noAchievements = document.getElementById('noAchievements');
+            const achievementProgress = document.getElementById('achievementProgress');
+            
+            // Update achievement progress counter
+            achievementProgress.textContent = `${achievements.unlocked}/${achievements.total}`;
+            
+            if (achievements.unlocked === 0) {
+                noAchievements.style.display = 'block';
+                return;
+            }
+            
+            noAchievements.style.display = 'none';
+            achievementsList.innerHTML = '';
+            
+            // Get all unlocked achievements
+            const allAchievements = [];
+            Object.values(progress).forEach(simulator => {
+                if (simulator.achievements) {
+                    simulator.achievements.forEach(achievementId => {
+                        const achievement = window.progressManager.achievements.milestones[achievementId];
+                        if (achievement && !allAchievements.find(a => a.id === achievementId)) {
+                            allAchievements.push(achievement);
+                        }
+                    });
+                }
+            });
+            
+            // Display achievements
+            allAchievements.forEach(achievement => {
+                const achievementDiv = document.createElement('div');
+                achievementDiv.className = 'achievement-badge rounded-xl p-4 flex items-center gap-4';
+                achievementDiv.innerHTML = `
+                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">${achievement.icon}</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">${achievement.title}</h3>
+                        <p class="text-sm opacity-90">${achievement.description}</p>
+                    </div>
+                `;
+                achievementsList.appendChild(achievementDiv);
+            });
+        }
+        
+        function formatTime(seconds) {
+            if (seconds < 60) return `${seconds}s`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+            return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
+        }
+        
+        // Refresh progress button
+        document.addEventListener('DOMContentLoaded', () => {
+            const refreshBtn = document.getElementById('refreshProgress');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', () => {
+                    updateProgressDisplay();
+                });
+            }
+        });
+        
+        // Auto-update progress every 30 seconds
+        setInterval(() => {
+            if (window.progressManager && window.progressManager.progressData) {
+                updateProgressDisplay();
+            }
+        }, 30000);
     </script>
 </body>
 </html>

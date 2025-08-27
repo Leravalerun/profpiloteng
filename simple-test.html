@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="firebase-config-local.js"></script>
+    <script src="firebase-init.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">🧪 Simple Test Page</h1>
+        
+        <div class="space-y-6">
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-2">1. Firebase Status</h2>
+                <div id="firebaseStatus" class="text-sm">Checking...</div>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-2">2. Authentication Status</h2>
+                <div id="authStatus" class="text-sm">Checking...</div>
+            </div>
+            
+            <div class="bg-purple-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-2">3. Test Actions</h2>
+                <button id="testButton" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    Test Button
+                </button>
+                <div id="testResult" class="mt-2 text-sm"></div>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-2">4. Navigation</h2>
+                <a href="dashboard.html" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 inline-block">
+                    Go to Dashboard
+                </a>
+                <a href="test-simulator.html" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 inline-block ml-2">
+                    Go to Test Simulator
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Simple test page loaded');
+            
+            // Test Firebase
+            const checkFirebase = () => {
+                const firebaseStatus = document.getElementById('firebaseStatus');
+                if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                    firebaseStatus.innerHTML = '✅ Firebase is loaded and ready';
+                    firebaseStatus.className = 'text-sm text-green-600';
+                } else {
+                    firebaseStatus.innerHTML = '❌ Firebase not ready yet...';
+                    firebaseStatus.className = 'text-sm text-red-600';
+                    setTimeout(checkFirebase, 1000);
+                }
+            };
+            
+            // Test Authentication
+            const checkAuth = () => {
+                const authStatus = document.getElementById('authStatus');
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    firebase.auth().onAuthStateChanged((user) => {
+                        if (user) {
+                            authStatus.innerHTML = `✅ Authenticated as: ${user.email}`;
+                            authStatus.className = 'text-sm text-green-600';
+                        } else {
+                            authStatus.innerHTML = '❌ Not authenticated - <a href="login.html" class="text-blue-600 underline">Login here</a>';
+                            authStatus.className = 'text-sm text-red-600';
+                        }
+                    });
+                } else {
+                    authStatus.innerHTML = '⏳ Waiting for Firebase Auth...';
+                    authStatus.className = 'text-sm text-yellow-600';
+                    setTimeout(checkAuth, 1000);
+                }
+            };
+            
+            // Test button functionality
+            document.getElementById('testButton').addEventListener('click', function() {
+                const result = document.getElementById('testResult');
+                result.innerHTML = '✅ Button clicked successfully!';
+                result.className = 'mt-2 text-sm text-green-600';
+                
+                // Test if we can access Firebase
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    const user = firebase.auth().currentUser;
+                    if (user) {
+                        result.innerHTML += `<br>👤 Current user: ${user.email}`;
+                    } else {
+                        result.innerHTML += '<br>❌ No user logged in';
+                    }
+                } else {
+                    result.innerHTML += '<br>❌ Firebase not available';
+                }
+            });
+            
+            // Start checks
+            checkFirebase();
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

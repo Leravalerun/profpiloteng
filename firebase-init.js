@@ -1,97 +1,199 @@
-// Firebase Configuration for ProfPilot
-// Real configuration from Firebase Console
+// Firebase Initialization for ProfPilotEng
+// Secure initialization with environment-based configuration
 
-// Wait for Firebase to be available
+// Wait for DOM and Firebase to be available
 document.addEventListener('DOMContentLoaded', function() {
   // Check if Firebase is loaded
   if (typeof firebase === 'undefined') {
-    console.error('Firebase SDK not loaded!');
+    console.error('❌ Firebase SDK not loaded! Check your script tags.');
+    showError('Firebase SDK failed to load. Please refresh the page.');
     return;
   }
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAetVvQl103Lz3MRk0ywr-_9xh9E6iCaCk",
-    authDomain: "profpilotru.firebaseapp.com",
-    projectId: "profpilotru",
-    storageBucket: "profpilotru.firebasestorage.app",
-    messagingSenderId: "108290999775",
-    appId: "1:108290999775:web:56b1add2e841523410f06a",
-    measurementId: "G-YV0GRVYKEC"
-  };
+  // Check if configuration is available
+  if (typeof getFirebaseConfig === 'undefined') {
+    console.error('❌ Firebase configuration not found! Check firebase-config.js');
+    showError('Firebase configuration missing. Please check setup.');
+    return;
+  }
+
+  // Get configuration based on environment
+  const firebaseConfig = getFirebaseConfig();
+  
+  // Validate configuration
+  if (!isValidFirebaseConfig(firebaseConfig)) {
+    console.error('❌ Invalid Firebase configuration!');
+    showError('Invalid Firebase configuration. Please check setup.');
+    return;
+  }
 
   try {
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    console.log('Firebase initialized successfully for ProfPilot');
+    console.log('✅ Firebase initialized successfully for ProfPilotEng');
 
     // Initialize Firebase services
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const analytics = firebase.analytics(); // Optional
+    
+    // Initialize Analytics only if available
+    let analytics = null;
+    try {
+      if (firebase.analytics) {
+        analytics = firebase.analytics();
+        console.log('✅ Firebase Analytics initialized');
+      }
+    } catch (error) {
+      console.warn('⚠️ Firebase Analytics not available:', error.message);
+    }
 
-    // Make Firebase services globally available
+    // Make Firebase services globally available (with security checks)
     window.auth = auth;
     window.db = db;
     window.firebase = firebase;
 
     // Authentication state observer
     auth.onAuthStateChanged((user) => {
+      console.log('🔍 Auth state changed:', user ? `User: ${user.email}` : 'No user');
+      console.log('📍 Current page:', window.location.pathname);
+      
       if (user) {
-        console.log('User is signed in:', user.email);
-        // Update UI for signed-in user
+        console.log('👤 User signed in:', user.email);
+        console.log('🔑 User UID:', user.uid);
+        console.log('📧 User email verified:', user.emailVerified);
         updateUIForSignedInUser(user);
       } else {
-        console.log('User is signed out');
-        // Update UI for signed-out user
+        console.log('👤 User signed out');
         updateUIForSignedOutUser();
       }
+    }, (error) => {
+      console.error('❌ Authentication error:', error);
+      showError(`Authentication error: ${error.message}`);
     });
 
     // Initialize all functions after Firebase is ready
     initializeFirebaseFunctions(auth, db, analytics);
+    
+    // Initialize auto-logout timer
+    initializeAutoLogout(auth);
 
   } catch (error) {
-    console.error('Error initializing Firebase:', error);
+    console.error('❌ Error initializing Firebase:', error);
+    showError(`Firebase initialization failed: ${error.message}`);
   }
 });
+
+// Configuration validation
+function isValidFirebaseConfig(config) {
+  const requiredFields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+  
+  for (const field of requiredFields) {
+    if (!config[field] || config[field].includes('YOUR_')) {
+      console.warn(`⚠️  Missing or placeholder value for: ${field}`);
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+// Error display function
+function showError(message) {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px;
+    background: #dc2626;
+    color: white;
+    border-radius: 8px;
+    z-index: 10000;
+    max-width: 400px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    font-family: system-ui, sans-serif;
+  `;
+  errorDiv.innerHTML = `<strong>Firebase Error:</strong><br>${message}`;
+  document.body.appendChild(errorDiv);
+  
+  setTimeout(() => {
+    errorDiv.remove();
+  }, 10000);
+}
+
+// Warning display function
+function showWarning(message) {
+  const warningDiv = document.createElement('div');
+  warningDiv.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px;
+    background: #f59e0b;
+    color: white;
+    border-radius: 8px;
+    z-index: 10000;
+    max-width: 400px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    font-family: system-ui, sans-serif;
+  `;
+  warningDiv.innerHTML = `<strong>Session Warning:</strong><br>${message}`;
+  document.body.appendChild(warningDiv);
+  
+  setTimeout(() => {
+    warningDiv.remove();
+  }, 15000);
+}
 
 // Initialize Firebase functions
 function initializeFirebaseFunctions(auth, db, analytics) {
   // Update UI for signed-in user
   window.updateUIForSignedInUser = function(user) {
-    // Update navigation
-    const authButtons = document.querySelectorAll('.auth-required');
-    const guestButtons = document.querySelectorAll('.guest-only');
-    
-    authButtons.forEach(btn => btn.style.display = 'block');
-    guestButtons.forEach(btn => btn.style.display = 'none');
-    
-    // Update user info if elements exist
-    const userNameElements = document.querySelectorAll('.user-name');
-    userNameElements.forEach(element => {
-      element.textContent = user.displayName || user.email;
-    });
-    
-    // Show dashboard link if it exists
-    const dashboardLinks = document.querySelectorAll('.dashboard-link');
-    dashboardLinks.forEach(link => {
-      link.style.display = 'block';
-    });
+    try {
+      // Update navigation
+      const authButtons = document.querySelectorAll('.auth-required');
+      const guestButtons = document.querySelectorAll('.guest-only');
+      
+      authButtons.forEach(btn => btn.style.display = 'block');
+      guestButtons.forEach(btn => btn.style.display = 'none');
+      
+      // Update user info if elements exist
+      const userNameElements = document.querySelectorAll('.user-name');
+      userNameElements.forEach(element => {
+        element.textContent = user.displayName || user.email;
+      });
+      
+      // Show dashboard link if it exists
+      const dashboardLinks = document.querySelectorAll('.dashboard-link');
+      dashboardLinks.forEach(link => {
+        link.style.display = 'block';
+      });
+      
+      console.log('✅ UI updated for signed-in user');
+    } catch (error) {
+      console.error('❌ Error updating UI for signed-in user:', error);
+    }
   };
 
   // Update UI for signed-out user
   window.updateUIForSignedOutUser = function() {
-    const authButtons = document.querySelectorAll('.auth-required');
-    const guestButtons = document.querySelectorAll('.guest-only');
-    
-    authButtons.forEach(btn => btn.style.display = 'none');
-    guestButtons.forEach(btn => btn.style.display = 'block');
-    
-    // Hide dashboard link
-    const dashboardLinks = document.querySelectorAll('.dashboard-link');
-    dashboardLinks.forEach(link => {
-      link.style.display = 'none';
-    });
+    try {
+      const authButtons = document.querySelectorAll('.auth-required');
+      const guestButtons = document.querySelectorAll('.guest-only');
+      
+      authButtons.forEach(btn => btn.style.display = 'none');
+      guestButtons.forEach(btn => btn.style.display = 'block');
+      
+      // Hide dashboard link
+      const dashboardLinks = document.querySelectorAll('.dashboard-link');
+      dashboardLinks.forEach(link => {
+        link.style.display = 'none';
+      });
+      
+      console.log('✅ UI updated for signed-out user');
+    } catch (error) {
+      console.error('❌ Error updating UI for signed-out user:', error);
+    }
   };
 
   // User Progress Management Functions
@@ -99,301 +201,214 @@ function initializeFirebaseFunctions(auth, db, analytics) {
   // Save user progress for a specific simulator and day
   window.saveUserProgress = async (simulator, day, data) => {
     try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return false;
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to save progress');
       }
-      
-      await db.collection('users').doc(user.uid)
-        .collection('progress').doc(simulator)
-        .set({
-          [day]: data,
+
+      const userId = auth.currentUser.uid;
+      const progressRef = db.collection('users').doc(userId)
+        .collection('progress').doc(simulator);
+
+      await progressRef.set({
+        [day]: {
+          ...data,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-      
-      console.log(`Progress saved for ${simulator} - ${day}`);
+        }
+      }, { merge: true });
+
+      console.log(`✅ Progress saved for ${simulator} day ${day}`);
       return true;
     } catch (error) {
-      console.error('Error saving progress:', error);
-      return false;
+      console.error('❌ Error saving progress:', error);
+      throw error;
     }
   };
 
-  // Get user progress for a specific simulator
-  window.getUserProgress = async (simulator) => {
+  // Get user progress for a specific simulator and day
+  window.getUserProgress = async (simulator, day) => {
     try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return null;
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to get progress');
+      }
+
+      const userId = auth.currentUser.uid;
+      const progressRef = db.collection('users').doc(userId)
+        .collection('progress').doc(simulator);
+
+      const doc = await progressRef.get();
+      
+      if (doc.exists && doc.data()[day]) {
+        return doc.data()[day];
       }
       
-      const doc = await db.collection('users').doc(user.uid)
-        .collection('progress').doc(simulator)
-        .get();
+      return null;
+    } catch (error) {
+      console.error('❌ Error getting progress:', error);
+      throw error;
+    }
+  };
+
+  // Get all user progress for a simulator
+  window.getAllUserProgress = async (simulator) => {
+    try {
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to get progress');
+      }
+
+      const userId = auth.currentUser.uid;
+      const progressRef = db.collection('users').doc(userId)
+        .collection('progress').doc(simulator);
+
+      const doc = await progressRef.get();
       
       if (doc.exists) {
         return doc.data();
       }
-      return null;
+      
+      return {};
     } catch (error) {
-      console.error('Error getting progress:', error);
-      return null;
+      console.error('❌ Error getting all progress:', error);
+      throw error;
     }
   };
 
-  // Save complete user data (profile, progress, etc.)
-  window.saveUserData = async (userData) => {
+  // User Profile Management
+
+  // Save user profile data
+  window.saveUserProfile = async (profileData) => {
     try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return false;
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to save profile');
       }
-      
-      await db.collection('users').doc(user.uid).set({
-        ...userData,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+
+      const userId = auth.currentUser.uid;
+      const userRef = db.collection('users').doc(userId);
+
+      await userRef.set({
+        ...profileData,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        email: auth.currentUser.email
       }, { merge: true });
-      
-      console.log('User data saved successfully');
+
+      console.log('✅ User profile saved');
       return true;
     } catch (error) {
-      console.error('Error saving user data:', error);
-      return false;
+      console.error('❌ Error saving user profile:', error);
+      throw error;
     }
   };
 
-  // Get complete user data
-  window.getUserData = async () => {
+  // Get user profile data
+  window.getUserProfile = async () => {
     try {
-      const user = auth.currentUser;
-      if (!user) {
-          console.error('No user signed in');
-          return null;
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to get profile');
       }
-      
-      const doc = await db.collection('users').doc(user.uid).get();
+
+      const userId = auth.currentUser.uid;
+      const userRef = db.collection('users').doc(userId);
+
+      const doc = await userRef.get();
       
       if (doc.exists) {
-          return doc.data();
+        return doc.data();
       }
+      
       return null;
     } catch (error) {
-      console.error('Error getting user data:', error);
-      return null;
+      console.error('❌ Error getting user profile:', error);
+      throw error;
     }
   };
 
-  // Purchase Management Functions
-
-  // Save purchase record
-  window.savePurchase = async (purchaseData) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return false;
-      }
-      
-      await db.collection('users').doc(user.uid)
-        .collection('purchases').add({
-          ...purchaseData,
-          purchasedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          status: 'active'
-        });
-      
-      console.log('Purchase saved successfully');
-      return true;
-    } catch (error) {
-      console.error('Error saving purchase:', error);
-      return false;
-    }
-  };
-
-  // Get user purchases
-  window.getUserPurchases = async () => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return [];
-      }
-      
-      const snapshot = await db.collection('users').doc(user.uid)
-        .collection('purchases')
-        .orderBy('purchasedAt', 'desc')
-        .get();
-      
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Error getting purchases:', error);
-      return [];
-    }
-  };
-
-  // Achievement Management Functions
-
-  // Save achievement
-  window.saveAchievement = async (achievementData) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return false;
-      }
-      
-      await db.collection('users').doc(user.uid)
-        .collection('achievements').add({
-          ...achievementData,
-          earnedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      
-      console.log('Achievement saved successfully');
-      return true;
-    } catch (error) {
-      console.error('Error saving achievement:', error);
-      return false;
-    }
-  };
-
-  // Get user achievements
-  window.getUserAchievements = async () => {
-    try {
-      const user = auth.currentUser;
-      if (!user) {
-        console.error('No user signed in');
-        return [];
-      }
-      
-      const snapshot = await db.collection('users').doc(user.uid)
-        .collection('achievements')
-        .orderBy('earnedAt', 'desc')
-        .get();
-      
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Error getting achievements:', error);
-      return [];
-    }
-  };
-
-  // Analytics Functions (Optional)
+  // Analytics and Tracking
 
   // Track user action
   window.trackUserAction = (action, data = {}) => {
     try {
       if (analytics) {
         analytics.logEvent(action, {
-          user_id: auth.currentUser?.uid || 'anonymous',
+          ...data,
           timestamp: Date.now(),
-          ...data
+          user_id: auth.currentUser?.uid || 'anonymous'
         });
+        console.log(`📊 Event tracked: ${action}`, data);
       }
     } catch (error) {
-      console.error('Error tracking action:', error);
+      console.error('❌ Error tracking event:', error);
     }
   };
 
-  // Track simulator completion
-  window.trackSimulatorCompletion = (simulator, day, score) => {
-    trackUserAction('simulator_completion', {
-      simulator,
-      day,
-      score
-    });
-  };
-
-  // Track assignment completion
-  window.trackAssignmentCompletion = (simulator, day, assignment) => {
-    trackUserAction('assignment_completion', {
-      simulator,
-      day,
-      assignment
-    });
-  };
-
-  // Utility Functions
-
-  // Check if user is authenticated
-  window.isUserAuthenticated = () => {
-    return !!auth.currentUser;
-  };
-
-  // Get current user
-  window.getCurrentUser = () => {
-    return auth.currentUser;
-  };
-
-  // Format timestamp for display
-  window.formatTimestamp = (timestamp) => {
-    if (!timestamp) return 'N/A';
-    
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Error handling utility
-  window.handleFirebaseError = (error) => {
-    console.error('Firebase error:', error);
-    
-    let userMessage = 'An error occurred. Please try again.';
-    
-    switch (error.code) {
-      case 'permission-denied':
-        userMessage = 'You don\'t have permission to perform this action.';
-        break;
-      case 'unauthenticated':
-        userMessage = 'Please sign in to continue.';
-        break;
-      case 'not-found':
-        userMessage = 'The requested resource was not found.';
-        break;
-      case 'already-exists':
-        userMessage = 'This resource already exists.';
-        break;
-      case 'resource-exhausted':
-        userMessage = 'Service temporarily unavailable. Please try again later.';
-        break;
-      case 'failed-precondition':
-        userMessage = 'Operation failed. Please check your input and try again.';
-        break;
-      case 'aborted':
-        userMessage = 'Operation was cancelled.';
-        break;
-      case 'out-of-range':
-        userMessage = 'Operation is out of valid range.';
-        break;
-      case 'unimplemented':
-        userMessage = 'This feature is not yet implemented.';
-        break;
-      case 'internal':
-        userMessage = 'Internal error. Please try again later.';
-        break;
-      case 'unavailable':
-        userMessage = 'Service is currently unavailable. Please try again later.';
-        break;
-      case 'data-loss':
-        userMessage = 'Data loss occurred. Please contact support.';
-        break;
+  // Track page view
+  window.trackPageView = (pageName) => {
+    try {
+      if (analytics) {
+        analytics.logEvent('page_view', {
+          page_name: pageName,
+          page_title: document.title,
+          timestamp: Date.now()
+        });
+        console.log(`📊 Page view tracked: ${pageName}`);
+      }
+    } catch (error) {
+      console.error('❌ Error tracking page view:', error);
     }
-    
-    return userMessage;
   };
 
-  console.log('Firebase functions initialized successfully');
-  console.log('Available functions: saveUserProgress, getUserProgress, saveUserData, getUserData, savePurchase, getUserPurchases, saveAchievement, getUserAchievements, trackUserAction, isUserAuthenticated, getCurrentUser, formatTimestamp, handleFirebaseError');
+  console.log('✅ Firebase functions initialized successfully');
 }
+
+// Auto-logout functionality
+function initializeAutoLogout(auth) {
+  const INACTIVITY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+  let logoutTimer;
+  let warningTimer;
+  
+  // Reset timer on user activity
+  function resetTimer() {
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
+    if (warningTimer) {
+      clearTimeout(warningTimer);
+    }
+    
+    // Set warning timer (1 hour 45 minutes)
+    warningTimer = setTimeout(() => {
+      showWarning('⚠️ Your session will expire in 15 minutes due to inactivity');
+    }, INACTIVITY_TIMEOUT - (15 * 60 * 1000));
+    
+    // Set logout timer (2 hours)
+    logoutTimer = setTimeout(() => {
+      showWarning('🔒 Session expired due to inactivity. Logging out...');
+      setTimeout(() => {
+        auth.signOut().then(() => {
+          window.location.href = 'login.html?reason=inactivity';
+        });
+      }, 2000);
+    }, INACTIVITY_TIMEOUT);
+  }
+  
+  // Activity events to reset timer
+  const activityEvents = [
+    'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'
+  ];
+  
+  activityEvents.forEach(event => {
+    document.addEventListener(event, resetTimer, true);
+  });
+  
+  // Reset timer on page focus
+  window.addEventListener('focus', resetTimer);
+  
+  // Initialize timer
+  resetTimer();
+  
+  console.log('✅ Auto-logout timer initialized (2 hours inactivity)');
+}
+
+// Security warnings
+console.warn('🔒 Security: This application uses Firebase with proper authentication and authorization.');
+console.warn('📝 Remember: Never expose API keys in client-side code for production applications.');
+console.warn('🌐 Consider using Firebase App Check for additional security.');
