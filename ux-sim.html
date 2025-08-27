@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Designer Simulator - JobHunter.ai - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config-local.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="progress-manager.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .task-card {
+            transition: all 0.3s ease;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .task-completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .task-locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .day-progress {
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        
+        .alex-chat {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+        }
+        
+        .email-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #cbd5e1;
+        }
+        
+        .prototype-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .prototype-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-slate-600 hover:text-slate-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">UX Designer Simulator</h1>
+                        <p class="text-sm text-slate-600">JobHunter.ai - Fix the "About Me" Drop-off</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userEmail" class="text-slate-600"></span>
+                    <button id="logoutBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Overview -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Your Progress</h2>
+                <div class="flex items-center gap-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600" id="currentDay">0</div>
+                        <div class="text-sm text-slate-600">Day</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600" id="currentExperience">0</div>
+                        <div class="text-sm text-slate-600">Experience</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="w-full bg-slate-200 rounded-full h-4 mb-4">
+                <div class="day-progress h-4 rounded-full transition-all duration-500" id="dayProgressBar" style="width: 0%"></div>
+            </div>
+            <div class="text-center text-sm text-slate-600">
+                <span id="dayProgressText">0/4 days completed</span>
+            </div>
+        </div>
+
+        <!-- Current Day Section -->
+        <div id="currentDaySection" class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4" id="dayTitle">Welcome to JobHunter.ai!</h2>
+                <p class="text-lg text-slate-600" id="dayDescription">You're about to start your UX design journey</p>
+            </div>
+            
+            <div id="dayContent">
+                <!-- Day content will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Tasks Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Day 0 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg" id="day0Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">0</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 0</h3>
+                    <p class="text-sm text-slate-600 mb-4">Onboarding & Basics</p>
+                    <div class="text-xs text-slate-500" id="day0Status">Not started</div>
+                </div>
+            </div>
+
+            <!-- Day 1 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="day1Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">1</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 1</h3>
+                    <p class="text-sm text-slate-600 mb-4">Data & Discovery</p>
+                    <div class="text-xs text-slate-500" id="day1Status">Locked</div>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="day2Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">2</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 2</h3>
+                    <p class="text-sm text-slate-600 mb-4">Design & Prototyping</p>
+                    <div class="text-xs text-slate-500" id="day2Status">Locked</div>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked" id="day3Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">3</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 3</h3>
+                    <p class="text-sm text-slate-600 mb-4">Testing & Presentation</p>
+                    <div class="text-xs text-slate-500" id="day3Status">Locked</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alex Chat Section -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">A</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Alex - Your AI Mentor</h3>
+                    <p class="text-sm text-slate-600">Always here to help and guide you!</p>
+                </div>
+            </div>
+            
+            <div id="alexChat" class="space-y-4 mb-6">
+                <div class="alex-chat rounded-2xl p-4">
+                    <p class="text-slate-800">Hi! I'm Alex, your AI mentor. I'll help you become a great UX designer in just 4 days. Do you want to start with UX basics or explore our product?</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <button class="alex-choice px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" data-choice="basics">
+                    Tell me the basics of UX
+                </button>
+                <button class="alex-choice px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" data-choice="product">
+                    Show me the product first
+                </button>
+                <button class="alex-choice px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" data-choice="learn">
+                    What should I learn today?
+                </button>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Achievements</h2>
+            <div id="achievementsDisplay" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="text-center py-8 text-slate-500" id="noAchievements">
+                    <div class="text-4xl mb-2">🏆</div>
+                    <p>Complete tasks to unlock achievements!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Alex Chat Modal -->
+    <div id="alexModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold">A</span>
+                            </div>
+                            <h3 class="text-xl font-bold">Ask Alex</h3>
+                        </div>
+                        <button id="closeAlexModal" class="text-slate-400 hover:text-slate-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div id="alexModalChat" class="space-y-4 mb-4">
+                        <div class="alex-chat rounded-2xl p-4">
+                            <p class="text-slate-800">What would you like to know? I can help with UX concepts, explain tools, analyze your solutions, or guide you through any challenge!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <input type="text" id="alexQuestion" placeholder="Type your question here..." class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button id="askAlex" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            Ask
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // UX Simulator State Management
+        class UXSimulator {
+            constructor() {
+                this.currentDay = 0;
+                this.currentTask = 0;
+                this.experience = 0;
+                this.completedTasks = [];
+                this.alexResponses = {
+                    basics: "Great! UX—User Experience—is all about how someone interacts with a product. Think of ordering food through an app: UX includes finding a restaurant, making an order, and tracking delivery. Your job as a designer is to make this process easy and enjoyable. The golden rule: design for users, not yourself.",
+                    product: "Smart move! Always start by exploring the product. JobHunter.ai is a job search platform. Here's what it offers: user creates an account and completes a profile form, auto-generates a resume, matches relevant jobs, gives personalized job-seeking advice. Problem: 38% of users stop at the 'About Me' field. If they don't finish the form, they lose access to personalized recommendations. We need to discover why and fix it!",
+                    learn: "Perfect! Today you'll learn: 1) What UX design really is, 2) How to explore a product as a user, 3) Basic UX psychology principles, 4) How to work with a cross-functional team. Let's start with the fundamentals and then dive into the JobHunter.ai challenge!"
+                };
+                this.dayContent = this.getDayContent();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadDay(0);
+                this.updateProgress();
+            }
+
+            setupEventListeners() {
+                // Alex choice buttons
+                document.querySelectorAll('.alex-choice').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const choice = e.target.dataset.choice;
+                        this.handleAlexChoice(choice);
+                    });
+                });
+
+                // Alex modal
+                document.getElementById('askAlex').addEventListener('click', () => {
+                    this.askAlex();
+                });
+
+                document.getElementById('closeAlexModal').addEventListener('click', () => {
+                    this.closeAlexModal();
+                });
+
+                // Day cards
+                document.querySelectorAll('.task-card').forEach((card, index) => {
+                    card.addEventListener('click', () => {
+                        if (!card.classList.contains('task-locked')) {
+                            this.loadDay(index);
+                        }
+                    });
+                });
+            }
+
+            handleAlexChoice(choice) {
+                const response = this.alexResponses[choice];
+                this.addAlexMessage(response);
+                
+                // Unlock next step
+                if (choice === 'basics' || choice === 'product' || choice === 'learn') {
+                    this.completeTask(0, 10);
+                    this.showNextStep();
+                }
+            }
+
+            addAlexMessage(message) {
+                const chatDiv = document.getElementById('alexChat');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'alex-chat rounded-2xl p-4 chat-message';
+                messageDiv.innerHTML = `<p class="text-slate-800">${message}</p>`;
+                chatDiv.appendChild(messageDiv);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }
+
+            showNextStep() {
+                setTimeout(() => {
+                    this.addAlexMessage("Great! Now let's meet the team and start your first real task. Click on Day 0 to continue!");
+                    document.getElementById('day0Card').classList.remove('task-locked');
+                    document.getElementById('day0Status').textContent = 'In progress';
+                }, 1000);
+            }
+
+            loadDay(day) {
+                this.currentDay = day;
+                this.updateDayDisplay();
+                this.loadDayContent(day);
+                this.updateProgress();
+            }
+
+            updateDayDisplay() {
+                document.getElementById('currentDay').textContent = this.currentDay;
+                document.getElementById('dayTitle').textContent = this.dayContent[this.currentDay].title;
+                document.getElementById('dayDescription').textContent = this.dayContent[this.currentDay].description;
+            }
+
+            loadDayContent(day) {
+                const contentDiv = document.getElementById('dayContent');
+                const dayData = this.dayContent[day];
+                
+                contentDiv.innerHTML = dayData.html;
+                
+                // Setup day-specific event listeners
+                if (day === 0) {
+                    this.setupDay0Events();
+                } else if (day === 1) {
+                    this.setupDay1Events();
+                } else if (day === 2) {
+                    this.setupDay2Events();
+                } else if (day === 3) {
+                    this.setupDay3Events();
+                }
+            }
+
+            setupDay0Events() {
+                // Team meeting buttons
+                const teamButtons = document.querySelectorAll('.team-member-btn');
+                teamButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const member = e.target.dataset.member;
+                        this.showTeamMemberInfo(member);
+                    });
+                });
+
+                // UX psychology quiz
+                const quizButtons = document.querySelectorAll('.quiz-choice');
+                quizButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const choice = e.target.dataset.choice;
+                        this.handleQuizChoice(choice);
+                    });
+                });
+            }
+
+            showTeamMemberInfo(member) {
+                const teamInfo = {
+                    mike: "Mike (Product Manager): We're losing users at the 'About Me' part—can you help?",
+                    emma: "Emma (UX Researcher): I've got user activity data and click maps. I'll share them.",
+                    sarah: "Sarah (Senior Designer): Welcome! Don't be afraid to ask 'why' in UX.",
+                    mark: "Mark (Front-End Engineer): Anything you design, I can build. Just keep tech limits in mind."
+                };
+
+                this.addAlexMessage(teamInfo[member]);
+                this.addAlexMessage("See how each team member has their specialty? Mike: business and metrics, Emma: user research, Sarah: solution design, Mark: tech constraints. In UX, everyone's opinion matters. Ready for your first task?");
+            }
+
+            handleQuizChoice(choice) {
+                const correctAnswer = 'D';
+                if (choice === correctAnswer) {
+                    this.addAlexMessage("Correct answer: D! Multiple psychological barriers may combine. Tomorrow we'll check through user interviews.");
+                    this.completeTask(0, 15);
+                } else {
+                    this.addAlexMessage("Not quite right. Think about it - users might have multiple reasons for abandoning the field. The answer is D: All of the above.");
+                }
+            }
+
+            completeTask(day, exp) {
+                if (!this.completedTasks.includes(day)) {
+                    this.completedTasks.push(day);
+                    this.experience += exp;
+                    this.updateProgress();
+                    
+                    // Unlock next day if available
+                    if (day < 3 && !this.completedTasks.includes(day + 1)) {
+                        this.unlockDay(day + 1);
+                    }
+                }
+            }
+
+            unlockDay(day) {
+                const dayCard = document.getElementById(`day${day}Card`);
+                dayCard.classList.remove('task-locked');
+                document.getElementById(`day${day}Status`).textContent = 'Available';
+                
+                this.addAlexMessage(`Great job! Day ${day} is now unlocked. Click on it to continue your UX journey!`);
+            }
+
+            updateProgress() {
+                const progress = (this.completedTasks.length / 4) * 100;
+                document.getElementById('dayProgressBar').style.width = `${progress}%`;
+                document.getElementById('dayProgressText').textContent = `${this.completedTasks.length}/4 days completed`;
+                document.getElementById('currentExperience').textContent = this.experience;
+            }
+
+            getDayContent() {
+                return {
+                    0: {
+                        title: "Day 0: Onboarding & Team Introduction",
+                        description: "Learn UX basics, meet the team, and understand the challenge",
+                        html: this.getDay0HTML()
+                    },
+                    1: {
+                        title: "Day 1: Data & Discovery",
+                        description: "Analyze analytics, conduct interviews, and form hypotheses",
+                        html: this.getDay1HTML()
+                    },
+                    2: {
+                        title: "Day 2: Design & Prototyping",
+                        description: "Create prototypes in Figma and get team feedback",
+                        html: this.getDay2HTML()
+                    },
+                    3: {
+                        title: "Day 3: Testing & Presentation",
+                        description: "Test prototypes and present your solution to executives",
+                        html: this.getDay3HTML()
+                    }
+                };
+            }
+
+            getDay0HTML() {
+                return `
+                    <div class="space-y-6">
+                        <!-- Welcome Email -->
+                        <div class="email-card rounded-2xl p-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-bold">H</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">hr@jobhunter.ai</div>
+                                    <div class="text-sm text-slate-500">Welcome to JobHunter.ai! 🎉</div>
+                                </div>
+                            </div>
+                            <div class="text-slate-700">
+                                <p>Hi!</p>
+                                <p class="mt-2">Today is your first day. Alex, your AI mentor, will guide you.</p>
+                                <p class="mt-2">Here's your task list:</p>
+                                <ol class="list-decimal list-inside mt-2 space-y-1">
+                                    <li>Explore the JobHunter.ai product as a user</li>
+                                    <li>Meet the project team</li>
+                                    <li>Complete the UX orientation module</li>
+                                </ol>
+                                <p class="mt-2">Good luck!</p>
+                                <p class="mt-2">— HR Team</p>
+                            </div>
+                        </div>
+
+                        <!-- Team Meeting -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+                            <h3 class="text-xl font-bold text-slate-900 mb-4">⏰ 11:00 AM – Meet the Team (Video Call)</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <button class="team-member-btn p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors" data-member="mike">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <span class="text-white font-bold">M</span>
+                                        </div>
+                                        <div class="font-semibold text-sm">Mike</div>
+                                        <div class="text-xs text-slate-600">Product Manager</div>
+                                    </div>
+                                </button>
+                                <button class="team-member-btn p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors" data-member="emma">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <span class="text-white font-bold">E</span>
+                                        </div>
+                                        <div class="font-semibold text-sm">Emma</div>
+                                        <div class="text-xs text-slate-600">UX Researcher</div>
+                                    </div>
+                                </button>
+                                <button class="team-member-btn p-4 bg-purple-50 rounded-xl hover:bg-purple-100 transition-colors" data-member="sarah">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <span class="text-white font-bold">S</span>
+                                        </div>
+                                        <div class="font-semibold text-sm">Sarah</div>
+                                        <div class="text-xs text-slate-600">Senior Designer</div>
+                                    </div>
+                                </button>
+                                <button class="team-member-btn p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors" data-member="mark">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <span class="text-white font-bold">M</span>
+                                        </div>
+                                        <div class="font-semibold text-sm">Mark</div>
+                                        <div class="text-xs text-slate-600">Front-End Engineer</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- UX Psychology Quiz -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+                            <h3 class="text-xl font-bold text-slate-900 mb-4">⏰ 2:00 PM – Quick UX Psychology with Alex</h3>
+                            <p class="text-slate-700 mb-4">Time for some user psychology!</p>
+                            <ul class="list-disc list-inside text-slate-700 mb-6 space-y-2">
+                                <li><strong>Hick's Law:</strong> More choices = slower decisions.</li>
+                                <li><strong>Gestalt Principles:</strong> The brain groups nearby items.</li>
+                                <li><strong>Mental Models:</strong> Users expect certain behaviors, like a 'shopping cart' for buying.</li>
+                            </ul>
+                            
+                            <div class="bg-blue-50 rounded-xl p-4 mb-4">
+                                <p class="font-semibold text-blue-900 mb-3">Quiz:</p>
+                                <p class="text-blue-800 mb-4">Why do users abandon the 'About Me' field?</p>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button class="quiz-choice px-4 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors text-left" data-choice="A">
+                                        A) Too many options
+                                    </button>
+                                    <button class="quiz-choice px-4 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors text-left" data-choice="B">
+                                        B) Unclear what is expected
+                                    </button>
+                                    <button class="quiz-choice px-4 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors text-left" data-choice="C">
+                                        C) Fear of mistakes
+                                    </button>
+                                    <button class="quiz-choice px-4 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors text-left" data-choice="D">
+                                        D) All of the above
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Day 0 Recap -->
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+                            <h3 class="text-xl font-bold text-green-900 mb-4">⏰ 5:00 PM – Day 0 Recap</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-green-800">Learned what UX is</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-green-800">Explored JobHunter.ai</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-green-800">Met the team</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-green-800">Understood core psychology</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 p-4 bg-white rounded-xl border border-green-200">
+                                <h4 class="font-semibold text-green-900 mb-2">Homework:</h4>
+                                <p class="text-green-800">Think of three questions you'd ask users about the 'About Me' field.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getDay1HTML() {
+                return `
+                    <div class="space-y-6">
+                        <div class="bg-yellow-50 rounded-2xl p-6 border border-yellow-200">
+                            <h3 class="text-xl font-bold text-yellow-900 mb-4">⏰ 9:00 AM – Receive Analytics</h3>
+                            <p class="text-yellow-800 mb-4">Email from Emma:</p>
+                            <div class="bg-white rounded-xl p-4">
+                                <h4 class="font-semibold mb-3">Registration Funnel:</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li><strong>Started:</strong> 100%</li>
+                                    <li><strong>Contacts:</strong> 93%</li>
+                                    <li><strong>Skills:</strong> 71%</li>
+                                    <li><strong>Reached "About Me":</strong> 62%</li>
+                                    <li><strong>Completed "About Me":</strong> 24%</li>
+                                    <li><strong>Finished form:</strong> 28%</li>
+                                </ul>
+                                <p class="mt-3 text-sm"><strong>Heatmap:</strong> Average time spent on "About Me" is 65 seconds. 38% pause there and leave.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="text-lg text-slate-700 mb-4">Day 1 content will be fully implemented in the next iteration!</p>
+                            <button class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
+                                Continue to Day 2
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getDay2HTML() {
+                return `
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <p class="text-lg text-slate-700 mb-4">Day 2 content will be fully implemented in the next iteration!</p>
+                            <button class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
+                                Continue to Day 3
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            getDay3HTML() {
+                return `
+                    <div class="space-y-6">
+                        <div class="text-center">
+                            <p class="text-lg text-slate-700 mb-4">Day 3 content will be fully implemented in the next iteration!</p>
+                            <button class="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors">
+                                Complete Simulation
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            askAlex() {
+                const question = document.getElementById('alexQuestion').value.trim();
+                if (question) {
+                    // Add user question
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'bg-blue-100 rounded-2xl p-4 ml-8';
+                    userDiv.innerHTML = `<p class="text-blue-900"><strong>You:</strong> ${question}</p>`;
+                    document.getElementById('alexModalChat').appendChild(userDiv);
+
+                    // Simulate Alex response
+                    setTimeout(() => {
+                        const alexDiv = document.createElement('div');
+                        alexDiv.className = 'alex-chat rounded-2xl p-4';
+                        alexDiv.innerHTML = `<p class="text-slate-800"><strong>Alex:</strong> ${this.generateAlexResponse(question)}</p>`;
+                        document.getElementById('alexModalChat').appendChild(alexDiv);
+                        document.getElementById('alexQuestion').value = '';
+                    }, 1000);
+                }
+            }
+
+            generateAlexResponse(question) {
+                const responses = [
+                    "Great question! In UX design, we always start with understanding the user's perspective. Let me explain...",
+                    "That's a key UX principle! The answer involves user research and iterative design. Here's why...",
+                    "Excellent observation! This relates to cognitive load theory. Users abandon forms when they feel overwhelmed...",
+                    "You're thinking like a true UX designer! The solution involves breaking down complex tasks into simpler steps...",
+                    "That's exactly what we need to focus on! User psychology tells us that people need clear guidance and examples..."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+
+            closeAlexModal() {
+                document.getElementById('alexModal').classList.add('hidden');
+            }
+        }
+
+        // Initialize simulator when page loads
+        let uxSimulator;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            if (typeof firebase !== 'undefined') {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        document.getElementById('userEmail').textContent = user.email;
+                        uxSimulator = new UXSimulator();
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                });
+            } else {
+                // For demo purposes, create simulator anyway
+                uxSimulator = new UXSimulator();
+            }
+
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                if (typeof firebase !== 'undefined') {
+                    try {
+                        await firebase.auth().signOut();
+                        window.location.href = 'login.html';
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                    }
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
