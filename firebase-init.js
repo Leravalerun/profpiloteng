@@ -111,28 +111,11 @@ function showError(message) {
   return;
 }
 
-// Warning display function
+// Warning display function - TEMPORARILY DISABLED
 function showWarning(message) {
-  const warningDiv = document.createElement('div');
-  warningDiv.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px;
-    background: #f59e0b;
-    color: white;
-    border-radius: 8px;
-    z-index: 10000;
-    max-width: 400px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    font-family: system-ui, sans-serif;
-  `;
-  warningDiv.innerHTML = `<strong>Session Warning:</strong><br>${message}`;
-  document.body.appendChild(warningDiv);
-  
-  setTimeout(() => {
-    warningDiv.remove();
-  }, 15000);
+  console.log('⚠️ Session Warning (temporarily disabled):', message);
+  // Warning display temporarily disabled to fix configuration issues
+  return;
 }
 
 // Initialize Firebase functions
