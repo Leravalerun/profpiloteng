@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resume Builder — Findyouridealjob.ai</title>
+  <meta name="description" content="Resume builder form in English. Single-file HTML+CSS+JS. No external libs."/>
+  <style>
+    :root{
+      --bg:#f5f6fb;/* page */
+      --paper:#ffffff;/* cards */
+      --text:#0f172a;/* slate-900 */
+      --muted:#6b7280;/* gray-500 */
+      --line:rgba(15,23,42,.08);
+      --primary:#7b61ff; /* purple */
+      --primary-600:#6a52ff;
+      --accent:#22c55e; /* green for success */
+      --radius:16px;
+      --shadow:0 8px 28px rgba(15,23,42,.08);
+      --input:#f3f4f6; /* field bg */
+      --input-line:#e5e7eb; /* field border */
+      --warning:#f59e0b; /* amber */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;letter-spacing:.2px;color:var(--text);background:radial-gradient(1200px 400px at 50% -120px, rgba(123,97,255,.08), transparent) , var(--bg)}
+    a{color:var(--primary);text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
+
+    /* Header */
+    .topbar{background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:999px;padding:10px 14px;display:flex;align-items:center;gap:16px;position:sticky;top:14px;z-index:40}
+    .logo{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 30% 20%, #a78bfa, #7b61ff);font-weight:800}
+    nav{display:flex;gap:14px;flex-wrap:wrap}
+    nav a{padding:8px 10px;border-radius:10px;color:#334155}
+    nav a.active,nav a:hover{background:rgba(123,97,255,.12);color:#1e293b}
+    .spacer{flex:1}
+    .avatar{display:flex;align-items:center;gap:10px}
+    .avatar img{width:36px;height:36px;border-radius:50%;box-shadow:0 0 0 2px #fff, 0 0 0 3px rgba(123,97,255,.3)}
+    details.menu{position:relative}
+    details.menu>summary{list-style:none;cursor:pointer;padding:6px 10px;border-radius:10px}
+    details.menu[open]>summary{background:rgba(123,97,255,.08)}
+    details.menu .dropdown{position:absolute;right:0;top:44px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-width:180px;overflow:hidden}
+    .dropdown a{display:block;padding:10px 12px;color:#111827}
+    .dropdown a:hover{background:#f9fafb}
+
+    /* Page head */
+    .pagehead{margin:22px 0 12px}
+    .pagehead h1{margin:0 0 8px;font-size:40px;line-height:1.05;letter-spacing:.3px}
+    .lead{color:#4b5563}
+
+    /* Upload card */
+    .upload{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+    .upload .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+    .btn{appearance:none;border:1px solid var(--primary);color:var(--primary);background:transparent;padding:12px 16px;border-radius:999px;font-weight:700;cursor:pointer}
+    .btn:hover{background:rgba(123,97,255,.08)}
+    .btn.solid{background:linear-gradient(180deg,var(--primary),var(--primary-600));border-color:transparent;color:#fff;box-shadow:0 8px 22px rgba(123,97,255,.35)}
+    .btn.icon::before{content:'📄';margin-right:8px}
+    .hint{margin-top:10px;color:#6b7280;font-size:14px}
+
+    /* Section cards */
+    section.card{background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:22px;padding:18px;margin:16px 0}
+    .sec-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 4px 14px}
+    .sec-title{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.2px}
+    .sec-title .dot{width:12px;height:12px;border-radius:3px;background:#e9d5ff;display:inline-block}
+    .caret{background:#f3f4f6;border:1px solid var(--line);border-radius:12px;padding:8px 10px;cursor:pointer}
+    .content{display:grid;gap:14px}
+
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media (max-width:900px){.form-grid{grid-template-columns:1fr}}
+
+    label{display:block;font-size:13px;color:#475569;margin:2px 4px 6px}
+    input[type="text"],input[type="email"],input[type="tel"],input[type="url"],textarea,select{width:100%;background:var(--input);border:1px solid var(--input-line);border-radius:999px;padding:12px 14px;color:#111827;outline: none}
+    textarea{min-height:110px;border-radius:16px;padding:12px 14px}
+    .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    @media (max-width:900px){.row2{grid-template-columns:1fr 1fr}}
+    .row3{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .note{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:#475569}
+    .note:before{content:'💡';margin-right:6px}
+
+    .split{display:grid;grid-template-columns:1fr 280px;gap:14px}
+    @media (max-width:900px){.split{grid-template-columns:1fr}}
+
+    /* bullets help */
+    .muted{color:#6b7280}
+
+    .addline{display:flex;justify-content:flex-start}
+
+    .btn.outline{border-color:var(--primary);color:var(--primary);background:transparent}
+
+    .footerbar{position:sticky;bottom:10px;display:flex;justify-content:center;margin:22px 0}
+    .savebtn{min-width:260px}
+    .disabled{opacity:.6;cursor:not-allowed}
+
+    .inline{display:flex;align-items:center;gap:10px}
+    .checkbox{display:flex;align-items:center;gap:8px}
+
+    /* tiny helper for hidden templates */
+    .hidden{display:none}
+
+    /* Back button */
+    .back-btn{position:fixed;top:20px;left:20px;z-index:50;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:8px 16px;color:var(--text);text-decoration:none;box-shadow:var(--shadow);font-weight:600}
+    .back-btn:hover{background:rgba(123,97,255,.08)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Back button -->
+  <a href="ux-sim-simple.html" class="back-btn">← Back to Simulator</a>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="logo">F</div>
+    <nav>
+      <a href="#" class="active">Home</a>
+      <a href="#">Resume</a>
+      <a href="#">Applications Tracker</a>
+      <a href="#">Knowledge Base</a>
+      <a href="#">Career Coaching</a>
+      <a href="#">Help</a>
+    </nav>
+    <div class="spacer"></div>
+    <details class="menu avatar">
+      <summary class="inline"><img alt="User" src="https://dummyimage.com/72x72/ddd/fff.jpg&text=%20"/><span>Account ▾</span></summary>
+      <div class="dropdown">
+        <a href="#">Account</a>
+        <a href="#">Log out</a>
+      </div>
+    </details>
+  </div>
+
+  <!-- Page Head -->
+  <div class="pagehead">
+    <h1>Resume</h1>
+    <p class="lead">Here you can upload your existing resume or use our form to create your CV.</p>
+  </div>
+
+  <!-- Upload card -->
+  <div class="upload">
+    <div class="row">
+      <label class="btn outline icon" for="resumeFile">Upload your resume</label>
+      <input id="resumeFile" type="file" accept="application/pdf" style="display:none">
+      <span class="muted">Accepted format: <b>PDF</b>. Max size: 10 MB.</span>
+    </div>
+    <p class="hint">To create a resume you can send directly to recruiters and HR, please fill in all fields. You can edit everything later.</p>
+  </div>
+
+  <!-- CONTACTS -->
+  <section class="card" id="contacts">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span>Contacts</span></div>
+      <button class="caret" type="button" data-toggle="#contactsBody">▾</button>
+    </div>
+    <div class="content split" id="contactsBody">
+      <div class="content">
+        <div class="form-grid">
+          <div><label>First name</label><input type="text" placeholder="Ivan"></div>
+          <div><label>Last name</label><input type="text" placeholder="Ivanov"></div>
+          <div><label>E‑mail</label><input type="email" placeholder="example@gmail.com"></div>
+          <div><label>Phone</label><input type="tel" placeholder="+90 123 45 67 89"></div>
+          <div><label>LinkedIn</label><input type="url" placeholder="https://"></div>
+          <div><label>GitHub</label><input type="url" placeholder="https://"></div>
+          <div><label>Behance</label><input type="url" placeholder="https://"></div>
+          <div><label>Website</label><input type="url" placeholder="https://"></div>
+          <div><label>Country</label><input type="text" placeholder="Country"></div>
+          <div><label>City</label><input type="text" placeholder="City"></div>
+        </div>
+      </div>
+      <aside class="note">Use the phone number linked to Telegram/WhatsApp. Use a professional email for job applications.</aside>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="card" id="summary">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span>Summary About You</span></div>
+      <button class="caret" type="button" data-toggle="#summaryBody">▾</button>
+    </div>
+    <div class="content split" id="summaryBody">
+      <div>
+        <label>Summary (2–3 sentences)</label>
+        <textarea placeholder="Example: Product Manager with 5+ years of experience launching products from zero. Worked in online education and consumer finance mobile apps. Strong collaborator with engineering; responsible for product strategy, go‑to‑market, and user communication."></textarea>
+      </div>
+      <aside class="note">Write up to 2–3 sentences in one paragraph. Mention your title, years of experience, key expertise and industries.</aside>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="card" id="skills">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span>Skills</span></div>
+      <button class="caret" type="button" data-toggle="#skillsBody">▾</button>
+    </div>
+    <div class="content split" id="skillsBody">
+      <div>
+        <label>Key hard skills (comma or • separated)</label>
+        <textarea placeholder="Example: Product strategy • Team leadership • Market & competitor analysis • Scrum • Agile • Customer Development • Product launches • Go‑to‑market • Product analytics • Mobile dev • Web dev • English (C2)"></textarea>
+      </div>
+      <aside class="note">List hard skills and platforms you actually use.</aside>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="card" id="experience">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span>Work Experience</span></div>
+      <button class="caret" type="button" data-toggle="#expBody">▾</button>
+    </div>
+    <div class="content" id="expBody">
+      <!-- Entries container -->
+      <div id="expList"></div>
+      <div class="addline"><button class="btn outline" id="addJob">＋ Add job</button></div>
+      <p class="muted">Tip: keep up to 6 bullets per job.</p>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="card" id="education">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span>Education</span></div>
+      <button class="caret" type="button" data-toggle="#eduBody">▾</button>
+    </div>
+    <div class="content" id="eduBody">
+      <div id="eduList"></div>
+      <div class="addline"><button class="btn outline" id="addEdu">＋ Add institution</button></div>
+      <p class="muted">List relevant courses not older than 2 years.</p>
+    </div>
+  </section>
+
+  <!-- Footer save -->
+  <div class="footerbar">
+    <button class="btn solid savebtn" id="saveBtn">Save</button>
+  </div>
+</div>
+
+<!-- Templates (hidden) -->
+<template id="jobTemplate">
+  <section class="card" style="margin:8px 0">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span class="jobTitle">New job</span></div>
+      <button class="caret" type="button">Remove</button>
+    </div>
+    <div class="content split">
+      <div class="content">
+        <div class="form-grid">
+          <div><label>Company</label><input type="text" class="company" placeholder="Company name"></div>
+          <div><label>Position</label><input type="text" class="position" placeholder="Your position"></div>
+        </div>
+        <div class="row3">
+          <div><label>Start date</label><input type="text" class="start" placeholder="MM/YYYY"></div>
+          <div><label>End date</label><input type="text" class="end" placeholder="MM/YYYY"></div>
+          <label class="checkbox" style="margin-top:26px"><input type="checkbox" class="present"> Present</label>
+        </div>
+        <div>
+          <label>Describe your responsibilities & achievements</label>
+          <textarea class="desc" placeholder="Use short bullet-like lines (max 6)."></textarea>
+        </div>
+      </div>
+      <aside class="note">No more than 6 bullets, please.</aside>
+    </div>
+  </section>
+</template>
+
+<template id="eduTemplate">
+  <section class="card" style="margin:8px 0">
+    <div class="sec-header">
+      <div class="sec-title"><span class="dot"></span><span class="eduTitle">New education</span></div>
+      <button class="caret" type="button">Remove</button>
+    </div>
+    <div class="content split">
+      <div class="content">
+        <div class="form-grid">
+          <div><label>University / Course</label><input type="text" class="school" placeholder="Name"></div>
+          <div><label>Field of study</label><input type="text" class="field" placeholder="Major / Track"></div>
+        </div>
+        <div class="row3">
+          <div><label>Start year</label><input type="text" class="ystart" placeholder="YYYY"></div>
+          <div><label>Graduation year</label><input type="text" class="yend" placeholder="YYYY"></div>
+        </div>
+        <div>
+          <label>Achievements</label>
+          <textarea class="desc" placeholder="Scholarships, projects, GPA, thesis, competitions…"></textarea>
+        </div>
+      </div>
+      <aside class="note">Add only relevant courses (≤ 2 years old).</aside>
+    </div>
+  </section>
+</template>
+
+<script>
+  const $ = (s,el=document)=>el.querySelector(s);
+  const $$ = (s,el=document)=>Array.from(el.querySelectorAll(s));
+
+  // collapse/expand (caret toggles)
+  $$('[data-toggle]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const el = document.querySelector(btn.dataset.toggle);
+      if(!el) return; el.style.display = el.style.display==='none' ? '' : 'none';
+      btn.textContent = el.style.display==='none' ? '▸' : '▾';
+    });
+  });
+
+  // Experience dynamic
+  const expList = $('#expList');
+  const jobTpl = $('#jobTemplate');
+  function addJob(){
+    const node = jobTpl.content.firstElementChild.cloneNode(true);
+    const title = $('.jobTitle', node);
+    const company = $('.company', node);
+    const position = $('.position', node);
+    $('.caret', node).addEventListener('click', ()=> node.remove());
+    company.addEventListener('input', ()=> {title.textContent = company.value || 'New job';});
+    position.addEventListener('input', ()=> {if(company.value) title.textContent = company.value + ' — ' + position.value;});
+    expList.appendChild(node);
+  }
+  $('#addJob').addEventListener('click', addJob);
+  // start with two blocks for parity with screenshot
+  addJob(); addJob();
+
+  // Education dynamic
+  const eduList = $('#eduList');
+  const eduTpl = $('#eduTemplate');
+  function addEdu(){
+    const node = eduTpl.content.firstElementChild.cloneNode(true);
+    const title = $('.eduTitle', node);
+    const school = $('.school', node);
+    const field = $('.field', node);
+    $('.caret', node).addEventListener('click', ()=> node.remove());
+    function update(){
+      title.textContent = (school.value||'Education') + (field.value? ' — ' + field.value : '');
+    }
+    school.addEventListener('input', update); field.addEventListener('input', update);
+    eduList.appendChild(node);
+  }
+  $('#addEdu').addEventListener('click', addEdu);
+  addEdu(); addEdu();
+
+  // Save (demo): gather payload and show in console
+  $('#saveBtn').addEventListener('click', ()=>{
+    const payload = {
+      contacts: {
+        first: $('#contacts input[placeholder="Ivan"]').value,
+        last:  $('#contacts input[placeholder="Ivanov"]').value,
+        email: $('#contacts input[type="email"]').value,
+        phone: $('#contacts input[type="tel"]').value,
+        linkedin: $('#contacts input[placeholder="https://"]').value,
+        github: $$('#contacts input[placeholder="https://"]')[1].value,
+        behance: $$('#contacts input[placeholder="https://"]')[2].value,
+        website: $$('#contacts input[placeholder="https://"]')[3].value,
+        country: $('#contacts input[placeholder="Country"]').value,
+        city: $('#contacts input[placeholder="City"]').value,
+      },
+      summary: $('#summary textarea').value,
+      skills: $('#skills textarea').value,
+      experience: $$('#expList section').map(card=>({
+        company: $('.company', card).value,
+        position: $('.position', card).value,
+        start: $('.start', card).value,
+        end: $('.present', card).checked? 'Present' : $('.end', card).value,
+        description: $('.desc', card).value
+      })),
+      education: $$('#eduList section').map(card=>({
+        school: $('.school', card).value,
+        field: $('.field', card).value,
+        startYear: $('.ystart', card).value,
+        endYear: $('.yend', card).value,
+        description: $('.desc', card).value
+      }))
+    };
+    console.log('SAVE PAYLOAD →', payload);
+    alert('Saved! (Check the console for the JSON payload)');
+  });
+</script>
+</body>
+</html>

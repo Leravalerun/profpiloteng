@@ -721,33 +721,16 @@
         // Initialize simulator when page loads
         let uxSimulator;
         document.addEventListener('DOMContentLoaded', () => {
-            // Check authentication
-            if (typeof firebase !== 'undefined') {
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (user) {
-                        document.getElementById('userEmail').textContent = user.email;
-                        uxSimulator = new UXSimulator();
-                    } else {
-                        window.location.href = 'login.html';
-                    }
-                });
-            } else {
-                // For demo purposes, create simulator anyway
-                uxSimulator = new UXSimulator();
-            }
+            // For demo purposes, create simulator anyway (skip authentication)
+            uxSimulator = new UXSimulator();
+            
+            // Set demo user email
+            document.getElementById('userEmail').textContent = 'demo@profpilot.com';
 
             // Logout button
             document.getElementById('logoutBtn').addEventListener('click', async () => {
-                if (typeof firebase !== 'undefined') {
-                    try {
-                        await firebase.auth().signOut();
-                        window.location.href = 'login.html';
-                    } catch (error) {
-                        console.error('Logout error:', error);
-                    }
-                } else {
-                    window.location.href = 'login.html';
-                }
+                // For demo purposes, just go back to dashboard
+                window.location.href = 'dashboard.html';
             });
         });
     </script>

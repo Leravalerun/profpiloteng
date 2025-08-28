@@ -1,8 +1,15 @@
 // Firebase Initialization for ProfPilotEng
 // Secure initialization with environment-based configuration
 
+// TEMPORARILY DISABLED - Firebase configuration issues
+console.log('⚠️ Firebase temporarily disabled to fix configuration issues');
+
 // Wait for DOM and Firebase to be available
 document.addEventListener('DOMContentLoaded', function() {
+  // TEMPORARILY DISABLED - Skip Firebase initialization
+  console.log('⚠️ Firebase initialization skipped - temporarily disabled');
+  return;
+  
   // Check if Firebase is loaded
   if (typeof firebase === 'undefined') {
     console.error('❌ Firebase SDK not loaded! Check your script tags.');
@@ -97,28 +104,11 @@ function isValidFirebaseConfig(config) {
   return true;
 }
 
-// Error display function
+// Error display function - TEMPORARILY DISABLED
 function showError(message) {
-  const errorDiv = document.createElement('div');
-  errorDiv.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 16px;
-    background: #dc2626;
-    color: white;
-    border-radius: 8px;
-    z-index: 10000;
-    max-width: 400px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    font-family: system-ui, sans-serif;
-  `;
-  errorDiv.innerHTML = `<strong>Firebase Error:</strong><br>${message}`;
-  document.body.appendChild(errorDiv);
-  
-  setTimeout(() => {
-    errorDiv.remove();
-  }, 10000);
+  console.log('⚠️ Firebase Error (temporarily disabled):', message);
+  // Error display temporarily disabled to fix configuration issues
+  return;
 }
 
 // Warning display function
