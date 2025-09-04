@@ -1,15 +1,351 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Thanks — ProfPilot</title>
-  <link rel="stylesheet" href="https://cdn.tailwindcss.com">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ProfPilot — Thank You!</title>
+  <meta name="description" content="Thank you for your purchase! Your career simulator is ready to start." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'bounce-gentle': 'bounceGentle 2s infinite',
+            'checkmark': 'checkmark 0.6s ease-out'
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' }
+            },
+            bounceGentle: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            checkmark: {
+              '0%': { transform: 'scale(0)' },
+              '50%': { transform: 'scale(1.2)' },
+              '100%': { transform: 'scale(1)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      scroll-behavior: smooth;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    .success-checkmark {
+      animation: checkmark 0.6s ease-out;
+    }
+  </style>
 </head>
-<body class="min-h-screen grid place-items-center bg-slate-50">
-  <div class="bg-white rounded-2xl shadow p-8 text-center max-w-md">
-    <h1 class="text-2xl font-semibold">Thanks! 🎉</h1>
-    <p class="mt-2 text-slate-600">We’ve received your suggestion and will email you when it’s live.</p>
-    <a href="/" class="mt-6 inline-block rounded-xl bg-brand-600 text-white px-5 py-2 font-semibold">Back to home</a>
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+
+  <!-- Navbar -->
+  <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
+    <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+      <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700 hover:text-brand-800 transition-colors">
+        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" />
+        ProfPilot
+      </a>
+      <div class="flex items-center gap-2">
+        <a href="/dashboard.html" class="px-4 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition-colors duration-200">Dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="h-16"></div><!-- spacer for fixed navbar -->
+
+  <!-- Main Content -->
+  <div class="min-h-screen py-8">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Success Message -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6 success-checkmark">
+          <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-4xl sm:text-5xl font-black text-slate-900 mb-4 animate-fade-in">
+          Payment <span class="gradient-text">Successful!</span>
+        </h1>
+        
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto animate-slide-up" style="animation-delay: 0.2s;">
+          Thank you for your purchase! Your simulator is now ready to start. Check your email for a confirmation and receipt.
+        </p>
+      </div>
+
+      <!-- Purchase Details -->
+      <div class="bg-white rounded-2xl shadow-card p-8 mb-8 animate-slide-up" style="animation-delay: 0.4s;">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Purchase Details</h2>
+        
+        <div id="purchase-details" class="space-y-4">
+          <!-- Purchase details will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Next Steps -->
+      <div class="grid md:grid-cols-2 gap-8 mb-8">
+        
+        <!-- Start Simulator -->
+        <div class="bg-white rounded-2xl shadow-card p-8 animate-slide-up" style="animation-delay: 0.6s;">
+          <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-4 text-center">Start Your Simulator</h3>
+          <p class="text-slate-600 mb-6 text-center">Ready to dive in? Your simulator is waiting for you in your dashboard.</p>
+          <a href="/dashboard.html" id="start-simulator-btn" 
+             class="block w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-brand-700 transition-colors text-center">
+            Go to Dashboard
+          </a>
+        </div>
+
+        <!-- What's Next -->
+        <div class="bg-white rounded-2xl shadow-card p-8 animate-slide-up" style="animation-delay: 0.8s;">
+          <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-4 text-center">What's Next?</h3>
+          <ul class="text-slate-600 space-y-3">
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Complete your 3-day simulator at your own pace</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Get feedback and guidance throughout</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span>Receive a summary of your experience</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Support Section -->
+      <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 text-center animate-slide-up" style="animation-delay: 1s;">
+        <h3 class="text-xl font-bold text-slate-900 mb-4">Need Help?</h3>
+        <p class="text-slate-600 mb-6">If you have any questions about your simulator or need assistance, we're here to help!</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="mailto:careers.inspirante@gmail.com" 
+             class="inline-flex items-center px-6 py-3 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+            <svg class="w-5 h-5 text-slate-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            Email Support
+          </a>
+          <a href="/dashboard.html" 
+             class="inline-flex items-center px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            View Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Footer -->
+  <footer class="py-8 border-t border-slate-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" />
+          <div>
+            <span class="text-lg font-bold text-slate-900">ProfPilot</span>
+            <p class="text-sm text-slate-500">Try a job in 3 days</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-6 text-sm text-slate-600">
+          <a href="/policy.html" class="hover:text-brand-700 hover:underline transition-colors">Privacy Policy</a>
+          <a href="/terms.html" class="hover:text-brand-700 hover:underline transition-colors">Terms</a>
+          <span class="text-slate-400">© <span id="year"></span> ProfPilot</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simulator information
+    const simulators = {
+      'ux-designer': {
+        name: 'UX Designer Simulator',
+        description: '3-day hands-on UX design experience',
+        icon: '🎨',
+        simulatorUrl: '/ux-sim.html'
+      },
+      'lawyer': {
+        name: 'Corporate Lawyer Simulator',
+        description: '3-day corporate legal work experience', 
+        icon: '⚖️',
+        simulatorUrl: '/lawyer-simulator.html'
+      }
+    };
+
+    let purchaseData = null;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Update year in footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+      
+      // Get purchase data from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const paymentIntentId = urlParams.get('payment_intent');
+      const simulator = urlParams.get('simulator');
+      
+      if (paymentIntentId && simulator) {
+        loadPurchaseData(paymentIntentId, simulator);
+      } else {
+        // Fallback if no parameters
+        showGenericSuccess();
+      }
+    });
+
+    // Load purchase data from Firebase
+    async function loadPurchaseData(paymentIntentId, simulator) {
+      try {
+        if (window.auth && window.auth.currentUser && window.db) {
+          const purchaseDoc = await window.db.collection('users')
+            .doc(window.auth.currentUser.uid)
+            .collection('purchases')
+            .doc(paymentIntentId)
+            .get();
+
+          if (purchaseDoc.exists) {
+            purchaseData = purchaseDoc.data();
+            displayPurchaseDetails(purchaseData);
+          } else {
+            showGenericSuccess();
+          }
+        } else {
+          showGenericSuccess();
+        }
+      } catch (error) {
+        console.error('Error loading purchase data:', error);
+        showGenericSuccess();
+      }
+    }
+
+    // Display purchase details
+    function displayPurchaseDetails(data) {
+      const container = document.getElementById('purchase-details');
+      const simulator = simulators[data.simulator];
+      
+      container.innerHTML = `
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="font-semibold text-slate-900 mb-2">Simulator</h4>
+            <div class="flex items-center">
+              <span class="text-2xl mr-3">${simulator.icon}</span>
+              <div>
+                <p class="font-medium">${simulator.name}</p>
+                <p class="text-sm text-slate-600">${simulator.description}</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-slate-900 mb-2">Payment Details</h4>
+            <div class="space-y-1 text-sm">
+              <div class="flex justify-between">
+                <span class="text-slate-600">Amount:</span>
+                <span class="font-medium">$${data.amount.toFixed(2)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-600">Payment ID:</span>
+                <span class="font-mono text-xs">${data.paymentIntentId.substring(0, 12)}...</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-600">Date:</span>
+                <span>${new Date(data.purchaseDate?.toDate() || Date.now()).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Update start simulator button
+      const startBtn = document.getElementById('start-simulator-btn');
+      startBtn.href = simulator.simulatorUrl;
+      startBtn.textContent = `Start ${simulator.name}`;
+    }
+
+    // Show generic success message
+    function showGenericSuccess() {
+      const container = document.getElementById('purchase-details');
+      container.innerHTML = `
+        <div class="text-center py-8">
+          <div class="text-4xl mb-4">🎉</div>
+          <h3 class="text-lg font-semibold text-slate-900 mb-2">Purchase Confirmed!</h3>
+          <p class="text-slate-600">Your simulator access has been activated. Check your dashboard to get started.</p>
+        </div>
+      `;
+    }
+
+    // Track successful purchase
+    if (window.trackEvent) {
+      window.trackEvent('purchase_completed', {
+        simulator: purchaseData?.simulator || 'unknown',
+        amount: purchaseData?.amount || 15,
+        payment_intent: purchaseData?.paymentIntentId || 'unknown'
+      });
+    }
+  </script>
 </body>
 </html>

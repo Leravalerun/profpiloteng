@@ -9,7 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
-    <script src="firebase-config-local.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="firebase-init.js"></script>
     <script src="progress-manager.js"></script>
     <style>
@@ -398,31 +398,31 @@
                     </button>
                 </div>
 
-                <!-- Quick Actions -->
+                <!-- Available Simulators -->
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg card-hover animate-scale-in" style="animation-delay: 0.5s">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-6">Quick Actions</h2>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6">Your Simulators</h2>
                     
-                    <div class="space-y-3">
-                        <a href="ux-sim.html" class="block w-full bg-brand-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors text-center">
-                            Continue UX Simulator
-                        </a>
-                        
-                        <a href="lawyer.html" class="block w-full bg-slate-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-slate-700 transition-colors text-center">
-                            Start Lawyer Simulator
-                        </a>
-                        
-                        <a href="test-simulator.html" class="block w-full bg-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors text-center">
-                            Test Simulator
-                        </a>
-                        
-                        <button class="w-full bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition-colors">
-                            Download Certificate
-                        </button>
-                        
-                        <button class="w-full bg-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-purple-700 transition-colors">
-                            Share Progress
-                        </button>
+                    <div id="simulator-list" class="space-y-3">
+                        <!-- Simulators will be populated by JavaScript -->
+                        <div class="text-center py-8">
+                            <div class="loading mr-3"></div>
+                            <span class="text-slate-600">Loading your simulators...</span>
+                        </div>
                     </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-slate-200">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">All Simulators Available</h3>
+                        <div class="grid grid-cols-1 gap-3">
+                            <a href="/ux-sim.html" class="block w-full bg-brand-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors text-center">
+                                UX Designer Simulator - Free
+                            </a>
+                            <a href="/lawyer-simulator.html" class="block w-full bg-slate-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-slate-700 transition-colors text-center">
+                                Lawyer Simulator - Free
+                            </a>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-3 text-center">All simulators are currently free during our beta launch!</p>
+                    </div>
+                </div>
                 </div>
 
                 <!-- Support & Help -->
@@ -895,6 +895,66 @@
                 updateProgressDisplay();
             }
         }, 30000);
+
+        // Load accessible simulators (currently all free during beta)
+        async function loadAccessibleSimulators() {
+            try {
+                const simulatorList = document.getElementById('simulator-list');
+                
+                // During beta, all simulators are free and accessible
+                const simulatorConfigs = {
+                    'ux-designer': {
+                        name: 'UX Designer Simulator',
+                        description: '3-day hands-on UX design experience',
+                        icon: '🎨',
+                        url: '/ux-sim.html',
+                        color: 'bg-purple-600 hover:bg-purple-700'
+                    },
+                    'lawyer': {
+                        name: 'Corporate Lawyer Simulator',
+                        description: '3-day corporate legal work experience',
+                        icon: '⚖️',
+                        url: '/lawyer-simulator.html',
+                        color: 'bg-blue-600 hover:bg-blue-700'
+                    }
+                };
+
+                let simulatorHTML = '';
+                Object.values(simulatorConfigs).forEach(config => {
+                    simulatorHTML += `
+                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="text-2xl mr-3">${config.icon}</span>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-900">${config.name}</h4>
+                                        <p class="text-sm text-slate-600">${config.description}</p>
+                                    </div>
+                                </div>
+                                <a href="${config.url}" class="${config.color} text-white py-2 px-4 rounded-lg font-semibold transition-colors">
+                                    Start Free
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                simulatorList.innerHTML = simulatorHTML;
+            } catch (error) {
+                console.error('Error loading simulators:', error);
+                document.getElementById('simulator-list').innerHTML = `
+                    <div class="text-center py-8 text-red-600">
+                        Error loading simulators. Please refresh the page.
+                    </div>
+                `;
+            }
+        }
+
+        // Load simulators when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for Firebase to initialize
+            setTimeout(loadAccessibleSimulators, 1000);
+        });
     </script>
 </body>
 </html>

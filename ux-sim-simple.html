@@ -117,7 +117,7 @@
         </div>
 
         <!-- Tasks Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             <!-- Day 0 -->
             <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300" id="day0Card">
                 <div class="text-center">
@@ -165,6 +165,18 @@
                     <div class="text-xs text-slate-500" id="day3Status">Locked</div>
                 </div>
             </div>
+
+            <!-- Final -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="finalCard">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">🏆</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Final</h3>
+                    <p class="text-sm text-slate-600 mb-4">Complete & Get Resources</p>
+                    <div class="text-xs text-slate-500" id="finalStatus">Locked</div>
+                </div>
+            </div>
         </div>
 
         <!-- Current Day Section -->
@@ -188,59 +200,153 @@
                 this.currentDay = 0;
                 this.experience = 0;
                 this.completedTasks = [];
+                this.dayProgress = {
+                    0: { completed: 0, total: 3 }, // Team meeting, UX quiz, Product demo
+                    1: { completed: 0, total: 4 }, // Analytics quiz, Interviews, Hypothesis quiz, Unlock Day 2
+                    2: { completed: 0, total: 3 }, // Prototype quiz, Team critique quiz, Unlock Day 3
+                    3: { completed: 0, total: 3 }  // Final decision, Presentation, Unlock Final
+                };
                 this.init();
             }
 
             init() {
+                console.log('🚀 Initializing Simple UX Simulator...');
+                console.log('📊 Initial day progress:', this.dayProgress);
+                
                 this.setupEventListeners();
                 this.loadDay(0);
                 this.updateProgress();
+                
                 console.log('✅ Simple UX Simulator initialized');
+                console.log('📊 Current state:', {
+                    currentDay: this.currentDay,
+                    experience: this.experience,
+                    completedTasks: this.completedTasks,
+                    dayProgress: this.dayProgress
+                });
             }
 
             setupEventListeners() {
+                console.log('🔧 Setting up event listeners...');
+                
                 // Day cards
-                document.querySelectorAll('.task-card').forEach((card, index) => {
+                const dayCards = document.querySelectorAll('.task-card');
+                console.log(`📋 Found ${dayCards.length} day cards`);
+                
+                dayCards.forEach((card, index) => {
+                    console.log(`🔧 Setting up Day ${index} card:`, card.id);
                     card.addEventListener('click', () => {
-                        console.log('Day card clicked:', index);
+                        console.log(`🔘 Day ${index} card clicked:`, card.id);
                         if (!card.classList.contains('task-locked')) {
-                            this.loadDay(index);
+                            // Special handling for final card
+                            if (card.id === 'finalCard') {
+                                // Check if final is unlocked
+                                if (!card.classList.contains('task-locked')) {
+                                    console.log(`🎯 Final card clicked, showing completion`);
+                                    this.showCompletion();
+                                }
+                            } else {
+                                console.log(`🔄 Loading Day ${index}`);
+                                this.loadDay(index);
+                            }
+                        } else {
+                            console.log(`🔒 Day ${index} card is locked, cannot click`);
                         }
                     });
                 });
 
                 // Logout button
-                document.getElementById('logoutBtn').addEventListener('click', () => {
-                    window.location.href = 'dashboard.html';
-                });
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', () => {
+                        window.location.href = 'dashboard.html';
+                    });
+                    console.log('✅ Logout button event listener added');
+                } else {
+                    console.log('⚠️ Logout button not found');
+                }
+                
+                console.log('✅ Event listeners setup complete');
             }
 
 
 
             loadDay(day) {
+                console.log(`🔄 Loading Day ${day}...`);
+                
+                // Показываем индикатор загрузки
+                this.addAlexMessage(`⏳ Loading Day ${day} content...`);
+                
+                // Плавная анимация перехода
+                const currentDaySection = document.getElementById('currentDaySection');
+                if (currentDaySection) {
+                    currentDaySection.style.opacity = '0.5';
+                    currentDaySection.style.transform = 'translateY(10px)';
+                    currentDaySection.style.transition = 'all 0.3s ease';
+                }
+                
+                // Загружаем новый день
                 this.currentDay = day;
                 this.updateDayDisplay();
                 this.loadDayContent(day);
                 this.updateProgress();
+                
+                // Показываем анимацию загрузки
+                setTimeout(() => {
+                    if (currentDaySection) {
+                        currentDaySection.style.opacity = '1';
+                        currentDaySection.style.transform = 'translateY(0)';
+                    }
+                    // Убираем сообщение о загрузке
+                    const alexMessageDiv = document.getElementById('alexMessageDisplay');
+                    if (alexMessageDiv) {
+                        alexMessageDiv.remove();
+                    }
+                    
+                    // Автоматически прокручиваем страницу наверх
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    
+                    console.log(`📱 Scrolled to top of page`);
+                }, 300);
+                
+                console.log(`✅ Day ${day} loaded successfully`);
             }
 
             // Special method for completion page
             showCompletion() {
-                this.currentDay = 'completion';
-                this.updateDayDisplay();
-                this.loadDayContent('completion');
-                this.updateProgress();
+                // Load completion content directly under the final card
+                const finalCard = document.getElementById('finalCard');
+                if (finalCard) {
+                    // Create completion section below the final card
+                    const completionSection = document.createElement('div');
+                    completionSection.id = 'completionSection';
+                    completionSection.className = 'mt-8 bg-white rounded-3xl border border-slate-200 p-8 shadow-lg';
+                    completionSection.innerHTML = this.getCompletionHTML();
+                    
+                    // Insert after the final card
+                    finalCard.parentNode.insertBefore(completionSection, finalCard.nextSibling);
+                    
+                    // Setup completion events
+                    this.setupCompletionEvents();
+                    
+                    // Hide the main day content
+                    document.getElementById('currentDaySection').style.display = 'none';
+                }
             }
 
             updateDayDisplay() {
-                document.getElementById('currentDay').textContent = this.currentDay;
-                
                 // Special handling for completion page
                 if (this.currentDay === 'completion') {
-                    document.getElementById('dayTitle').textContent = "🎉 Simulation Completed!";
-                    document.getElementById('dayDescription').textContent = "Congratulations! You've finished your UX design journey";
+                    document.getElementById('currentDay').textContent = "Final";
+                    document.getElementById('dayTitle').textContent = "🎉 Final - Simulation Completed!";
+                    document.getElementById('dayDescription').textContent = "Final page - Complete your journey and get resources";
                     return;
                 }
+                
+                document.getElementById('currentDay').textContent = this.currentDay;
                 
                 const dayTitles = {
                     0: "Day 0: Onboarding & Team Introduction",
@@ -259,24 +365,31 @@
             }
 
             loadDayContent(day) {
+                console.log(`📝 Loading content for Day ${day}...`);
                 const contentDiv = document.getElementById('dayContent');
                 if (day === 0) {
                     contentDiv.innerHTML = this.getDay0HTML();
                     this.setupDay0Events();
+                    console.log(`✅ Day 0 content loaded and events set up`);
                 } else if (day === 1) {
                     contentDiv.innerHTML = this.getDay1HTML();
                     this.setupDay1Events();
+                    console.log(`✅ Day 1 content loaded and events set up`);
                 } else if (day === 2) {
                     contentDiv.innerHTML = this.getDay2HTML();
                     this.setupDay2Events();
+                    console.log(`✅ Day 2 content loaded and events set up`);
                 } else if (day === 3) {
                     contentDiv.innerHTML = this.getDay3HTML();
                     this.setupDay3Events();
+                    console.log(`✅ Day 3 content loaded and events set up`);
                 } else if (day === 'completion') {
                     contentDiv.innerHTML = this.getCompletionHTML();
                     this.setupCompletionEvents();
+                    console.log(`✅ Completion content loaded and events set up`);
                 } else {
                     contentDiv.innerHTML = `<div class="text-center"><p class="text-lg text-slate-700">Day ${day} content coming soon!</p></div>`;
+                    console.log(`⚠️ Unknown day ${day}, showing placeholder content`);
                 }
             }
 
@@ -313,10 +426,31 @@
                 // Setup unlock Day 1 button
                 const unlockDay1Btn = document.getElementById('unlockDay1Btn');
                 if (unlockDay1Btn) {
+                    console.log(`🔧 Setting up unlock Day 1 button...`);
                     unlockDay1Btn.addEventListener('click', () => {
-                        this.unlockDay(1);
-                        this.loadDay(1);
+                        console.log(`🔘 Unlock Day 1 button clicked`);
+                        if (this.canUnlockDay(1)) {
+                            console.log(`✅ Can unlock Day 1, proceeding...`);
+                            this.unlockDay(1);
+                            this.addAlexMessage(`🚀 Perfect! Let's dive into Day 1: Data & Discovery. Loading the content...`);
+                            
+                            // Сначала прокручиваем наверх, затем загружаем день
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            
+                            setTimeout(() => {
+                                this.loadDay(1); // Сразу загружаем контент Day 1
+                            }, 300);
+                        } else {
+                            console.log(`❌ Cannot unlock Day 1 yet`);
+                            this.addAlexMessage("❌ You need to complete all Day 0 tasks before unlocking Day 1!");
+                        }
                     });
+                    console.log(`✅ Unlock Day 1 button event listener added`);
+                } else {
+                    console.error(`❌ Could not find unlockDay1Btn element`);
                 }
             }
 
@@ -366,10 +500,31 @@
                 // Setup unlock Day 2 button
                 const unlockDay2Btn = document.getElementById('unlockDay2Btn');
                 if (unlockDay2Btn) {
+                    console.log(`🔧 Setting up unlock Day 2 button...`);
                     unlockDay2Btn.addEventListener('click', () => {
-                        this.unlockDay(2);
-                        this.loadDay(2);
+                        console.log(`🔘 Unlock Day 2 button clicked`);
+                        if (this.canUnlockDay(2)) {
+                            console.log(`✅ Can unlock Day 2, proceeding...`);
+                            this.unlockDay(2);
+                            this.addAlexMessage(`🚀 Excellent! Let's move to Day 2: Design & Prototyping. Loading the content...`);
+                            
+                            // Сначала прокручиваем наверх, затем загружаем день
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            
+                            setTimeout(() => {
+                                this.loadDay(2); // Сразу загружаем контент Day 2
+                            }, 300);
+                        } else {
+                            console.log(`❌ Cannot unlock Day 2 yet`);
+                            this.addAlexMessage("❌ You need to complete all Day 1 tasks before unlocking Day 2!");
+                        }
                     });
+                    console.log(`✅ Unlock Day 2 button event listener added`);
+                } else {
+                    console.error(`❌ Could not find unlockDay2Btn element`);
                 }
             }
 
@@ -403,10 +558,31 @@
                 // Setup unlock Day 3 button
                 const unlockDay3Btn = document.getElementById('unlockDay3Btn');
                 if (unlockDay3Btn) {
+                    console.log(`🔧 Setting up unlock Day 3 button...`);
                     unlockDay3Btn.addEventListener('click', () => {
-                        this.unlockDay(3);
-                        this.loadDay(3);
+                        console.log(`🔘 Unlock Day 3 button clicked`);
+                        if (this.canUnlockDay(3)) {
+                            console.log(`✅ Can unlock Day 3, proceeding...`);
+                            this.unlockDay(3);
+                            this.addAlexMessage(`🚀 Fantastic! Let's move to Day 3: Testing & Presentation. Loading the content...`);
+                            
+                            // Сначала прокручиваем наверх, затем загружаем день
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            
+                            setTimeout(() => {
+                                this.loadDay(3); // Сразу загружаем контент Day 3
+                            }, 300);
+                        } else {
+                            console.log(`❌ Cannot unlock Day 3 yet`);
+                            this.addAlexMessage("❌ You need to complete all Day 2 tasks before unlocking Day 3!");
+                        }
                     });
+                    console.log(`✅ Unlock Day 3 button event listener added`);
+                } else {
+                    console.error(`❌ Could not find unlockDay3Btn element`);
                 }
             }
 
@@ -427,8 +603,18 @@
                 this.setupAlexChat('executive', 'askAlexExecutiveBtn', 'alexExecutiveQuestion', 'alexExecutiveResponse', 'alexExecutiveResponseText');
                 this.setupAlexChat('reflection', 'askAlexReflectionBtn', 'alexReflectionQuestion', 'alexReflectionResponse', 'alexReflectionResponseText');
                 
+                // Setup unlock final button
+                const unlockFinalBtn = document.getElementById('unlockFinalBtn');
+                if (unlockFinalBtn) {
+                    unlockFinalBtn.addEventListener('click', () => {
+                        this.unlockFinal();
+                    });
+                }
+
                 // Setup complete simulation button
                 document.getElementById('completeSimulationBtn').addEventListener('click', () => {
+                    // Mark final as completed for Day 3
+                    this.completeTaskForDay(3, 'Final');
                     this.showCompletion();
                 });
             }
@@ -448,6 +634,21 @@
                 
                 // Setup action buttons
                 this.setupActionButtons();
+                
+                // Setup back to days button
+                const backToDaysBtn = document.getElementById('backToDaysBtn');
+                if (backToDaysBtn) {
+                    backToDaysBtn.addEventListener('click', () => {
+                        // Show main day content again
+                        document.getElementById('currentDaySection').style.display = 'block';
+                        
+                        // Remove completion section
+                        const completionSection = document.getElementById('completionSection');
+                        if (completionSection) {
+                            completionSection.remove();
+                        }
+                    });
+                }
             }
 
             showTeamMemberInfo(member) {
@@ -460,6 +661,9 @@
 
                 this.addAlexMessage(teamInfo[member]);
                 this.addAlexMessage("See how each team member has their specialty? Mike: business and metrics, Emma: user research, Sarah: solution design, Mark: tech constraints. In UX, everyone's opinion matters. Ready for your first task?");
+                
+                // Mark team meeting as completed
+                this.completeTaskForDay(0, 'Team Meeting');
             }
 
             showProductDemo() {
@@ -480,6 +684,8 @@
                 
                 setTimeout(() => {
                     this.addAlexMessage("This is exactly the UX problem you need to solve! Come back when you're ready to start working on the solution.");
+                    // Mark product demo as completed
+                    this.completeTaskForDay(0, 'Product Demo');
                 }, 6000);
             }
 
@@ -547,7 +753,24 @@
                             <p class="text-green-700 text-sm">Excellent thinking! Multiple psychological barriers can indeed combine to create user abandonment. Tomorrow we'll explore this through user interviews.</p>
                         </div>
                     `;
-                    this.completeTask(0, 15);
+                    this.completeTaskForDay(0, 'UX Psychology Quiz');
+                    
+                    // Автоматически открываем Day 1 после правильного ответа
+                    setTimeout(() => {
+                        this.addAlexMessage("🎉 Excellent! You've mastered the UX basics. Let's move to Day 1: Data & Discovery!");
+                        setTimeout(() => {
+                            // Сначала прокручиваем наверх, затем переходим к Day 1
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            
+                            setTimeout(() => {
+                                this.unlockDay(1);
+                                this.loadDay(1);
+                            }, 300);
+                        }, 1500);
+                    }, 1000);
                 } else {
                     // Different feedback for each wrong choice
                     const feedback = {
@@ -562,7 +785,7 @@
                                 <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
-                                <span class="font-semibold text-red-800">Not quite right</span>
+                                <span class="text-red-800">Not quite right</span>
                             </div>
                             <p class="text-red-700 text-sm">${feedback[choice]}</p>
                         </div>
@@ -580,7 +803,7 @@
                     resultDiv.innerHTML = `
                         <div class="bg-green-100 border border-green-300 rounded-lg p-3">
                             <div class="flex items-center gap-2 mb-2">
-                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
                                 <span class="font-semibold text-green-800">Excellent!</span>
@@ -588,7 +811,7 @@
                             <p class="text-green-700 text-sm">Great insight! Most of that time is spent thinking, not typing. This suggests users are struggling with content, not technical issues.</p>
                         </div>
                     `;
-                    this.completeTask(1, 10);
+                    this.completeTaskForDay(1, 'Analytics Quiz');
                 } else {
                     // Different feedback for each wrong choice
                     const feedback = {
@@ -603,7 +826,7 @@
                                 <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
-                                <span class="font-semibold text-red-800">Not quite right</span>
+                                <span class="text-red-800">Not quite right</span>
                             </div>
                             <p class="text-red-700 text-sm">${feedback[choice]}</p>
                         </div>
@@ -624,12 +847,29 @@
                                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="font-semibold text-green-800">Excellent!</span>
+                                <span class="text-green-800">Excellent!</span>
                             </div>
                             <p class="text-green-700 text-sm">Perfect approach! Always test options in UX. Don't assume - validate with real users!</p>
                         </div>
                     `;
-                    this.completeTask(1, 15);
+                    this.completeTaskForDay(1, 'Hypothesis Quiz');
+                    
+                    // Автоматически открываем Day 2 после правильного ответа
+                    setTimeout(() => {
+                        this.addAlexMessage("🎉 Perfect! You understand the importance of testing. Let's move to Day 2: Design & Prototyping!");
+                        setTimeout(() => {
+                            // Сначала прокручиваем наверх, затем переходим к Day 2
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            
+                            setTimeout(() => {
+                                this.unlockDay(2);
+                                this.loadDay(2);
+                            }, 300);
+                        }, 1500);
+                    }, 1000);
                 } else {
                     // Different feedback for each wrong choice
                     const feedback = {
@@ -644,7 +884,7 @@
                                 <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                                 </svg>
-                                <span class="font-semibold text-orange-800">Good thinking, but...</span>
+                                <span class="text-orange-800">Good thinking, but...</span>
                             </div>
                             <p class="text-orange-700 text-sm">${feedback[choice]}</p>
                         </div>
@@ -684,7 +924,7 @@
                                 <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                                 </svg>
-                                <span class="font-semibold text-orange-800">Good start!</span>
+                                <span class="text-orange-800">Good start!</span>
                             </div>
                             <p class="text-orange-700 text-sm">${feedback[choice]} Think about all the different aspects that affect user experience.</p>
                         </div>
@@ -693,6 +933,9 @@
                 
                 resultDiv.innerHTML = resultHTML;
                 resultDiv.classList.remove('hidden');
+                
+                // Mark prototype quiz as completed for Day 2
+                this.completeTaskForDay(2, 'Prototype Quiz');
             }
 
             handleTeamCritiqueQuiz(choice) {
@@ -711,6 +954,23 @@
                             <p class="text-green-700 text-sm">Always test with real users! Data beats opinions every time.</p>
                         </div>
                     `;
+                    
+                    // Автоматически открываем Day 3 после правильного ответа
+                    setTimeout(() => {
+                        this.addAlexMessage("🎉 Excellent! You know that user testing is key. Let's move to Day 3: Testing & Presentation!");
+                        setTimeout(() => {
+                            // Сначала прокручиваем наверх, затем переходим к Day 3
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                            
+                            setTimeout(() => {
+                                this.unlockDay(3);
+                                this.loadDay(3);
+                            }, 300);
+                        }, 1500);
+                    }, 1000);
                 } else {
                     const feedback = {
                         'A': "Simplicity is good, but we need to validate that it actually solves the user problem.",
@@ -724,7 +984,7 @@
                                 <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                                 </svg>
-                                <span class="font-semibold text-orange-800">Good thinking!</span>
+                                <span class="text-orange-800">Good thinking!</span>
                             </div>
                             <p class="text-orange-700 text-sm">${feedback[choice]} Remember: in UX, we validate our assumptions with real users.</p>
                         </div>
@@ -733,6 +993,9 @@
                 
                 resultDiv.innerHTML = resultHTML;
                 resultDiv.classList.remove('hidden');
+                
+                // Mark team critique quiz as completed for Day 2
+                this.completeTaskForDay(2, 'Team Critique Quiz');
             }
 
             // Practice interview questions
@@ -816,28 +1079,153 @@
                 `;
                 
                 responseDiv.classList.remove('hidden');
-                this.completeTask(1, 5); // Small experience boost for each follow-up
+                
+                // Mark interviews as completed for Day 1
+                if (!this.completedTasks.includes('1-Interviews')) {
+                    this.completeTaskForDay(1, 'Interviews');
+                }
             }
 
             updateProgress() {
-                const progress = (this.completedTasks.length / 4) * 100;
+                // Calculate total progress across all days
+                let totalCompleted = 0;
+                let totalTasks = 0;
+                
+                for (let day = 0; day <= 3; day++) {
+                    if (this.dayProgress[day]) {
+                        totalCompleted += this.dayProgress[day].completed;
+                        totalTasks += this.dayProgress[day].total;
+                    }
+                }
+                
+                const progress = totalTasks > 0 ? (totalCompleted / totalTasks) * 100 : 0;
                 document.getElementById('dayProgressBar').style.width = `${progress}%`;
-                document.getElementById('dayProgressText').textContent = `${this.completedTasks.length}/4 days completed`;
+                document.getElementById('dayProgressText').textContent = `${totalCompleted}/${totalTasks} tasks completed`;
                 document.getElementById('currentExperience').textContent = this.experience;
+                
+                console.log(`📊 Progress update: ${totalCompleted}/${totalTasks} tasks (${progress.toFixed(1)}%)`);
+                
+                // Debug: show progress for each day
+                console.log('📊 Day-by-day progress:');
+                for (let day = 0; day <= 3; day++) {
+                    if (this.dayProgress[day]) {
+                        console.log(`  Day ${day}: ${this.dayProgress[day].completed}/${this.dayProgress[day].total}`);
+                    }
+                }
             }
 
             unlockDay(day) {
+                console.log(`🔓 Unlocking Day ${day}...`);
+                
                 // Remove task-locked class from the day card
                 const dayCard = document.getElementById(`day${day}Card`);
                 if (dayCard) {
                     dayCard.classList.remove('task-locked');
+                    dayCard.classList.remove('cursor-not-allowed');
+                    dayCard.classList.remove('opacity-60');
+                    dayCard.classList.add('cursor-pointer');
+                    dayCard.classList.add('hover:shadow-xl');
+                    
                     const dayStatus = document.getElementById(`day${day}Status`);
                     if (dayStatus) {
                         dayStatus.textContent = 'Available';
                     }
+                    
+                    console.log(`✅ Day ${day} card unlocked successfully`);
+                } else {
+                    console.error(`❌ Could not find day ${day} card element`);
                 }
                 
                 this.addAlexMessage(`Great job! Day ${day} is now unlocked. Click on it to continue your UX journey!`);
+            }
+
+            unlockFinal() {
+                // Unlock the final card
+                const finalCard = document.getElementById('finalCard');
+                if (finalCard) {
+                    finalCard.classList.remove('task-locked');
+                    finalCard.classList.remove('cursor-not-allowed');
+                    finalCard.classList.remove('opacity-60');
+                    finalCard.classList.add('cursor-pointer');
+                    finalCard.classList.add('hover:shadow-xl');
+                    
+                    const finalStatus = document.getElementById('finalStatus');
+                    if (finalStatus) {
+                        finalStatus.textContent = 'Available';
+                    }
+                }
+                
+                this.addAlexMessage(`🎉 Congratulations! You've unlocked the Final page. Click on it to complete your UX journey!`);
+            }
+
+            // Check if day can be unlocked
+            canUnlockDay(day) {
+                if (day === 0) return true; // Day 0 is always available
+                
+                const previousDay = day - 1;
+                const previousProgress = this.dayProgress[previousDay];
+                
+                if (!previousProgress) {
+                    console.log(`❌ No progress data for Day ${previousDay}`);
+                    return false;
+                }
+                
+                const canUnlock = previousProgress.completed >= previousProgress.total;
+                console.log(`🔍 Can unlock Day ${day}? Previous day (${previousDay}) progress: ${previousProgress.completed}/${previousProgress.total} = ${canUnlock}`);
+                
+                // Check if all tasks for the previous day are completed
+                return canUnlock;
+            }
+
+            // Mark task as completed for current day
+            completeTaskForDay(day, taskName) {
+                if (!this.dayProgress[day]) {
+                    this.dayProgress[day] = { completed: 0, total: 3 };
+                }
+                
+                // Check if task is already completed to avoid duplicates
+                if (!this.completedTasks.includes(`${day}-${taskName}`)) {
+                    this.completedTasks.push(`${day}-${taskName}`);
+                    this.dayProgress[day].completed++;
+                    this.experience += 5; // Small experience boost for each task
+                    
+                    console.log(`✅ Task completed for Day ${day}: ${taskName}. Progress: ${this.dayProgress[day].completed}/${this.dayProgress[day].total}`);
+                    
+                    // Check if day is complete and can unlock next
+                    if (this.dayProgress[day].completed >= this.dayProgress[day].total) {
+                        console.log(`🎉 Day ${day} completed! All ${this.dayProgress[day].total} tasks finished.`);
+                        this.addAlexMessage(`🎉 Day ${day} completed! You can now unlock the next day.`);
+                        
+                        // Auto-unlock next day if available
+                        const nextDay = day + 1;
+                        if (nextDay <= 3) {
+                            console.log(`🔓 Auto-unlocking Day ${nextDay}...`);
+                            this.unlockDay(nextDay);
+                            // Сразу загружаем контент следующего дня
+                            setTimeout(() => {
+                                console.log(`🔄 Auto-loading Day ${nextDay} content...`);
+                                this.addAlexMessage(`🚀 Great! Now let's move to Day ${nextDay}. I'm loading the content for you...`);
+                                
+                                // Сначала прокручиваем наверх, затем загружаем день
+                                window.scrollTo({
+                                    top: 0,
+                                    behavior: 'smooth'
+                                });
+                                
+                                // Небольшая задержка для плавности прокрутки
+                                setTimeout(() => {
+                                    this.loadDay(nextDay);
+                                }, 300);
+                            }, 500); // Небольшая задержка для плавности
+                        }
+                    } else {
+                        console.log(`📊 Day ${day} progress: ${this.dayProgress[day].completed}/${this.dayProgress[day].total} - ${this.dayProgress[day].total - this.dayProgress[day].completed} tasks remaining`);
+                    }
+                } else {
+                    console.log(`⚠️ Task ${day}-${taskName} already completed, skipping...`);
+                }
+                
+                this.updateProgress();
             }
 
             completeTask(day, exp) {
@@ -849,8 +1237,40 @@
             }
 
             addAlexMessage(message) {
-                // For now, just log to console since we don't have the chat interface
+                // Log to console for debugging
                 console.log('Alex:', message);
+                
+                // Also show message to user in the UI
+                const currentDaySection = document.getElementById('currentDaySection');
+                if (currentDaySection) {
+                    // Create or update Alex message display
+                    let alexMessageDiv = document.getElementById('alexMessageDisplay');
+                    if (!alexMessageDiv) {
+                        alexMessageDiv = document.createElement('div');
+                        alexMessageDiv.id = 'alexMessageDisplay';
+                        alexMessageDiv.className = 'bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4';
+                        currentDaySection.insertBefore(alexMessageDiv, currentDaySection.firstChild);
+                    }
+                    
+                    alexMessageDiv.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">A</span>
+                            </div>
+                            <div>
+                                <p class="text-blue-800 font-medium">Alex:</p>
+                                <p class="text-blue-700">${message}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Auto-hide after 5 seconds
+                    setTimeout(() => {
+                        if (alexMessageDiv) {
+                            alexMessageDiv.remove();
+                        }
+                    }, 5000);
+                }
             }
 
 
@@ -1307,12 +1727,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Unlock Day 1 Button -->
+                            <!-- Day 1 Info -->
                             <div class="text-center mt-6">
-                                <button id="unlockDay1Btn" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                                    🚀 Unlock Day 1: Data & Discovery
-                                </button>
-                                <p class="text-green-700 mt-2 text-sm">Ready to analyze data and conduct user interviews!</p>
+                                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                                    <h4 class="font-semibold text-blue-900 mb-2">🚀 Day 1: Data & Discovery</h4>
+                                    <p class="text-blue-700 text-sm">Complete the UX Psychology Quiz above to automatically unlock Day 1!</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1643,12 +2063,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Unlock Day 2 Button -->
+                            <!-- Day 2 Info -->
                             <div class="text-center mt-6">
-                                <button id="unlockDay2Btn" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                                    🚀 Unlock Day 2: Design & Prototyping
-                                </button>
-                                <p class="text-green-700 mt-2 text-sm">Ready to design solutions and create prototypes!</p>
+                                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                                    <h4 class="font-semibold text-indigo-900 mb-2">🚀 Day 2: Design & Prototyping</h4>
+                                    <p class="text-indigo-700 text-sm">Complete the Hypothesis Quiz above to automatically unlock Day 2!</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1940,12 +2360,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Unlock Day 3 Button -->
+                            <!-- Day 3 Info -->
                             <div class="text-center mt-6">
-                                <button id="unlockDay3Btn" class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                                    🚀 Unlock Day 3: Testing & Presentation
-                                </button>
-                                <p class="text-blue-700 mt-2 text-sm">Ready to test your prototypes and present to executives!</p>
+                                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                                    <h4 class="font-semibold text-emerald-900 mb-2">🚀 Day 3: Testing & Presentation</h4>
+                                    <p class="text-emerald-700 text-sm">Complete the Team Critique Quiz above to automatically unlock Day 3!</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2404,13 +2824,15 @@
                                     </div>
                                 </div>
                                 
-                                            <!-- Complete Simulation Button -->
-            <div class="text-center mt-8">
-                <button id="completeSimulationBtn" class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-lg rounded-2xl hover:from-emerald-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                    🎉 Complete Simulation
-                </button>
-                <p class="text-slate-600 mt-3 text-sm">Ready to finish your UX journey? Click to complete the simulation!</p>
+                                            <!-- Final Info -->
+            <div class="text-center mt-8 mb-6">
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                    <h4 class="font-semibold text-purple-900 mb-2 text-lg">🏆 Final: Complete & Get Resources</h4>
+                    <p class="text-purple-700 text-sm">Complete the Team Critique Quiz above to automatically unlock the Final page!</p>
+                </div>
             </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -2602,16 +3024,11 @@
                         <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-8 border border-indigo-200">
                             <h2 class="text-2xl font-bold text-indigo-900 mb-4">🚀 Your Personalized Career Track</h2>
                             <p class="text-indigo-800 mb-6 text-lg">
-                                Based on your answers, we can recommend a learning path—from beginner to advanced—covering books, courses, portfolio tips, networking, and key skills for UX/UI designers.
+                                Coming Soon
                             </p>
-                            <div class="bg-indigo-100 rounded-xl p-4 border border-indigo-300">
-                                <p class="text-indigo-700 text-sm">
-                                    <strong>Coming Soon:</strong> Click below to get your custom career plan after submitting feedback.
-                                </p>
-                            </div>
                             <button id="getCareerPlanBtn" class="mt-6 px-8 py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                                 🎯 Get Your Custom Career Plan
-                            </button>
+                            </p>
                         </div>
 
                         <!-- Final Alex Message -->
@@ -2633,6 +3050,9 @@
                                 📊 Submit Feedback & Get Career Plan
                             </button>
                             <div class="flex justify-center gap-4">
+                                <button id="backToDaysBtn" class="px-6 py-3 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-600 transition-colors">
+                                    🔙 Back to Days
+                                </button>
                                 <button id="restartSimulationBtn" class="px-6 py-3 bg-slate-500 text-white font-bold rounded-xl hover:bg-slate-600 transition-colors">
                                     🔄 Restart Simulation
                                 </button>
@@ -2976,6 +3396,26 @@
                     </div>
                 `;
                 resultDiv.classList.remove('hidden');
+                
+                // Mark final decision as completed for Day 3
+                this.completeTaskForDay(3, 'Final Decision');
+                
+                // Автоматически открываем Final после выбора решения
+                setTimeout(() => {
+                    this.addAlexMessage("🎉 Perfect choice! You've made a data-driven decision. Let's move to the Final: Complete & Get Resources!");
+                    setTimeout(() => {
+                        // Сначала прокручиваем наверх, затем показываем Final
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        
+                        setTimeout(() => {
+                            this.unlockFinal();
+                            this.showCompletion();
+                        }, 300);
+                    }, 1500);
+                }, 1000);
             }
 
             setupPracticePresentation() {
@@ -3024,6 +3464,11 @@
                     button.textContent = originalText;
                     button.classList.remove('bg-yellow-100', 'border-yellow-400');
                 }, 3000);
+                
+                // Mark presentation practice as completed for Day 3
+                if (!this.completedTasks.includes('3-Presentation')) {
+                    this.completeTaskForDay(3, 'Presentation');
+                }
             }
 
             setupReflectionQuestions() {
@@ -3055,18 +3500,23 @@
                         A: "Advanced research methods like ethnographic studies, diary studies, and behavioral analytics will deepen your understanding of users. This is perfect for complex products with diverse user bases.",
                         B: "Pro-level prototyping with advanced interactions, animations, and user flows will help you create more sophisticated designs. Focus on micro-interactions and state management.",
                         C: "UX analytics and metrics like conversion funnels, heatmaps, and A/B testing will help you measure the impact of your designs. This is crucial for proving ROI and making data-driven decisions.",
-                        D: "Psychology of users - understanding cognitive biases, mental models, and decision-making processes - will make you a more effective designer. This knowledge helps you design for how people actually think."
+                        D: "Psychology of users - understanding cognitive biases, mental models, and decision-making processes - will make you a more effective designer. This knowledge helps you knowledge helps you design for how people actually think."
                     }
                 };
 
                 const selected = reflections[question][choice];
                 resultDiv.innerHTML = `
-                    <div class="bg-slate-50 border border-slate-300 rounded-lg p-4">
+                    <div class="bg-slate-100 border border-slate-300 rounded-lg p-4">
                         <h5 class="font-semibold text-slate-900 mb-2">Reflection Insight:</h5>
                         <p class="text-slate-700 text-sm">${selected}</p>
                     </div>
                 `;
                 resultDiv.classList.remove('hidden');
+                
+                // Mark reflection as completed for Day 3
+                if (!this.completedTasks.includes('3-Reflection')) {
+                    this.completeTaskForDay(3, 'Reflection');
+                }
             }
 
             // Completion Page Methods

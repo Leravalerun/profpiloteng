@@ -1,14 +1,9 @@
-// Firebase Initialization for ProfPilotEng
+// Firebase Initialization for ProfPilot
 // Secure initialization with environment-based configuration
-
-// TEMPORARILY DISABLED - Firebase configuration issues
-console.log('⚠️ Firebase temporarily disabled to fix configuration issues');
 
 // Wait for DOM and Firebase to be available
 document.addEventListener('DOMContentLoaded', function() {
-  // TEMPORARILY DISABLED - Skip Firebase initialization
-  console.log('⚠️ Firebase initialization skipped - temporarily disabled');
-  return;
+  console.log('🚀 Initializing Firebase for ProfPilot...');
   
   // Check if Firebase is loaded
   if (typeof firebase === 'undefined') {
@@ -37,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
   try {
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    console.log('✅ Firebase initialized successfully for ProfPilotEng');
+    console.log('✅ Firebase initialized successfully for ProfPilot');
 
     // Initialize Firebase services
     const auth = firebase.auth();
@@ -48,7 +43,10 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       if (firebase.analytics) {
         analytics = firebase.analytics();
-        console.log('✅ Firebase Analytics initialized');
+        console.log('✅ Firebase Analytics initialized (legacy)');
+      } else if (window.firebaseAnalytics) {
+        analytics = window.firebaseAnalytics;
+        console.log('✅ Firebase Analytics initialized (modern)');
       }
     } catch (error) {
       console.warn('⚠️ Firebase Analytics not available:', error.message);
@@ -95,7 +93,7 @@ function isValidFirebaseConfig(config) {
   const requiredFields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
   
   for (const field of requiredFields) {
-    if (!config[field] || config[field].includes('YOUR_')) {
+    if (!config[field] || config[field].includes('YOUR_') || config[field].includes('XXXXXXXXXX')) {
       console.warn(`⚠️  Missing or placeholder value for: ${field}`);
       return false;
     }
@@ -104,18 +102,52 @@ function isValidFirebaseConfig(config) {
   return true;
 }
 
-// Error display function - TEMPORARILY DISABLED
+// Error display function
 function showError(message) {
-  console.log('⚠️ Firebase Error (temporarily disabled):', message);
-  // Error display temporarily disabled to fix configuration issues
-  return;
+  console.error('❌ Firebase Error:', message);
+  
+  // Try to show error in UI if possible
+  const errorContainer = document.getElementById('error-container') || 
+                        document.querySelector('.error-message') ||
+                        document.createElement('div');
+  
+  if (!errorContainer.id) {
+    errorContainer.id = 'error-container';
+    errorContainer.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+    document.body.appendChild(errorContainer);
+  }
+  
+  errorContainer.textContent = message;
+  errorContainer.style.display = 'block';
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    errorContainer.style.display = 'none';
+  }, 5000);
 }
 
-// Warning display function - TEMPORARILY DISABLED
+// Warning display function
 function showWarning(message) {
-  console.log('⚠️ Session Warning (temporarily disabled):', message);
-  // Warning display temporarily disabled to fix configuration issues
-  return;
+  console.warn('⚠️ Warning:', message);
+  
+  // Try to show warning in UI if possible
+  const warningContainer = document.getElementById('warning-container') || 
+                          document.querySelector('.warning-message') ||
+                          document.createElement('div');
+  
+  if (!warningContainer.id) {
+    warningContainer.id = 'warning-container';
+    warningContainer.className = 'fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded z-50';
+    document.body.appendChild(warningContainer);
+  }
+  
+  warningContainer.textContent = message;
+  warningContainer.style.display = 'block';
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    warningContainer.style.display = 'none';
+  }, 5000);
 }
 
 // Initialize Firebase functions
@@ -166,6 +198,56 @@ function initializeFirebaseFunctions(auth, db, analytics) {
       console.log('✅ UI updated for signed-out user');
     } catch (error) {
       console.error('❌ Error updating UI for signed-out user:', error);
+    }
+  };
+
+  // Analytics Functions
+  
+  // Track custom events
+  window.trackEvent = (eventName, parameters = {}) => {
+    try {
+      if (analytics) {
+        analytics.logEvent(eventName, parameters);
+        console.log(`📊 Analytics event tracked: ${eventName}`, parameters);
+      }
+    } catch (error) {
+      console.warn('⚠️ Analytics tracking failed:', error);
+    }
+  };
+
+  // Track page views
+  window.trackPageView = (pageName) => {
+    try {
+      if (analytics) {
+        analytics.logEvent('page_view', {
+          page_title: pageName,
+          page_location: window.location.href
+        });
+        console.log(`📊 Page view tracked: ${pageName}`);
+      }
+    } catch (error) {
+      console.warn('⚠️ Page view tracking failed:', error);
+    }
+  };
+
+  // Track simulator events
+  window.trackSimulatorEvent = (simulator, action, day = null) => {
+    try {
+      if (analytics) {
+        const parameters = {
+          simulator_name: simulator,
+          action: action
+        };
+        
+        if (day) {
+          parameters.day = day;
+        }
+        
+        analytics.logEvent('simulator_interaction', parameters);
+        console.log(`📊 Simulator event tracked: ${simulator} - ${action}`, parameters);
+      }
+    } catch (error) {
+      console.warn('⚠️ Simulator tracking failed:', error);
     }
   };
 
@@ -326,6 +408,116 @@ function initializeFirebaseFunctions(auth, db, analytics) {
       }
     } catch (error) {
       console.error('❌ Error tracking page view:', error);
+    }
+  };
+
+  // Purchase Management Functions
+
+  // Save purchase data
+  window.savePurchase = async (purchaseData) => {
+    try {
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to save purchase');
+      }
+
+      const userId = auth.currentUser.uid;
+      const purchaseRef = db.collection('users').doc(userId)
+        .collection('purchases').doc(purchaseData.paymentIntentId);
+
+      await purchaseRef.set({
+        ...purchaseData,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      // Update user's accessible simulators
+      await db.collection('users').doc(userId).update({
+        accessibleSimulators: firebase.firestore.FieldValue.arrayUnion(purchaseData.simulator),
+        lastPurchaseDate: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      console.log('✅ Purchase saved successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ Error saving purchase:', error);
+      throw error;
+    }
+  };
+
+  // Get user purchases
+  window.getUserPurchases = async () => {
+    try {
+      if (!auth.currentUser) {
+        throw new Error('User must be authenticated to get purchases');
+      }
+
+      const userId = auth.currentUser.uid;
+      const purchasesRef = db.collection('users').doc(userId)
+        .collection('purchases');
+
+      const snapshot = await purchasesRef.orderBy('createdAt', 'desc').get();
+      
+      const purchases = [];
+      snapshot.forEach(doc => {
+        purchases.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      return purchases;
+    } catch (error) {
+      console.error('❌ Error getting purchases:', error);
+      throw error;
+    }
+  };
+
+  // Check if user has access to a simulator (currently all free during beta)
+  window.hasSimulatorAccess = async (simulatorName) => {
+    try {
+      if (!auth.currentUser) {
+        return false;
+      }
+
+      // During beta launch, all simulators are free and accessible
+      const availableSimulators = ['ux-designer', 'lawyer'];
+      return availableSimulators.includes(simulatorName);
+    } catch (error) {
+      console.error('❌ Error checking simulator access:', error);
+      return false;
+    }
+  };
+
+  // Get user's accessible simulators (currently all free during beta)
+  window.getAccessibleSimulators = async () => {
+    try {
+      if (!auth.currentUser) {
+        return [];
+      }
+
+      // During beta launch, all simulators are free and accessible
+      return ['ux-designer', 'lawyer'];
+    } catch (error) {
+      console.error('❌ Error getting accessible simulators:', error);
+      return [];
+    }
+  };
+
+  // Track purchase event
+  window.trackPurchase = (simulator, amount, paymentIntentId) => {
+    try {
+      if (analytics) {
+        analytics.logEvent('purchase', {
+          simulator: simulator,
+          value: amount,
+          currency: 'USD',
+          payment_intent_id: paymentIntentId,
+          user_id: auth.currentUser?.uid || 'anonymous'
+        });
+        console.log(`📊 Purchase tracked: ${simulator} - $${amount}`);
+      }
+    } catch (error) {
+      console.warn('⚠️ Purchase tracking failed:', error);
     }
   };
 
