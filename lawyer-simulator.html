@@ -93,6 +93,26 @@
       color: white;
     }
   </style>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+  
+  <script>
+    // Check authentication before allowing access to simulator
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait for Firebase to initialize
+      setTimeout(() => {
+        if (!window.auth || !window.auth.currentUser) {
+          // User not authenticated, redirect to login with redirect parameter
+          window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+        }
+      }, 1000);
+    });
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
@@ -292,12 +312,6 @@
         this.documentReviewCompleted = false;
         
         console.log("🚀 Initializing Corporate Lawyer Simulator...");
-        
-        // Track simulator start
-        if (typeof trackSimulatorEvent === 'function') {
-          trackSimulatorEvent('Lawyer Simulator', 'started');
-        }
-        
         this.init();
       }
 
@@ -4307,11 +4321,6 @@ Based upon our examination of such documents and such other matters as we have d
           this.completeTaskForDay(4, 'Closing Execution');
           this.completeTaskForDay(4, 'Post-Closing Debrief');
           this.completeTaskForDay(4, 'Client Presentation');
-          
-          // Auto-complete Day 4 and show final success
-          setTimeout(() => {
-            this.completeDay4();
-          }, 2000);
         }
 
         restartSimulation() {
@@ -4454,11 +4463,6 @@ Based upon our examination of such documents and such other matters as we have d
           this.completeTaskForDay(3, 'Closing Checklist');
           this.completeTaskForDay(3, 'Damage Control');
           this.completeTaskForDay(3, 'Deal Restructuring');
-          
-          // Auto-complete Day 3 and unlock Day 4
-          setTimeout(() => {
-            this.completeDay3();
-          }, 2000);
         }
 
         handleCorrectNegotiationChoice() {
@@ -4583,11 +4587,6 @@ Based upon our examination of such documents and such other matters as we have d
         }
 
         completeDay2() {
-          // Track day completion
-          if (typeof trackSimulatorEvent === 'function') {
-            trackSimulatorEvent('Lawyer Simulator', 'day_completed', 2);
-          }
-          
           // Show success message and auto-unlock Day 3
           this.addAlexMessage("🎉 Excellent! You've completed Day 2 negotiation and documentation. Now let's move to Day 3: Closing Preparation & Crisis Management!");
           
@@ -4605,52 +4604,13 @@ Based upon our examination of such documents and such other matters as we have d
           }, 1500);
         }
 
-        completeDay3() {
-          // Track day completion
-          if (typeof trackSimulatorEvent === 'function') {
-            trackSimulatorEvent('Lawyer Simulator', 'day_completed', 3);
-          }
-          
-          // Show success message and auto-unlock Day 4
-          this.addAlexMessage("🎉 Excellent! You've completed Day 3 crisis management and closing preparation. Now let's move to Day 4: Closing & Presentation!");
-          
-          setTimeout(() => {
-            // First scroll to top, then unlock and load Day 4
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth'
-            });
-            
-            setTimeout(() => {
-              this.unlockDay(4);
-              this.loadDay(4);
-            }, 300);
-          }, 1500);
+        setupDay3Events() {
+          console.log("🔧 Setting up Day 3 events...");
         }
 
-        completeDay4() {
-          // Track day completion and simulator completion
-          if (typeof trackSimulatorEvent === 'function') {
-            trackSimulatorEvent('Lawyer Simulator', 'day_completed', 4);
-            trackSimulatorEvent('Lawyer Simulator', 'completed');
-          }
-          
-          // Show final success message
-          this.addAlexMessage("🏆 Congratulations! You've successfully completed the entire Corporate Lawyer Simulator! You've mastered M&A transactions from start to finish.");
-          
-          // Update progress to show completion
-          this.updateProgress();
-          
-          // Scroll to completion section
-          setTimeout(() => {
-            const completionSection = document.querySelector('[id*="Completion"]');
-            if (completionSection) {
-              completionSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }, 1000);
+        setupDay4Events() {
+          console.log("🔧 Setting up Day 4 events...");
         }
-
-        // Day 3 and Day 4 events are already set up in the main setupDay3Events() and setupDay4Events() functions above
       }
   
       // Initialize simulator when page loads

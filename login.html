@@ -212,7 +212,6 @@
       
       <nav class="nav-links">
         <a href="index.html" class="nav-link">Home</a>
-        <a href="dashboard.html" class="nav-link">Dashboard</a>
       </nav>
     </div>
   </header>
@@ -343,14 +342,18 @@
                 
                 // Use setTimeout to ensure all operations complete
                 setTimeout(() => {
-                  addDebugLog('🚀 Executing redirect to dashboard...');
-                  window.location.href = 'dashboard.html';
+                  addDebugLog('🚀 Executing redirect...');
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const redirectTo = urlParams.get('redirect') || 'dashboard.html';
+                  window.location.href = redirectTo;
                 }, 100);
                 
               } catch (error) {
                 addDebugLog(`❌ Error in sign in success callback: ${error.message}`);
                 // Still redirect even if saving fails
-                window.location.href = 'dashboard.html';
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectTo = urlParams.get('redirect') || 'dashboard.html';
+                window.location.href = redirectTo;
               }
               
               return false;
@@ -395,10 +398,12 @@
             
             // Check if we're on login page and should redirect
             if (window.location.pathname.includes('login.html')) {
-              addDebugLog('🔄 User already signed in, redirecting to dashboard...');
+              addDebugLog('🔄 User already signed in, redirecting...');
               setTimeout(() => {
-                addDebugLog('🚀 Executing redirect to dashboard...');
-                window.location.href = 'dashboard.html';
+                addDebugLog('🚀 Executing redirect...');
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectTo = urlParams.get('redirect') || 'dashboard.html';
+                window.location.href = redirectTo;
               }, 500);
             }
           } else {

@@ -8,8 +8,21 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="firebase-config-local.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="firebase-init.js"></script>
+    
+    <script>
+      // Check authentication before allowing access to simulator
+      document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Firebase to initialize
+        setTimeout(() => {
+          if (!window.auth || !window.auth.currentUser) {
+            // User not authenticated, redirect to login with redirect parameter
+            window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+          }
+        }, 1000);
+      });
+    </script>
     <script src="progress-manager.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');

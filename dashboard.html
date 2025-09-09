@@ -950,10 +950,23 @@
             }
         }
 
+        // Check authentication and redirect if needed
+        function checkAuthAndRedirect() {
+            if (!window.auth || !window.auth.currentUser) {
+                // User not authenticated, redirect to login
+                window.location.href = '/login.html?redirect=dashboard';
+                return false;
+            }
+            return true;
+        }
+
         // Load simulators when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            // Wait for Firebase to initialize
-            setTimeout(loadAccessibleSimulators, 1000);
+            // Check authentication first
+            if (checkAuthAndRedirect()) {
+                // Wait for Firebase to initialize
+                setTimeout(loadAccessibleSimulators, 1000);
+            }
         });
     </script>
 </body>
