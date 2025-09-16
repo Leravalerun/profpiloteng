@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ProfPilot — Checkout</title>
-  <meta name="description" content="Complete your purchase and start your career simulator journey with ProfPilot." />
+  <title>Checkout — ProfPilot</title>
+  <meta name="description" content="Complete your purchase to access ProfPilot career simulators." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -54,32 +54,14 @@
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-10px); }
     }
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #3498db;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .paypal-button {
+      width: 100%;
+      height: 50px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="firebase-init.js"></script>
-
-  <!-- Stripe SDK -->
-  <script src="https://js.stripe.com/v3/"></script>
 
   <!-- Navbar -->
   <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
@@ -89,7 +71,7 @@
         ProfPilot
       </a>
       <div class="flex items-center gap-2">
-        <a href="/login.html" class="px-4 py-2 border border-sky-600 text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition-colors duration-200">Log in</a>
+        <a href="/" class="px-4 py-2 text-slate-700 font-medium hover:text-brand-700 transition-colors">Back to Home</a>
       </div>
     </div>
   </header>
@@ -100,127 +82,116 @@
   <div class="min-h-screen py-8">
     <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
       
-      <!-- Progress Steps -->
-      <div class="mb-8">
-        <div class="flex items-center justify-center space-x-4">
-          <div class="flex items-center">
-            <div class="w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-            <span class="ml-2 text-sm font-medium text-brand-600">Select Simulator</span>
-          </div>
-          <div class="w-16 h-0.5 bg-brand-600"></div>
-          <div class="flex items-center">
-            <div class="w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-            <span class="ml-2 text-sm font-medium text-brand-600">Payment</span>
-          </div>
-          <div class="w-16 h-0.5 bg-slate-300"></div>
-          <div class="flex items-center">
-            <div class="w-8 h-8 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-sm font-bold">3</div>
-            <span class="ml-2 text-sm font-medium text-slate-500">Complete</span>
-          </div>
-        </div>
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
+          Complete Your <span class="gradient-text">Purchase</span>
+        </h1>
+        <p class="text-lg text-slate-600">Secure payment powered by PayPal</p>
       </div>
 
       <div class="grid lg:grid-cols-2 gap-8">
         
         <!-- Order Summary -->
-        <div class="bg-white rounded-2xl shadow-card p-6">
+        <div class="bg-white rounded-2xl shadow-card p-8">
           <h2 class="text-2xl font-bold text-slate-900 mb-6">Order Summary</h2>
           
-          <div id="simulator-selection" class="space-y-4">
-            <!-- Simulator cards will be populated by JavaScript -->
+          <div id="simulator-info" class="border border-slate-200 rounded-xl p-6 mb-6">
+            <div class="flex items-center gap-4">
+              <div id="simulator-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center">
+                <!-- Icon will be set by JavaScript -->
+              </div>
+              <div>
+                <h3 id="simulator-title" class="text-xl font-bold text-slate-900">Loading...</h3>
+                <p id="simulator-description" class="text-slate-600">Loading simulator details...</p>
+              </div>
+            </div>
           </div>
 
-          <div class="border-t border-slate-200 pt-4 mt-6">
-            <div class="flex justify-between items-center text-lg font-semibold">
-              <span>Total</span>
-              <span id="total-price" class="text-brand-600">$15.00</span>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-3 border-b border-slate-200">
+              <span class="text-slate-600">Simulator Access</span>
+              <span id="simulator-price" class="font-semibold text-slate-900">$15.00</span>
             </div>
-            <p class="text-sm text-slate-500 mt-2">One-time payment • Lifetime access</p>
+            <div class="flex justify-between items-center py-3 border-b border-slate-200">
+              <span class="text-slate-600">Processing Fee</span>
+              <span class="font-semibold text-slate-900">$0.00</span>
+            </div>
+            <div class="flex justify-between items-center py-4">
+              <span class="text-xl font-bold text-slate-900">Total</span>
+              <span id="total-price" class="text-2xl font-bold text-brand-600">$15.00</span>
+            </div>
+          </div>
+
+          <div class="mt-6 p-4 bg-green-50 rounded-xl border border-green-200">
+            <div class="flex items-center gap-2 text-green-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="font-medium">30-day money-back guarantee</span>
+            </div>
+            <p class="text-sm text-green-600 mt-1">If you're not satisfied, we'll refund your payment within 30 days.</p>
           </div>
         </div>
 
         <!-- Payment Form -->
-        <div class="bg-white rounded-2xl shadow-card p-6">
-          <h2 class="text-2xl font-bold text-slate-900 mb-6">Payment Information</h2>
+        <div class="bg-white rounded-2xl shadow-card p-8">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Payment Details</h2>
           
-          <!-- Authentication Check -->
-          <div id="auth-check" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div class="flex items-center">
-              <div class="loading mr-3"></div>
-              <span class="text-blue-700">Checking authentication...</span>
+          <!-- Loading State -->
+          <div id="loading-state" class="text-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600 mx-auto mb-4"></div>
+            <p class="text-slate-600">Loading payment options...</p>
+          </div>
+
+          <!-- PayPal Button Container -->
+          <div id="paypal-button-container" class="hidden">
+            <div class="mb-6">
+              <p class="text-slate-600 mb-4">Choose your payment method:</p>
+              <div class="flex items-center gap-2 mb-4">
+                <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
+                <span class="text-slate-700 font-medium">PayPal</span>
+              </div>
             </div>
           </div>
 
-          <!-- Login Required -->
-          <div id="login-required" class="hidden mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <div class="flex items-center mb-3">
-              <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-              </svg>
-              <span class="text-yellow-800 font-medium">Login Required</span>
-            </div>
-            <p class="text-yellow-700 text-sm mb-3">Please log in to complete your purchase.</p>
-            <a href="/login.html" class="inline-block bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">
-              Log In
-            </a>
-          </div>
-
-          <!-- Payment Form -->
-          <div id="payment-form" class="hidden">
-            <form id="checkout-form">
-              <!-- Email -->
-              <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
-                <input type="email" id="email" name="email" required 
-                       class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent"
-                       placeholder="your@email.com">
-              </div>
-
-              <!-- Card Information -->
-              <div class="mb-4">
-                <label class="block text-sm font-medium text-slate-700 mb-2">Card Information</label>
-                <div id="card-element" class="p-3 border border-slate-300 rounded-lg focus-within:ring-2 focus-within:ring-brand-600 focus-within:border-transparent">
-                  <!-- Stripe Elements will create form elements here -->
-                </div>
-                <div id="card-errors" class="text-red-600 text-sm mt-2"></div>
-              </div>
-
-              <!-- Billing Address -->
-              <div class="mb-6">
-                <label for="billing-name" class="block text-sm font-medium text-slate-700 mb-2">Billing Name</label>
-                <input type="text" id="billing-name" name="billing-name" required 
-                       class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent"
-                       placeholder="Full name">
-              </div>
-
-              <!-- Submit Button -->
-              <button type="submit" id="submit-button" 
-                      class="w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                <span id="button-text">Pay $15.00</span>
-                <div id="spinner" class="loading hidden"></div>
-              </button>
-
-              <!-- Security Notice -->
-              <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <div class="flex items-center">
-                  <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                  </svg>
-                  <span class="text-green-700 text-sm">Secure payment powered by Stripe</span>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <!-- Error Messages -->
-          <div id="error-message" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <div class="flex items-center">
-              <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Error State -->
+          <div id="error-state" class="hidden text-center py-12">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              <span class="text-red-800 font-medium">Payment Failed</span>
             </div>
-            <p id="error-text" class="text-red-700 text-sm mt-1"></p>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Payment Error</h3>
+            <p class="text-slate-600 mb-4">There was an error loading the payment options.</p>
+            <button onclick="location.reload()" class="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors">
+              Try Again
+            </button>
+          </div>
+
+          <!-- Success State -->
+          <div id="success-state" class="hidden text-center py-12">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Payment Successful!</h3>
+            <p class="text-slate-600 mb-4">Redirecting you to your simulator...</p>
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-brand-600 mx-auto"></div>
+          </div>
+
+          <!-- Security Notice -->
+          <div class="mt-8 p-4 bg-slate-50 rounded-xl">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-slate-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+              <div>
+                <h4 class="font-medium text-slate-900 mb-1">Secure Payment</h4>
+                <p class="text-sm text-slate-600">Your payment information is encrypted and processed securely by PayPal. We never store your payment details.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -247,256 +218,168 @@
     </div>
   </footer>
 
-  <script>
-    // Initialize Stripe
-    const stripe = Stripe('pk_test_51OZ...'); // Replace with your actual publishable key
-    const elements = stripe.elements();
+  <!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD&intent=capture"></script>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
 
-    // Available simulators
+  <script>
+    // Simulator data
     const simulators = {
       'ux-designer': {
-        name: 'UX Designer Simulator',
-        price: 15.00,
-        description: '3-day hands-on UX design experience',
-        icon: '🎨'
+        title: 'UX Designer Simulator',
+        description: 'Analyze user behavior, fix usability issues, and sketch improvements with guidance from a team.',
+        icon: 'purple',
+        price: 15.00
       },
       'lawyer': {
-        name: 'Corporate Lawyer Simulator', 
-        price: 15.00,
-        description: '3-day corporate legal work experience',
-        icon: '⚖️'
+        title: 'Corporate Lawyer Simulator',
+        description: 'Review contracts, advise colleagues, and balance business needs with legal safety in real scenarios.',
+        icon: 'blue',
+        price: 15.00
       }
     };
 
-    let selectedSimulator = null;
-    let currentUser = null;
-
-    // Get simulator from URL parameters
+    // Get simulator from URL parameter
     function getSimulatorFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
-      const role = urlParams.get('role');
-      return role && simulators[role] ? role : 'ux-designer'; // Default to UX Designer
+      return urlParams.get('role') || 'ux-designer';
+    }
+
+    // Update simulator info
+    function updateSimulatorInfo(simulatorKey) {
+      const simulator = simulators[simulatorKey];
+      if (!simulator) return;
+
+      document.getElementById('simulator-title').textContent = simulator.title;
+      document.getElementById('simulator-description').textContent = simulator.description;
+      document.getElementById('simulator-price').textContent = `$${simulator.price.toFixed(2)}`;
+      document.getElementById('total-price').textContent = `$${simulator.price.toFixed(2)}`;
+
+      // Set icon
+      const iconElement = document.getElementById('simulator-icon');
+      if (simulator.icon === 'purple') {
+        iconElement.className = 'w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center';
+        iconElement.innerHTML = '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>';
+      } else if (simulator.icon === 'blue') {
+        iconElement.className = 'w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center';
+        iconElement.innerHTML = '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>';
+      }
+    }
+
+    // Initialize PayPal
+    function initializePayPal() {
+      const simulatorKey = getSimulatorFromURL();
+      const simulator = simulators[simulatorKey];
+      
+      if (!simulator) {
+        showError('Invalid simulator selected');
+        return;
+      }
+
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: simulator.price.toFixed(2),
+                currency_code: 'USD'
+              },
+              description: simulator.title
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Payment successful
+            handlePaymentSuccess(details, simulatorKey);
+          });
+        },
+        onError: function(err) {
+          console.error('PayPal error:', err);
+          showError('Payment failed. Please try again.');
+        },
+        onCancel: function(data) {
+          console.log('Payment cancelled');
+        }
+      }).render('#paypal-button-container');
+    }
+
+    // Handle successful payment
+    async function handlePaymentSuccess(details, simulatorKey) {
+      try {
+        // Show success state
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('paypal-button-container').classList.add('hidden');
+        document.getElementById('success-state').classList.remove('hidden');
+
+        // Save purchase to Firebase
+        const purchaseData = {
+          paymentIntentId: details.id,
+          simulator: simulatorKey,
+          amount: simulators[simulatorKey].price,
+          paymentMethod: 'paypal',
+          status: 'completed',
+          paypalOrderId: details.id,
+          payerEmail: details.payer.email_address
+        };
+
+        await window.savePurchase(purchaseData);
+
+        // Track analytics
+        if (window.trackPurchase) {
+          window.trackPurchase(simulatorKey, simulators[simulatorKey].price, details.id);
+        }
+
+        // Redirect to simulator after 2 seconds
+        setTimeout(() => {
+          if (simulatorKey === 'ux-designer') {
+            window.location.href = '/ux-sim.html';
+          } else if (simulatorKey === 'lawyer') {
+            window.location.href = '/lawyer-simulator.html';
+          }
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error saving purchase:', error);
+        showError('Payment successful but there was an error saving your purchase. Please contact support.');
+      }
+    }
+
+    // Show error state
+    function showError(message) {
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('paypal-button-container').classList.add('hidden');
+      document.getElementById('error-state').classList.remove('hidden');
+      document.querySelector('#error-state p').textContent = message;
     }
 
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
       // Update year in footer
       document.getElementById('year').textContent = new Date().getFullYear();
-      
-      // Get selected simulator
-      selectedSimulator = getSimulatorFromURL();
-      
-      // Display simulator selection
-      displaySimulatorSelection();
-      
+
       // Check authentication
-      checkAuthentication();
-    });
-
-    // Display simulator selection
-    function displaySimulatorSelection() {
-      const container = document.getElementById('simulator-selection');
-      const simulator = simulators[selectedSimulator];
-      
-      container.innerHTML = `
-        <div class="flex items-center p-4 border border-slate-200 rounded-lg">
-          <div class="text-2xl mr-4">${simulator.icon}</div>
-          <div class="flex-grow">
-            <h3 class="font-semibold text-slate-900">${simulator.name}</h3>
-            <p class="text-sm text-slate-600">${simulator.description}</p>
-          </div>
-          <div class="text-lg font-semibold text-brand-600">$${simulator.price.toFixed(2)}</div>
-        </div>
-      `;
-      
-      document.getElementById('total-price').textContent = `$${simulator.price.toFixed(2)}`;
-      document.getElementById('button-text').textContent = `Pay $${simulator.price.toFixed(2)}`;
-    }
-
-    // Check authentication status
-    function checkAuthentication() {
-      const authCheck = document.getElementById('auth-check');
-      const loginRequired = document.getElementById('login-required');
-      const paymentForm = document.getElementById('payment-form');
-
-      // Wait for Firebase to initialize
-      const checkAuth = () => {
-        if (window.auth && window.auth.currentUser) {
-          currentUser = window.auth.currentUser;
-          authCheck.classList.add('hidden');
-          paymentForm.classList.remove('hidden');
-          initializePaymentForm();
-        } else {
-          authCheck.classList.add('hidden');
-          loginRequired.classList.remove('hidden');
-        }
-      };
-
-      // Check immediately and also listen for auth state changes
-      if (window.auth) {
-        checkAuth();
-        window.auth.onAuthStateChanged((user) => {
-          if (user) {
-            currentUser = user;
-            authCheck.classList.add('hidden');
-            loginRequired.classList.add('hidden');
-            paymentForm.classList.remove('hidden');
-            initializePaymentForm();
-          } else {
-            authCheck.classList.add('hidden');
-            loginRequired.classList.remove('hidden');
-            paymentForm.classList.add('hidden');
-          }
-        });
-      } else {
-        // Wait for Firebase to load
-        setTimeout(checkAuth, 1000);
+      if (!window.auth || !window.auth.currentUser) {
+        window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.href);
+        return;
       }
-    }
 
-    // Initialize payment form
-    function initializePaymentForm() {
-      if (!currentUser) return;
+      // Update simulator info
+      updateSimulatorInfo(getSimulatorFromURL());
 
-      // Pre-fill email with user's email
-      document.getElementById('email').value = currentUser.email || '';
-      
-      // Pre-fill billing name
-      document.getElementById('billing-name').value = currentUser.displayName || '';
-
-      // Create card element
-      const cardElement = elements.create('card', {
-        style: {
-          base: {
-            fontSize: '16px',
-            color: '#424770',
-            '::placeholder': {
-              color: '#aab7c4',
-            },
-          },
-        },
-      });
-
-      cardElement.mount('#card-element');
-
-      // Handle real-time validation errors from the card Element
-      cardElement.on('change', ({error}) => {
-        const displayError = document.getElementById('card-errors');
-        if (error) {
-          displayError.textContent = error.message;
-        } else {
-          displayError.textContent = '';
-        }
-      });
-
-      // Handle form submission
-      const form = document.getElementById('checkout-form');
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        
-        const submitButton = document.getElementById('submit-button');
-        const buttonText = document.getElementById('button-text');
-        const spinner = document.getElementById('spinner');
-        
-        // Show loading state
-        submitButton.disabled = true;
-        buttonText.classList.add('hidden');
-        spinner.classList.remove('hidden');
-        
-        try {
-          // Create payment intent
-          const response = await fetch('/create-payment-intent', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              simulator: selectedSimulator,
-              amount: simulators[selectedSimulator].price * 100, // Convert to cents
-              currency: 'usd',
-              userId: currentUser.uid,
-              userEmail: currentUser.email
-            }),
-          });
-
-          const {clientSecret} = await response.json();
-
-          // Confirm payment
-          const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-              card: cardElement,
-              billing_details: {
-                name: document.getElementById('billing-name').value,
-                email: document.getElementById('email').value,
-              },
-            },
-          });
-
-          if (error) {
-            showError(error.message);
-          } else if (paymentIntent.status === 'succeeded') {
-            // Payment succeeded
-            await savePurchase(paymentIntent);
-            window.location.href = `/thank-you.html?payment_intent=${paymentIntent.id}&simulator=${selectedSimulator}`;
-          }
-        } catch (error) {
-          console.error('Payment error:', error);
-          showError('An unexpected error occurred. Please try again.');
-        } finally {
-          // Reset button state
-          submitButton.disabled = false;
-          buttonText.classList.remove('hidden');
-          spinner.classList.add('hidden');
-        }
-      });
-    }
-
-    // Save purchase to Firebase
-    async function savePurchase(paymentIntent) {
-      try {
-        const purchaseData = {
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-          simulator: selectedSimulator,
-          simulatorName: simulators[selectedSimulator].name,
-          amount: simulators[selectedSimulator].price,
-          currency: 'usd',
-          paymentIntentId: paymentIntent.id,
-          status: 'completed',
-          purchaseDate: firebase.firestore.FieldValue.serverTimestamp(),
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        // Save to user's purchases collection
-        await window.db.collection('users').doc(currentUser.uid)
-          .collection('purchases').doc(paymentIntent.id).set(purchaseData);
-
-        // Update user's accessible simulators
-        await window.db.collection('users').doc(currentUser.uid).update({
-          accessibleSimulators: firebase.firestore.FieldValue.arrayUnion(selectedSimulator),
-          lastPurchaseDate: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        console.log('Purchase saved successfully');
-      } catch (error) {
-        console.error('Error saving purchase:', error);
-        throw error;
-      }
-    }
-
-    // Show error message
-    function showError(message) {
-      const errorDiv = document.getElementById('error-message');
-      const errorText = document.getElementById('error-text');
-      
-      errorText.textContent = message;
-      errorDiv.classList.remove('hidden');
-      
-      // Auto-hide after 5 seconds
+      // Initialize PayPal
       setTimeout(() => {
-        errorDiv.classList.add('hidden');
-      }, 5000);
-    }
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('paypal-button-container').classList.remove('hidden');
+        initializePayPal();
+      }, 1000);
+    });
   </script>
 </body>
 </html>

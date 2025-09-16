@@ -472,31 +472,44 @@ function initializeFirebaseFunctions(auth, db, analytics) {
     }
   };
 
-  // Check if user has access to a simulator (currently all free during beta)
+  // Check if user has access to a simulator
   window.hasSimulatorAccess = async (simulatorName) => {
     try {
       if (!auth.currentUser) {
         return false;
       }
-
-      // During beta launch, all simulators are free and accessible
-      const availableSimulators = ['ux-designer', 'lawyer'];
-      return availableSimulators.includes(simulatorName);
+      const userId = auth.currentUser.uid;
+      const userDoc = await db.collection('users').doc(userId).get();
+      
+      if (!userDoc.exists) {
+        return false;
+      }
+      
+      const userData = userDoc.data();
+      const accessibleSimulators = userData.accessibleSimulators || [];
+      
+      return accessibleSimulators.includes(simulatorName);
     } catch (error) {
       console.error('❌ Error checking simulator access:', error);
       return false;
     }
   };
 
-  // Get user's accessible simulators (currently all free during beta)
+  // Get user's accessible simulators
   window.getAccessibleSimulators = async () => {
     try {
       if (!auth.currentUser) {
         return [];
       }
-
-      // During beta launch, all simulators are free and accessible
-      return ['ux-designer', 'lawyer'];
+      const userId = auth.currentUser.uid;
+      const userDoc = await db.collection('users').doc(userId).get();
+      
+      if (!userDoc.exists) {
+        return [];
+      }
+      
+      const userData = userDoc.data();
+      return userData.accessibleSimulators || [];
     } catch (error) {
       console.error('❌ Error getting accessible simulators:', error);
       return [];
