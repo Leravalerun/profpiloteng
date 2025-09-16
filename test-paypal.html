@@ -49,7 +49,29 @@
   <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=ATqMLXIdVBcijAV9H8QmYud0idJcGQc-SHKYjhsvIPGSmvHv-Y988y60kljFD6uT6SXrnpkrLLWD4DvI&currency=USD&intent=capture"></script>
   
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+  
   <script>
+    // Check Firebase initialization
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔍 Checking Firebase initialization...');
+      
+      // Wait for Firebase to initialize
+      setTimeout(() => {
+        if (window.firebase && window.auth) {
+          console.log('✅ Firebase initialized successfully');
+          console.log('🔑 Auth state:', window.auth.currentUser ? 'Logged in' : 'Not logged in');
+        } else {
+          console.error('❌ Firebase not initialized');
+        }
+      }, 2000);
+    });
+
     paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({

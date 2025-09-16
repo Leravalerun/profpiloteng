@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Firebase Test — ProfPilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 p-8">
+  
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-slate-900 mb-8">Firebase Diagnostic Test</h1>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      
+      <!-- Firebase Status -->
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Firebase Status</h2>
+        <div id="firebase-status" class="space-y-3">
+          <div class="flex items-center gap-2">
+            <div id="firebase-sdk" class="w-4 h-4 rounded-full bg-gray-300"></div>
+            <span>Firebase SDK</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div id="firebase-config" class="w-4 h-4 rounded-full bg-gray-300"></div>
+            <span>Firebase Config</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div id="firebase-app" class="w-4 h-4 rounded-full bg-gray-300"></div>
+            <span>Firebase App</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div id="firebase-auth" class="w-4 h-4 rounded-full bg-gray-300"></div>
+            <span>Firebase Auth</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div id="firebase-firestore" class="w-4 h-4 rounded-full bg-gray-300"></div>
+            <span>Firebase Firestore</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Console Logs -->
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Console Logs</h2>
+        <div id="console-logs" class="bg-slate-100 rounded-lg p-4 h-64 overflow-y-auto text-sm font-mono">
+          <div class="text-slate-500">Loading...</div>
+        </div>
+      </div>
+
+      <!-- Test Actions -->
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Test Actions</h2>
+        <div class="space-y-3">
+          <button onclick="testFirebaseConnection()" class="w-full bg-brand-600 text-white py-2 px-4 rounded-lg hover:bg-brand-700 transition-colors">
+            Test Firebase Connection
+          </button>
+          <button onclick="testAuth()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+            Test Authentication
+          </button>
+          <button onclick="testFirestore()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            Test Firestore
+          </button>
+        </div>
+      </div>
+
+      <!-- Environment Info -->
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Environment Info</h2>
+        <div class="space-y-2 text-sm">
+          <div><strong>Hostname:</strong> <span id="hostname"></span></div>
+          <div><strong>Protocol:</strong> <span id="protocol"></span></div>
+          <div><strong>User Agent:</strong> <span id="user-agent" class="text-xs break-all"></span></div>
+          <div><strong>Timestamp:</strong> <span id="timestamp"></span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Error Display -->
+    <div id="error-display" class="hidden mt-6 bg-red-100 border border-red-200 rounded-lg p-4">
+      <h3 class="font-medium text-red-900 mb-2">Error Details</h3>
+      <pre id="error-details" class="text-red-700 text-sm whitespace-pre-wrap"></pre>
+    </div>
+
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+
+  <script>
+    // Console logging
+    const originalLog = console.log;
+    const originalError = console.error;
+    const consoleDiv = document.getElementById('console-logs');
+    
+    function addLog(message, type = 'log') {
+      const div = document.createElement('div');
+      div.className = type === 'error' ? 'text-red-600' : 'text-slate-700';
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      consoleDiv.appendChild(div);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+    
+    console.log = function(...args) {
+      originalLog.apply(console, args);
+      addLog(args.join(' '), 'log');
+    };
+    
+    console.error = function(...args) {
+      originalError.apply(console, args);
+      addLog(args.join(' '), 'error');
+    };
+
+    // Update environment info
+    document.getElementById('hostname').textContent = window.location.hostname;
+    document.getElementById('protocol').textContent = window.location.protocol;
+    document.getElementById('user-agent').textContent = navigator.userAgent;
+    document.getElementById('timestamp').textContent = new Date().toISOString();
+
+    // Check Firebase status
+    function updateStatus() {
+      const checks = [
+        { id: 'firebase-sdk', condition: typeof firebase !== 'undefined', name: 'Firebase SDK' },
+        { id: 'firebase-config', condition: typeof getFirebaseConfig !== 'undefined', name: 'Firebase Config' },
+        { id: 'firebase-app', condition: window.firebase && window.firebase.apps && window.firebase.apps.length > 0, name: 'Firebase App' },
+        { id: 'firebase-auth', condition: window.auth !== undefined, name: 'Firebase Auth' },
+        { id: 'firebase-firestore', condition: window.db !== undefined, name: 'Firebase Firestore' }
+      ];
+
+      checks.forEach(check => {
+        const element = document.getElementById(check.id);
+        if (check.condition) {
+          element.className = 'w-4 h-4 rounded-full bg-green-500';
+          console.log(`✅ ${check.name} loaded`);
+        } else {
+          element.className = 'w-4 h-4 rounded-full bg-red-500';
+          console.error(`❌ ${check.name} not loaded`);
+        }
+      });
+    }
+
+    // Test functions
+    async function testFirebaseConnection() {
+      console.log('🔍 Testing Firebase connection...');
+      try {
+        if (window.db) {
+          const testDoc = await window.db.collection('test').doc('connection').get();
+          console.log('✅ Firestore connection successful');
+        } else {
+          console.error('❌ Firestore not available');
+        }
+      } catch (error) {
+        console.error('❌ Firestore connection failed:', error.message);
+      }
+    }
+
+    async function testAuth() {
+      console.log('🔍 Testing Authentication...');
+      try {
+        if (window.auth) {
+          console.log('✅ Auth service available');
+          console.log('Current user:', window.auth.currentUser ? 'Logged in' : 'Not logged in');
+        } else {
+          console.error('❌ Auth service not available');
+        }
+      } catch (error) {
+        console.error('❌ Auth test failed:', error.message);
+      }
+    }
+
+    async function testFirestore() {
+      console.log('🔍 Testing Firestore...');
+      try {
+        if (window.db) {
+          const testData = { test: true, timestamp: new Date() };
+          await window.db.collection('test').doc('diagnostic').set(testData);
+          console.log('✅ Firestore write successful');
+          
+          const doc = await window.db.collection('test').doc('diagnostic').get();
+          if (doc.exists) {
+            console.log('✅ Firestore read successful');
+          }
+        } else {
+          console.error('❌ Firestore not available');
+        }
+      } catch (error) {
+        console.error('❌ Firestore test failed:', error.message);
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Starting Firebase diagnostic...');
+      
+      // Check status immediately
+      updateStatus();
+      
+      // Check again after a delay to catch async initialization
+      setTimeout(updateStatus, 2000);
+      setTimeout(updateStatus, 5000);
+    });
+  </script>
+</body>
+</html>
