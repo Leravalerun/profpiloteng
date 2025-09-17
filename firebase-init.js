@@ -5,6 +5,13 @@
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Initializing Firebase for ProfPilot...');
   
+  // Wait a bit for all scripts to load
+  setTimeout(() => {
+    initializeFirebase();
+  }, 100);
+});
+
+function initializeFirebase() {
   // Check if Firebase is loaded
   if (typeof firebase === 'undefined') {
     console.error('❌ Firebase SDK not loaded! Check your script tags.');
@@ -584,6 +591,9 @@ function initializeAutoLogout(auth) {
   resetTimer();
   
   console.log('✅ Auto-logout timer initialized (2 hours inactivity)');
+}
+
+// Close the initializeFirebase function
 }
 
 // Security warnings

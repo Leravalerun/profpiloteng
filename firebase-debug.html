@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Debug</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .status { margin: 10px 0; padding: 10px; border-radius: 5px; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    .warning { background: #fff3cd; color: #856404; }
+  </style>
+</head>
+<body>
+  <h1>Firebase Debug</h1>
+  <div id="status"></div>
+
+  <script>
+    function addStatus(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `status ${type}`;
+      div.textContent = message;
+      document.getElementById('status').appendChild(div);
+    }
+
+    // Test 1: Check if Firebase SDK loads
+    addStatus('Testing Firebase SDK loading...', 'info');
+    
+    // Load Firebase SDK
+    const script1 = document.createElement('script');
+    script1.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js';
+    script1.onload = function() {
+      addStatus('✅ Firebase App SDK loaded', 'success');
+      
+      // Test 2: Load Auth SDK
+      const script2 = document.createElement('script');
+      script2.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js';
+      script2.onload = function() {
+        addStatus('✅ Firebase Auth SDK loaded', 'success');
+        
+        // Test 3: Load Firestore SDK
+        const script3 = document.createElement('script');
+        script3.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js';
+        script3.onload = function() {
+          addStatus('✅ Firebase Firestore SDK loaded', 'success');
+          
+          // Test 4: Load config
+          const script4 = document.createElement('script');
+          script4.src = 'firebase-config.js';
+          script4.onload = function() {
+            addStatus('✅ Firebase config loaded', 'success');
+            
+            // Test 5: Check if firebase object exists
+            if (typeof firebase !== 'undefined') {
+              addStatus('✅ Firebase object available', 'success');
+              
+              // Test 6: Check if getFirebaseConfig exists
+              if (typeof getFirebaseConfig !== 'undefined') {
+                addStatus('✅ getFirebaseConfig function available', 'success');
+                
+                // Test 7: Try to get config
+                try {
+                  const config = getFirebaseConfig();
+                  addStatus('✅ Firebase config retrieved successfully', 'success');
+                  addStatus(`Config: ${JSON.stringify(config, null, 2)}`, 'info');
+                  
+                  // Test 8: Try to initialize Firebase
+                  try {
+                    const app = firebase.initializeApp(config);
+                    addStatus('✅ Firebase app initialized successfully', 'success');
+                    
+                    // Test 9: Try to get auth
+                    try {
+                      const auth = firebase.auth();
+                      addStatus('✅ Firebase auth initialized successfully', 'success');
+                      
+                      // Test 10: Try to get firestore
+                      try {
+                        const db = firebase.firestore();
+                        addStatus('✅ Firebase firestore initialized successfully', 'success');
+                        addStatus('🎉 All Firebase tests passed!', 'success');
+                      } catch (e) {
+                        addStatus(`❌ Firestore error: ${e.message}`, 'error');
+                      }
+                    } catch (e) {
+                      addStatus(`❌ Auth error: ${e.message}`, 'error');
+                    }
+                  } catch (e) {
+                    addStatus(`❌ Firebase initialization error: ${e.message}`, 'error');
+                  }
+                } catch (e) {
+                  addStatus(`❌ Config error: ${e.message}`, 'error');
+                }
+              } else {
+                addStatus('❌ getFirebaseConfig function not available', 'error');
+              }
+            } else {
+              addStatus('❌ Firebase object not available', 'error');
+            }
+          };
+          script4.onerror = function() {
+            addStatus('❌ Failed to load firebase-config.js', 'error');
+          };
+          document.head.appendChild(script4);
+        };
+        script3.onerror = function() {
+          addStatus('❌ Failed to load Firestore SDK', 'error');
+        };
+        document.head.appendChild(script3);
+      };
+      script2.onerror = function() {
+        addStatus('❌ Failed to load Auth SDK', 'error');
+      };
+      document.head.appendChild(script2);
+    };
+    script1.onerror = function() {
+      addStatus('❌ Failed to load Firebase App SDK', 'error');
+    };
+    document.head.appendChild(script1);
+  </script>
+</body>
+</html>
