@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.profpilot.co/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /test-paypal.html
+Disallow: /firebase-test.html
+
+# Allow important pages
+Allow: /
+Allow: /checkout
+Allow: /login
+Allow: /dashboard
+Allow: /ux
+Allow: /lawyer
+Allow: /policy.html
+Allow: /terms.html

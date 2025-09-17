@@ -5,13 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ProfPilot — Try a Job in 3 Days</title>
   <meta name="description" content="Hands-on career simulators. Try the role of a UX Designer or Corporate Lawyer in 3 days with tasks, feedback, and learning paths." />
+  <meta name="keywords" content="career simulator, job simulation, UX designer, corporate lawyer, career exploration, professional development" />
+  <meta name="author" content="ProfPilot" />
+  <meta property="og:title" content="ProfPilot - Try a Job in 3 Days" />
+  <meta property="og:description" content="Experience real work scenarios in UX Design, Corporate Law, and more. No commitment, just exploration." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.profpilot.co" />
+  <meta property="og:image" content="https://www.profpilot.co/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ProfPilot - Try a Job in 3 Days" />
+  <meta name="twitter:description" content="Experience real work scenarios in UX Design, Corporate Law, and more." />
+  <meta name="twitter:image" content="https://www.profpilot.co/logo.png" />
   <!-- Favicons -->
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon_32.png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Preload critical resources -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"></noscript>
+  
+  <!-- Preload critical images -->
+  <link rel="preload" href="logo.png" as="image">
+  
+  <!-- Theme color for PWA -->
+  <meta name="theme-color" content="#3b82f6">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -92,19 +110,16 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="firebase-init.js"></script>
 
   <!-- Navbar -->
   <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
     <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
       <!-- Logo -->
       <a href="/" class="flex items-center gap-2 text-xl font-bold text-brand-700 hover:text-brand-800 transition-colors">
-        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" />
+        <picture>
+          <source srcset="logo.webp" type="image/webp">
+          <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" width="32" height="32" />
+        </picture>
         ProfPilot
       </a>
 
@@ -180,10 +195,10 @@
       </p>
       
       <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style="animation-delay: 0.4s;">
-        <a href="#roles" class="w-full sm:w-auto rounded-2xl bg-slate-900 text-white px-8 py-4 text-lg font-bold shadow-soft hover:bg-slate-800 hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+        <a href="#roles" class="w-full sm:w-auto rounded-2xl bg-slate-900 text-white px-8 py-4 text-lg font-bold shadow-soft hover:bg-slate-800 hover:shadow-lg transition-all duration-200 transform hover:scale-105" aria-label="Start your career test-drive for $15">
           Start for $15
         </a>
-        <a href="#roles" class="w-full sm:w-auto rounded-2xl bg-brand-600 text-white px-8 py-4 text-lg font-bold shadow-soft hover:bg-brand-700 hover:shadow-glow transition-all duration-200 transform hover:scale-105">
+        <a href="#roles" class="w-full sm:w-auto rounded-2xl bg-brand-600 text-white px-8 py-4 text-lg font-bold shadow-soft hover:bg-brand-700 hover:shadow-glow transition-all duration-200 transform hover:scale-105" aria-label="Choose a profession to explore">
           Choose a profession
         </a>
         <a href="#about" class="w-full sm:w-auto rounded-2xl bg-white/80 backdrop-blur-sm text-slate-900 px-8 py-4 text-lg font-bold border border-slate-200 hover:bg-white hover:shadow-soft transition-all duration-200">
@@ -218,7 +233,7 @@
             <a href="/ux.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
               Learn more
             </a>
-            <a href="/checkout?role=ux-designer" class="inline-block rounded-xl bg-brand-600 text-white px-6 py-3 font-medium hover:bg-brand-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow">
+            <a href="/checkout?role=ux-designer" class="inline-block rounded-xl bg-brand-600 text-white px-6 py-3 font-medium hover:bg-brand-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow" aria-label="Start UX Designer simulator for $15">
               Start for $15
             </a>
           </div>
@@ -239,7 +254,7 @@
             <a href="/lawyer.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
               Learn more
             </a>
-            <a href="/checkout?role=lawyer" class="inline-block rounded-xl bg-brand-600 text-white px-6 py-3 font-medium hover:bg-brand-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow">
+            <a href="/checkout?role=lawyer" class="inline-block rounded-xl bg-brand-600 text-white px-6 py-3 font-medium hover:bg-brand-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow" aria-label="Start Corporate Lawyer simulator for $15">
               Start for $15
             </a>
           </div>
@@ -663,7 +678,10 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div class="flex items-center gap-3">
-          <img src="logo.png" alt="ProfPilot logo" class="h-10 w-10 rounded-xl object-contain" />
+          <picture>
+            <source srcset="logo.webp" type="image/webp">
+            <img src="logo.png" alt="ProfPilot logo" class="h-10 w-10 rounded-xl object-contain" width="40" height="40" loading="lazy" />
+          </picture>
           <div>
             <span class="text-xl font-bold text-slate-900">ProfPilot</span>
             <p class="text-sm text-slate-500">Try a job in 3 days</p>
@@ -751,5 +769,12 @@
       observer.observe(el);
     });
   </script>
+
+  <!-- Firebase SDK - Load after critical content -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
 </body>
 </html>
