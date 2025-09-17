@@ -5,10 +5,24 @@
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 Initializing Firebase for ProfPilot...');
   
-  // Wait a bit for all scripts to load
-  setTimeout(() => {
-    initializeFirebase();
-  }, 100);
+  // Wait for all scripts to load with retry mechanism
+  let retryCount = 0;
+  const maxRetries = 10;
+  
+  function tryInitialize() {
+    if (typeof firebase !== 'undefined' && typeof getFirebaseConfig !== 'undefined') {
+      initializeFirebase();
+    } else if (retryCount < maxRetries) {
+      retryCount++;
+      console.log(`⏳ Waiting for Firebase scripts... (attempt ${retryCount}/${maxRetries})`);
+      setTimeout(tryInitialize, 200);
+    } else {
+      console.error('❌ Firebase scripts failed to load after maximum retries');
+      showError('Firebase configuration missing. Please check setup.');
+    }
+  }
+  
+  tryInitialize();
 });
 
 function initializeFirebase() {

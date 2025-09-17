@@ -771,10 +771,42 @@
   </script>
 
   <!-- Firebase SDK - Load after critical content -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="firebase-init.js"></script>
+  <script>
+    // Load Firebase scripts dynamically
+    function loadFirebaseScripts() {
+      const scripts = [
+        'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',
+        'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
+        'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js',
+        'firebase-config.js',
+        'firebase-init.js'
+      ];
+      
+      let loadedCount = 0;
+      
+      scripts.forEach((src, index) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          loadedCount++;
+          console.log(`✅ Loaded ${src} (${loadedCount}/${scripts.length})`);
+          if (loadedCount === scripts.length) {
+            console.log('🎉 All Firebase scripts loaded successfully!');
+          }
+        };
+        script.onerror = () => {
+          console.error(`❌ Failed to load ${src}`);
+        };
+        document.head.appendChild(script);
+      });
+    }
+    
+    // Load Firebase scripts after page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadFirebaseScripts);
+    } else {
+      loadFirebaseScripts();
+    }
+  </script>
 </body>
 </html>
