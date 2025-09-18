@@ -50,7 +50,7 @@ npm start
 
 ## 🔄 Payment Flow
 
-1. **User clicks "Start — $15"** on any simulator page
+1. **User clicks "Start — $29"** on any simulator page
 2. **Redirected to checkout.html** with simulator parameter
 3. **User logs in** (if not already authenticated)
 4. **Enters payment details** using Stripe Elements

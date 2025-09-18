@@ -124,7 +124,7 @@ profpiloteng/
 ## 💰 Pricing & Business
 
 ### **Pricing Model**
-- **Single Simulator**: $15
+- **Single Simulator**: $29
 - **Bundle (2 simulators)**: $25 (coming soon)
 - **All-Access**: Future offering
 

@@ -23,14 +23,14 @@ Our platform addresses a critical gap in career education: **only about 27% of c
 - **What you'll do**: Analyze user behavior, fix usability issues, sketch improvements
 - **Skills learned**: User research, wireframing, usability testing, design thinking
 - **Real scenarios**: E-commerce website optimization, mobile app UX improvements
-- **Price**: $15
+- **Price**: $29
 
 #### ⚖️ **Corporate Lawyer Simulator**
 - **Duration**: 4 days (30-60 minutes per day)
 - **What you'll do**: Review contracts, advise clients, handle M&A transactions
 - **Skills learned**: Due diligence, contract negotiation, risk assessment, client counseling
 - **Real scenarios**: $85M acquisition deal, FDA compliance, crisis management
-- **Price**: $15
+- **Price**: $29
 
 ### 🔮 **Coming Soon**
 - Software Developer
@@ -115,7 +115,7 @@ profpiloteng/
 ### **For Users**
 1. **Visit** [profpilot.com](https://profpilot.com)
 2. **Choose** a profession that interests you
-3. **Pay** $15 to access the simulator
+3. **Pay** $29 to access the simulator
 4. **Start** your 3-day career test-drive
 5. **Complete** tasks and get feedback
 6. **Decide** if the career fits you
@@ -182,7 +182,7 @@ Each simulator follows a progressive learning path:
 ## 💰 Pricing Model
 
 ### **Simple & Transparent**
-- **Single Simulator**: $15
+- **Single Simulator**: $29
 - **Bundle (2 simulators)**: $25 (coming soon)
 - **All-Access**: Notify me (future offering)
 

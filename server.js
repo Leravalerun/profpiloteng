@@ -16,8 +16,8 @@ const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY || 'pk_test_51
 
 // Simulator pricing
 const SIMULATOR_PRICES = {
-  'ux-designer': 1500, // $15.00 in cents
-  'lawyer': 1500,      // $15.00 in cents
+  'ux-designer': 2900, // $29.00 in cents
+  'lawyer': 2900,      // $29.00 in cents
 };
 
 // Create payment intent
