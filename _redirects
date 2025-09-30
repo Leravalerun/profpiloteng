@@ -1,0 +1,28 @@
+# Netlify redirects for ProfPilot
+
+# Redirect /checkout to /checkout.html
+/checkout /checkout.html 200
+
+# Redirect /paypal-checkout to /paypal-checkout.html  
+/paypal-checkout /paypal-checkout.html 200
+
+# Redirect /login to /login.html
+/login /login.html 200
+
+# Redirect /dashboard to /dashboard.html
+/dashboard /dashboard.html 200
+
+# Redirect /ux to /ux.html
+/ux /ux.html 200
+
+# Redirect /lawyer to /lawyer.html
+/lawyer /lawyer.html 200
+
+# Redirect /ux-sim to /ux-sim.html
+/ux-sim /ux-sim.html 200
+
+# Redirect /lawyer-sim to /lawyer-simulator.html
+/lawyer-sim /lawyer-simulator.html 200
+
+# SPA fallback - redirect all other routes to index.html
+/* /index.html 200

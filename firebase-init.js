@@ -7,25 +7,52 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Wait for all scripts to load with retry mechanism
   let retryCount = 0;
-  const maxRetries = 10;
+  const maxRetries = 20; // Increased retries
   
   function tryInitialize() {
     if (typeof firebase !== 'undefined' && typeof getFirebaseConfig !== 'undefined') {
-      initializeFirebase();
+      // Additional check to ensure Firebase is fully loaded
+      if (firebase.apps && firebase.apps.length === 0) {
+        initializeFirebase();
+      } else if (firebase.apps && firebase.apps.length > 0) {
+        console.log('✅ Firebase already initialized');
+        // Make sure global variables are available
+        if (!window.auth) {
+          window.auth = firebase.auth();
+          window.db = firebase.firestore();
+          window.firebase = firebase;
+        }
+      } else {
+        // Firebase is loaded but not initialized
+        initializeFirebase();
+      }
     } else if (retryCount < maxRetries) {
       retryCount++;
       console.log(`⏳ Waiting for Firebase scripts... (attempt ${retryCount}/${maxRetries})`);
-      setTimeout(tryInitialize, 200);
+      setTimeout(tryInitialize, 500); // Increased delay
     } else {
       console.error('❌ Firebase scripts failed to load after maximum retries');
       showError('Firebase configuration missing. Please check setup.');
     }
   }
   
-  tryInitialize();
+  // Start trying to initialize
+  setTimeout(tryInitialize, 100); // Small delay to ensure scripts are loaded
 });
 
 function initializeFirebase() {
+  // Check if Firebase is already initialized
+  if (firebase.apps && firebase.apps.length > 0) {
+    console.log('✅ Firebase already initialized, skipping...');
+    // Make sure global variables are available
+    if (!window.auth) {
+      window.auth = firebase.auth();
+      window.db = firebase.firestore();
+      window.firebase = firebase;
+    }
+    return;
+  }
+
   // Check if Firebase is loaded
   if (typeof firebase === 'undefined') {
     console.error('❌ Firebase SDK not loaded! Check your script tags.');

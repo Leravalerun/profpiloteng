@@ -108,6 +108,28 @@
             </div>
           </div>
 
+          <!-- Promo Code Section -->
+          <div class="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <div class="flex items-center gap-3">
+              <div class="flex-1">
+                <label for="promo-code" class="block text-sm font-medium text-slate-700 mb-2">Promo Code</label>
+                <input 
+                  type="text" 
+                  id="promo-code" 
+                  placeholder="Enter promo code" 
+                  class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm"
+                >
+              </div>
+              <button 
+                id="apply-promo" 
+                class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium whitespace-nowrap"
+              >
+                Apply
+              </button>
+            </div>
+            <div id="promo-message" class="mt-2 text-sm hidden"></div>
+          </div>
+
           <div class="space-y-4">
             <div class="flex justify-between items-center py-3 border-b border-slate-200">
               <span class="text-slate-600">Simulator Access</span>
@@ -116,6 +138,10 @@
             <div class="flex justify-between items-center py-3 border-b border-slate-200">
               <span class="text-slate-600">Processing Fee</span>
               <span class="font-semibold text-slate-900">$0.00</span>
+            </div>
+            <div id="discount-row" class="flex justify-between items-center py-3 border-b border-slate-200 hidden">
+              <span class="text-slate-600">Discount</span>
+              <span id="discount-amount" class="font-semibold text-green-600">-$29.00</span>
             </div>
             <div class="flex justify-between items-center py-4">
               <span class="text-xl font-bold text-slate-900">Total</span>
@@ -144,13 +170,47 @@
             <p class="text-slate-600">Loading payment options...</p>
           </div>
 
-          <!-- PayPal Button Container -->
-          <div id="paypal-button-container" class="hidden">
+          <!-- Payment Methods -->
+          <div id="payment-methods" class="hidden">
             <div class="mb-6">
               <p class="text-slate-600 mb-4">Choose your payment method:</p>
-              <div class="flex items-center gap-2 mb-4">
-                <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
-                <span class="text-slate-700 font-medium">PayPal</span>
+              
+              <!-- Payment Method Tabs -->
+              <div class="flex space-x-1 bg-slate-100 p-1 rounded-lg mb-6">
+                <button id="stripe-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm">
+                  Credit Card
+                </button>
+                <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
+                  PayPal
+                </button>
+              </div>
+            </div>
+
+            <!-- Stripe Payment -->
+            <div id="stripe-payment" class="payment-method">
+              <div class="mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                  <img src="https://js.stripe.com/v3/fingerprinted/img/visa-4d0529ac3c7a6b0a8b0c8b0c8b0c8b0c.png" alt="Stripe" class="h-6" />
+                  <span class="text-slate-700 font-medium">Secure payment with Stripe</span>
+                </div>
+                <div id="stripe-button-container"></div>
+              </div>
+            </div>
+
+            <!-- PayPal Payment -->
+            <div id="paypal-payment" class="payment-method hidden">
+              <div class="mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                  <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
+                  <span class="text-slate-700 font-medium">PayPal</span>
+                </div>
+                <div class="mb-4">
+                  <p class="text-sm text-slate-600 mb-4">Pay securely with your PayPal account or credit card.</p>
+                  <a href="/paypal-checkout.html" id="paypal-checkout-link" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center">
+                    Continue with PayPal
+                  </a>
+                </div>
+                <div id="paypal-button-container"></div>
               </div>
             </div>
           </div>
@@ -235,15 +295,29 @@
         title: 'UX Designer Simulator',
         description: 'Analyze user behavior, fix usability issues, and sketch improvements with guidance from a team.',
         icon: 'purple',
-        price: 15.00
+        price: 29.00
       },
       'lawyer': {
         title: 'Corporate Lawyer Simulator',
         description: 'Review contracts, advise colleagues, and balance business needs with legal safety in real scenarios.',
         icon: 'blue',
-        price: 15.00
+        price: 29.00
       }
     };
+
+    // Promo code configuration
+    const PROMO_CODES = {
+      'checkppff': {
+        discount: 100, // 100% discount (free)
+        description: 'Free access granted!'
+      }
+    };
+
+    // Global variables for pricing
+    let originalPrice = 29.00;
+    let currentPrice = 29.00;
+    let promoApplied = false;
+    let currentPromoCode = null;
 
     // Get simulator from URL parameter
     function getSimulatorFromURL() {
@@ -255,6 +329,10 @@
     function updateSimulatorInfo(simulatorKey) {
       const simulator = simulators[simulatorKey];
       if (!simulator) return;
+
+      // Update global pricing variables
+      originalPrice = simulator.price;
+      currentPrice = simulator.price;
 
       document.getElementById('simulator-title').textContent = simulator.title;
       document.getElementById('simulator-description').textContent = simulator.description;
@@ -272,6 +350,139 @@
       }
     }
 
+    // Promo code functions
+    function applyPromoCode() {
+      const promoInput = document.getElementById('promo-code');
+      const promoMessage = document.getElementById('promo-message');
+      const promoCode = promoInput.value.trim().toLowerCase();
+      
+      if (!promoCode) {
+        showPromoMessage('Please enter a promo code', 'error');
+        return;
+      }
+      
+      if (PROMO_CODES[promoCode]) {
+        const promo = PROMO_CODES[promoCode];
+        promoApplied = true;
+        currentPromoCode = promoCode;
+        
+        // Calculate new price
+        if (promo.discount === 100) {
+          currentPrice = 0;
+        } else {
+          currentPrice = originalPrice * (1 - promo.discount / 100);
+        }
+        
+        // Update UI
+        updatePricing();
+        showPromoMessage(promo.description, 'success');
+        
+        // Disable promo input and button
+        promoInput.disabled = true;
+        document.getElementById('apply-promo').disabled = true;
+        
+        // If free access, show continue button instead of payment
+        if (currentPrice === 0) {
+          showFreeAccessButton();
+        }
+        
+        // Track promo usage
+        if (window.trackEvent) {
+          window.trackEvent('promo_applied', {
+            promo_code: promoCode,
+            discount: promo.discount,
+            original_price: originalPrice,
+            final_price: currentPrice
+          });
+        }
+        
+      } else {
+        showPromoMessage('Invalid promo code', 'error');
+      }
+    }
+    
+    function showPromoMessage(message, type) {
+      const promoMessage = document.getElementById('promo-message');
+      promoMessage.classList.remove('hidden');
+      promoMessage.className = `mt-2 text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+      promoMessage.textContent = message;
+    }
+    
+    function updatePricing() {
+      const simulatorPrice = document.getElementById('simulator-price');
+      const totalPrice = document.getElementById('total-price');
+      const discountRow = document.getElementById('discount-row');
+      const discountAmount = document.getElementById('discount-amount');
+      
+      if (promoApplied) {
+        // Show discount row
+        discountRow.classList.remove('hidden');
+        discountAmount.textContent = `-$${originalPrice.toFixed(2)}`;
+        
+        // Update total price
+        totalPrice.textContent = `$${currentPrice.toFixed(2)}`;
+        
+        // Update total price color
+        if (currentPrice === 0) {
+          totalPrice.className = 'text-2xl font-bold text-green-600';
+        } else {
+          totalPrice.className = 'text-2xl font-bold text-brand-600';
+        }
+      } else {
+        // Hide discount row
+        discountRow.classList.add('hidden');
+        totalPrice.textContent = `$${originalPrice.toFixed(2)}`;
+        totalPrice.className = 'text-2xl font-bold text-brand-600';
+      }
+    }
+    
+    function showFreeAccessButton() {
+      // Hide payment methods
+      document.getElementById('payment-methods').classList.add('hidden');
+      
+      // Show free access message and button
+      const freeAccessHTML = `
+        <div class="text-center py-8">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-2">Free Access Granted!</h3>
+          <p class="text-slate-600 mb-6">Your promo code has been applied successfully. You can now access the simulator for free.</p>
+          <button 
+            id="continue-free" 
+            class="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors"
+          >
+            Continue to Simulator
+          </button>
+        </div>
+      `;
+      
+      // Insert after payment methods
+      const paymentMethods = document.getElementById('payment-methods');
+      paymentMethods.insertAdjacentHTML('afterend', freeAccessHTML);
+      
+      // Add event listener to continue button
+      document.getElementById('continue-free').addEventListener('click', function() {
+        const simulatorKey = getSimulatorFromURL();
+        handleFreeAccess(simulatorKey);
+      });
+    }
+    
+    function initializePromoCode() {
+      const applyButton = document.getElementById('apply-promo');
+      const promoInput = document.getElementById('promo-code');
+      
+      applyButton.addEventListener('click', applyPromoCode);
+      
+      promoInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          applyPromoCode();
+        }
+      });
+    }
+
     // Initialize PayPal
     function initializePayPal() {
       const simulatorKey = getSimulatorFromURL();
@@ -287,7 +498,7 @@
           return actions.order.create({
             purchase_units: [{
               amount: {
-                value: simulator.price.toFixed(2),
+                value: currentPrice.toFixed(2),
                 currency_code: 'USD'
               },
               description: simulator.title
@@ -315,25 +526,28 @@
       try {
         // Show success state
         document.getElementById('loading-state').classList.add('hidden');
-        document.getElementById('paypal-button-container').classList.add('hidden');
+        document.getElementById('payment-methods').classList.add('hidden');
         document.getElementById('success-state').classList.remove('hidden');
 
         // Save purchase to Firebase
         const purchaseData = {
           paymentIntentId: details.id,
           simulator: simulatorKey,
-          amount: simulators[simulatorKey].price,
+          amount: currentPrice,
           paymentMethod: 'paypal',
           status: 'completed',
           paypalOrderId: details.id,
-          payerEmail: details.payer.email_address
+          payerEmail: details.payer.email_address,
+          promoCode: currentPromoCode,
+          originalPrice: originalPrice,
+          discount: originalPrice - currentPrice
         };
 
         await window.savePurchase(purchaseData);
 
         // Track analytics
         if (window.trackPurchase) {
-          window.trackPurchase(simulatorKey, simulators[simulatorKey].price, details.id);
+          window.trackPurchase(simulatorKey, currentPrice, details.id);
         }
 
         // Redirect to simulator after 2 seconds
@@ -351,12 +565,83 @@
       }
     }
 
+    // Handle free access (when promo code is applied)
+    function handleFreeAccess(simulatorKey) {
+      // Show success state
+      document.getElementById('loading-state').classList.add('hidden');
+      document.getElementById('payment-methods').classList.add('hidden');
+      document.getElementById('success-state').classList.remove('hidden');
+
+      // Save free access to Firebase
+      const purchaseData = {
+        simulator: simulatorKey,
+        amount: 0,
+        currency: 'USD',
+        paymentMethod: 'promo',
+        promoCode: currentPromoCode,
+        originalPrice: originalPrice,
+        discount: originalPrice,
+        freeAccess: true
+      };
+
+      // Save to Firebase
+      if (window.savePurchase) {
+        window.savePurchase(purchaseData);
+      }
+
+      // Track analytics
+      if (window.trackEvent) {
+        window.trackEvent('free_access_granted', {
+          simulator: simulatorKey,
+          promo_code: currentPromoCode,
+          original_price: originalPrice
+        });
+      }
+
+      // Redirect to simulator after 2 seconds
+      setTimeout(() => {
+        if (simulatorKey === 'ux-designer') {
+          window.location.href = '/ux-sim.html';
+        } else if (simulatorKey === 'lawyer') {
+          window.location.href = '/lawyer-simulator.html';
+        }
+      }, 2000);
+    }
+
     // Show error state
     function showError(message) {
       document.getElementById('loading-state').classList.add('hidden');
-      document.getElementById('paypal-button-container').classList.add('hidden');
+      document.getElementById('payment-methods').classList.add('hidden');
       document.getElementById('error-state').classList.remove('hidden');
       document.querySelector('#error-state p').textContent = message;
+    }
+
+    // Handle payment method tabs
+    function initializePaymentTabs() {
+      const stripeTab = document.getElementById('stripe-tab');
+      const paypalTab = document.getElementById('paypal-tab');
+      const stripePayment = document.getElementById('stripe-payment');
+      const paypalPayment = document.getElementById('paypal-payment');
+
+      stripeTab.addEventListener('click', function() {
+        stripeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        stripeTab.classList.remove('text-slate-600');
+        paypalTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        paypalTab.classList.add('text-slate-600');
+        
+        stripePayment.classList.remove('hidden');
+        paypalPayment.classList.add('hidden');
+      });
+
+      paypalTab.addEventListener('click', function() {
+        paypalTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        paypalTab.classList.remove('text-slate-600');
+        stripeTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        stripeTab.classList.add('text-slate-600');
+        
+        paypalPayment.classList.remove('hidden');
+        stripePayment.classList.add('hidden');
+      });
     }
 
     // Initialize page
@@ -364,21 +649,46 @@
       // Update year in footer
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // Check authentication
-      if (!window.auth || !window.auth.currentUser) {
-        window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.href);
-        return;
+      // Wait for Firebase to be ready before checking authentication
+      function checkAuthWhenReady() {
+        if (window.auth) {
+          if (!window.auth.currentUser) {
+            window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.href);
+            return;
+          }
+          // Continue with the rest of the initialization
+          continueInitialization();
+        } else {
+          // Firebase not ready yet, wait a bit more
+          setTimeout(checkAuthWhenReady, 100);
+        }
       }
+      
+      function continueInitialization() {
+        // Update simulator info
+        updateSimulatorInfo(getSimulatorFromURL());
+        
+        // Initialize promo code functionality
+        initializePromoCode();
+        
+        // Update PayPal checkout link
+        const simulator = getSimulatorFromURL();
+        const paypalLink = document.getElementById('paypal-checkout-link');
+        if (paypalLink) {
+          paypalLink.href = `/paypal-checkout.html?role=${simulator}`;
+        }
 
-      // Update simulator info
-      updateSimulatorInfo(getSimulatorFromURL());
-
-      // Initialize PayPal
-      setTimeout(() => {
-        document.getElementById('loading-state').classList.add('hidden');
-        document.getElementById('paypal-button-container').classList.remove('hidden');
-        initializePayPal();
-      }, 1000);
+        // Initialize payment methods
+        setTimeout(() => {
+          document.getElementById('loading-state').classList.add('hidden');
+          document.getElementById('payment-methods').classList.remove('hidden');
+          initializePaymentTabs();
+          initializePayPal();
+        }, 1000);
+      }
+      
+      // Start checking for Firebase
+      checkAuthWhenReady();
     });
   </script>
 </body>

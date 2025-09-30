@@ -1,85 +1,171 @@
-# PayPal Integration Setup
+# PayPal Integration Setup for ProfPilot
 
-## 1. Create PayPal Developer Account
+This guide explains how to set up PayPal payments for the ProfPilot platform.
 
+## 🚀 Quick Setup
+
+### 1. PayPal Developer Account
 1. Go to [PayPal Developer Portal](https://developer.paypal.com/)
-2. Sign in with your PayPal account or create one
+2. Log in with your PayPal business account
 3. Navigate to "My Apps & Credentials"
 
-## 2. Create New App
-
+### 2. Create Production App
 1. Click "Create App"
-2. Choose "Default Application" or "Custom App"
-3. Select "Sandbox" for testing or "Live" for production
-4. Note down your **Client ID**
+2. Choose "Default Application" or "Web Application"
+3. Select "Live" environment
+4. Fill in app details:
+   - **App Name**: ProfPilot
+   - **Merchant**: Your business name
+   - **Return URL**: `https://yourdomain.com/paypal-checkout.html`
+   - **Cancel URL**: `https://yourdomain.com/checkout.html`
 
-## 3. Update checkout.html
+### 3. Get Production Credentials
+1. After creating the app, you'll get:
+   - **Client ID** (starts with `A...`)
+   - **Client Secret** (starts with `E...`)
 
-Replace `YOUR_PAYPAL_CLIENT_ID` in the PayPal SDK script with your actual Client ID:
+### 4. Update Configuration Files
 
-```html
-<script src="https://www.paypal.com/sdk/js?client-id=YOUR_ACTUAL_CLIENT_ID&currency=USD&intent=capture"></script>
+#### Update `paypal-config.js`
+Replace the production client ID:
+```javascript
+production: {
+  clientId: 'YOUR_ACTUAL_PRODUCTION_CLIENT_ID', // Replace this
+  environment: 'production',
+  currency: 'USD',
+  intent: 'capture'
+}
 ```
 
-## 4. Test the Integration
+#### Update `paypal-checkout.html`
+Replace the client ID in the PayPal SDK script:
+```html
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_ACTUAL_PRODUCTION_CLIENT_ID&currency=USD&intent=capture"></script>
+```
 
-### Sandbox Testing
-1. Use sandbox test accounts from PayPal Developer Portal
-2. Test with different scenarios (success, failure, cancellation)
-3. Verify payments appear in your PayPal sandbox account
+## 🔧 Configuration Details
+
+### Environment Detection
+The system automatically detects the environment:
+- **Development**: `localhost`, `127.0.0.1`, `*.netlify.app`
+- **Production**: All other domains
+
+### Pricing Configuration
+Prices are configured in `paypal-config.js`:
+```javascript
+const SIMULATOR_PRICES = {
+  'ux-designer': 29.00,
+  'lawyer': 29.00
+};
+```
+
+### Simulator Descriptions
+Descriptions are configured in `paypal-config.js`:
+```javascript
+const SIMULATOR_DESCRIPTIONS = {
+  'ux-designer': 'UX Designer Simulator - 3-day career test-drive',
+  'lawyer': 'Corporate Lawyer Simulator - 3-day career test-drive'
+};
+```
+
+## 📁 File Structure
+
+```
+/
+├── paypal-config.js              # PayPal configuration
+├── paypal-integration.js         # PayPal integration logic
+├── paypal-checkout.html          # PayPal checkout page
+├── checkout.html                 # Main checkout (updated with PayPal option)
+├── test-paypal.html             # Test page for development
+└── PAYPAL_SETUP.md              # This setup guide
+```
+
+## 🔄 Payment Flow
+
+1. **User clicks "Start — $29"** on simulator page
+2. **Redirected to checkout.html** with simulator parameter
+3. **User chooses payment method** (Credit Card or PayPal)
+4. **If PayPal**: Redirected to paypal-checkout.html
+5. **PayPal payment processed** via PayPal SDK
+6. **Purchase saved** to Firebase
+7. **User redirected** to simulator
+
+## 🧪 Testing
+
+### Development Testing
+1. Use `test-paypal.html` for testing
+2. Use sandbox credentials
+3. Test with PayPal sandbox accounts
 
 ### Production Testing
-1. Switch to live credentials
+1. Use small amounts for initial testing
 2. Test with real PayPal accounts
-3. Monitor transactions in your PayPal business account
+3. Verify webhook handling
 
-## 5. Webhook Setup (Optional)
+## 🔐 Security Considerations
 
-For advanced features, set up webhooks:
+### Client-Side Security
+- Client ID is safe to expose in frontend code
+- Never expose Client Secret in frontend
+- All sensitive operations handled server-side
 
-1. In PayPal Developer Portal, go to your app
-2. Click "Webhooks" tab
-3. Add webhook URL: `https://yourdomain.com/paypal-webhook`
-4. Select events: `PAYMENT.CAPTURE.COMPLETED`, `PAYMENT.CAPTURE.DENIED`
+### Server-Side Security
+- Validate all payments server-side
+- Use webhooks for payment verification
+- Store purchase records in Firebase
 
-## 6. Environment Variables
+## 📊 Analytics Integration
 
-Create a `.env` file for production:
+PayPal payments are tracked in Firebase Analytics:
+- `purchase_completed` event
+- Simulator type
+- Payment amount
+- Payment method
 
-```env
-PAYPAL_CLIENT_ID=your_live_client_id
-PAYPAL_CLIENT_SECRET=your_live_client_secret
-PAYPAL_WEBHOOK_ID=your_webhook_id
+## 🚨 Troubleshooting
+
+### Common Issues
+
+1. **"PayPal SDK failed to load"**
+   - Check client ID is correct
+   - Verify PayPal SDK URL
+   - Check network connectivity
+
+2. **"Payment not captured"**
+   - Check PayPal app configuration
+   - Verify return URLs
+   - Check browser console for errors
+
+3. **"Purchase not saved"**
+   - Check Firebase configuration
+   - Verify user authentication
+   - Check Firestore rules
+
+### Debug Mode
+Enable debug logging by adding to console:
+```javascript
+localStorage.setItem('paypal-debug', 'true');
 ```
 
-## 7. Security Considerations
+## 📞 Support
 
-- Never expose your Client Secret in frontend code
-- Use HTTPS in production
-- Validate webhook signatures
-- Implement proper error handling
-- Log all payment attempts
-
-## 8. Testing Checklist
-
-- [ ] Payment flow works end-to-end
-- [ ] Success redirects to correct simulator
-- [ ] Error handling works properly
-- [ ] Firebase purchase data is saved
-- [ ] User gets access to simulator after payment
-- [ ] Mobile responsive design works
-- [ ] Different simulators work correctly
-
-## 9. Production Deployment
-
-1. Update Client ID to live credentials
-2. Test with real PayPal accounts
-3. Monitor PayPal dashboard for transactions
-4. Set up proper logging and monitoring
-5. Configure backup payment methods if needed
-
-## Support
-
-For PayPal integration issues:
+For PayPal-specific issues:
 - [PayPal Developer Documentation](https://developer.paypal.com/docs/)
-- [PayPal Support](https://www.paypal.com/us/smarthelp/contact-us)
+- [PayPal Support](https://www.paypal.com/support/)
+
+For ProfPilot integration issues:
+- Check Firebase configuration
+- Verify simulator parameters
+- Review browser console logs
+
+## 🔄 Updates
+
+To update PayPal integration:
+1. Update `paypal-config.js` with new settings
+2. Update `paypal-integration.js` for new features
+3. Test thoroughly in development
+4. Deploy to production
+
+---
+
+**Note**: Always test payments with small amounts before going live with production credentials.

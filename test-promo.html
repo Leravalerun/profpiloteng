@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Promo Code Test — ProfPilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 p-8">
+  
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-slate-900 mb-8">Promo Code Test</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Test Checkout -->
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-xl font-semibold mb-4">Test Checkout Page</h2>
+        <p class="text-slate-600 mb-6">Test the promo code functionality on the main checkout page.</p>
+        
+        <div class="space-y-4">
+          <a href="/checkout.html?role=ux-designer" class="block w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center">
+            Test UX Designer Checkout
+          </a>
+          <a href="/checkout.html?role=lawyer" class="block w-full bg-slate-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-slate-700 transition-colors text-center">
+            Test Lawyer Checkout
+          </a>
+        </div>
+      </div>
+      
+      <!-- Test PayPal Checkout -->
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+        <h2 class="text-xl font-semibold mb-4">Test PayPal Checkout</h2>
+        <p class="text-slate-600 mb-6">Test the promo code functionality on the PayPal checkout page.</p>
+        
+        <div class="space-y-4">
+          <a href="/paypal-checkout.html?role=ux-designer" class="block w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center">
+            Test UX Designer PayPal
+          </a>
+          <a href="/paypal-checkout.html?role=lawyer" class="block w-full bg-slate-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-slate-700 transition-colors text-center">
+            Test Lawyer PayPal
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Promo Code Information -->
+    <div class="mt-8 bg-green-50 border border-green-200 rounded-xl p-6">
+      <h3 class="font-semibold text-green-900 mb-4">Test Promo Code</h3>
+      <div class="space-y-2 text-sm">
+        <p><strong>Promo Code:</strong> <code class="bg-green-100 px-2 py-1 rounded">checkppff</code></p>
+        <p><strong>Discount:</strong> 100% (Free access)</p>
+        <p><strong>Description:</strong> Free access granted!</p>
+      </div>
+    </div>
+    
+    <!-- Test Instructions -->
+    <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
+      <h3 class="font-semibold text-blue-900 mb-4">Test Instructions</h3>
+      <ol class="list-decimal list-inside space-y-2 text-sm text-blue-700">
+        <li>Click on any test link above</li>
+        <li>Enter the promo code <code class="bg-blue-100 px-1 rounded">checkppff</code></li>
+        <li>Click "Apply" button</li>
+        <li>Verify that the price changes to $0.00</li>
+        <li>Verify that a "Free Access Granted!" message appears</li>
+        <li>Click "Continue to Simulator" to test the free access flow</li>
+      </ol>
+    </div>
+    
+    <!-- Expected Behavior -->
+    <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+      <h3 class="font-semibold text-yellow-900 mb-4">Expected Behavior</h3>
+      <ul class="list-disc list-inside space-y-2 text-sm text-yellow-700">
+        <li>Promo code field should be visible on both checkout pages</li>
+        <li>Entering "checkppff" should show success message</li>
+        <li>Price should change from $29.00 to $0.00</li>
+        <li>Discount row should appear showing -$29.00</li>
+        <li>Payment methods should be hidden when free access is granted</li>
+        <li>"Continue to Simulator" button should appear</li>
+        <li>Clicking continue should redirect to the appropriate simulator</li>
+      </ul>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="mt-8 flex justify-center">
+      <a href="/" class="text-slate-600 hover:text-slate-900 font-medium">← Back to Home</a>
+    </div>
+  </div>
+
+</body>
+</html>
+
