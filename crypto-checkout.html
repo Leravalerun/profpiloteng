@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crypto Payment — ProfPilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    .crypto-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <a href="/" class="flex items-center space-x-2">
+            <img src="/logo.png" alt="ProfPilot" class="h-8 w-8">
+            <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+          </a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="/" class="text-slate-600 hover:text-slate-900 font-medium">Home</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Progress Steps -->
+    <div class="mb-12">
+      <div class="flex items-center justify-center space-x-8">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-slate-300 text-slate-600 rounded-full flex items-center justify-center text-sm font-semibold">1</div>
+          <span class="ml-2 text-sm font-medium text-slate-400">Choose Simulator</span>
+        </div>
+        <div class="w-16 h-0.5 bg-slate-300"></div>
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-slate-300 text-slate-600 rounded-full flex items-center justify-center text-sm font-semibold">2</div>
+          <span class="ml-2 text-sm font-medium text-slate-400">Payment</span>
+        </div>
+        <div class="w-16 h-0.5 bg-slate-300"></div>
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">3</div>
+          <span class="ml-2 text-sm font-medium text-slate-600">Crypto Payment</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      
+      <!-- Order Summary -->
+      <div class="bg-white rounded-2xl shadow-soft p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Order Summary</h2>
+        
+        <!-- Promo Code Section -->
+        <div class="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <div class="flex items-center gap-3">
+            <div class="flex-1">
+              <label for="promo-code" class="block text-sm font-medium text-slate-700 mb-2">Promo Code</label>
+              <input 
+                type="text" 
+                id="promo-code" 
+                placeholder="Enter promo code" 
+                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              >
+            </div>
+            <button 
+              id="apply-promo" 
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium whitespace-nowrap"
+            >
+              Apply
+            </button>
+          </div>
+          <div id="promo-message" class="mt-2 text-sm hidden"></div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex justify-between items-center py-4 border-b border-slate-200">
+            <div>
+              <h3 class="font-semibold text-slate-900" id="simulator-name">UX Designer Simulator</h3>
+              <p class="text-sm text-slate-600">3-day career test-drive</p>
+            </div>
+            <span class="font-semibold text-slate-900" id="simulator-price">$29.00</span>
+          </div>
+          
+          <div class="flex justify-between items-center py-4 border-b border-slate-200">
+            <span class="text-slate-600">Processing Fee</span>
+            <span class="font-semibold text-slate-900">$0.00</span>
+          </div>
+          
+          <div id="discount-row" class="flex justify-between items-center py-4 border-b border-slate-200 hidden">
+            <span class="text-slate-600">Discount</span>
+            <span id="discount-amount" class="font-semibold text-green-600">-$29.00</span>
+          </div>
+          
+          <div class="flex justify-between items-center py-4">
+            <span class="text-xl font-bold text-slate-900">Total</span>
+            <span class="text-2xl font-bold text-blue-600" id="total-price">$29.00</span>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+          <div class="flex items-center gap-2 text-blue-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+            <span class="text-sm font-medium">Secure crypto payment</span>
+          </div>
+          <p class="text-sm text-blue-600 mt-1">Your payment is processed securely using blockchain technology.</p>
+        </div>
+      </div>
+
+      <!-- Crypto Payment Section -->
+      <div class="bg-white rounded-2xl shadow-soft p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Crypto Payment</h2>
+        
+        <!-- Currency Selection -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-slate-700 mb-3">Choose Cryptocurrency</label>
+          <div class="grid grid-cols-2 gap-3" id="crypto-options">
+            <!-- Options will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div id="payment-details" class="hidden">
+          <div class="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <h3 class="font-semibold text-slate-900 mb-3">Payment Information</h3>
+            
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-slate-600">Amount:</span>
+                <span id="crypto-amount" class="font-semibold">0 USDT</span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-slate-600">Network:</span>
+                <span id="crypto-network" class="font-semibold">TRC20</span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-slate-600">Exchange Rate:</span>
+                <span id="exchange-rate" class="font-semibold">1 USDT = $1.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wallet Address -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Send to this address:</label>
+            <div class="flex items-center gap-2">
+              <input 
+                type="text" 
+                id="wallet-address" 
+                readonly 
+                class="flex-1 px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 text-sm font-mono"
+              >
+              <button 
+                id="copy-address" 
+                class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- QR Code -->
+          <div class="mb-6 text-center">
+            <div id="qr-code" class="inline-block p-4 bg-white border border-slate-200 rounded-lg">
+              <!-- QR code will be generated here -->
+            </div>
+          </div>
+
+          <!-- Payment Status -->
+          <div id="payment-status" class="hidden mb-6 p-4 rounded-xl">
+            <div class="flex items-center gap-2">
+              <div id="status-icon" class="w-6 h-6 rounded-full flex items-center justify-center">
+                <!-- Status icon -->
+              </div>
+              <span id="status-text" class="font-medium"></span>
+            </div>
+            <p id="status-description" class="text-sm text-slate-600 mt-2"></p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-3">
+            <button 
+              id="check-payment" 
+              class="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Check Payment Status
+            </button>
+            
+            <button 
+              id="continue-simulator" 
+              class="w-full bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition-colors hidden"
+            >
+              Continue to Simulator
+            </button>
+          </div>
+        </div>
+
+        <!-- Free Access (when promo applied) -->
+        <div id="free-access" class="hidden text-center py-8">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-2">Free Access Granted!</h3>
+          <p class="text-slate-600 mb-6">Your promo code has been applied successfully.</p>
+          <button 
+            id="continue-free" 
+            class="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors"
+          >
+            Continue to Simulator
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="crypto-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script>
+    // Promo code configuration
+    const PROMO_CODES = {
+      'checkppff': {
+        discount: 100,
+        description: 'Free access granted!'
+      }
+    };
+
+    let originalPrice = 29.00;
+    let currentPrice = 29.00;
+    let promoApplied = false;
+    let selectedCrypto = null;
+    let exchangeRates = {};
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get simulator from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'ux-designer';
+      
+      // Update simulator info
+      updateSimulatorInfo(simulator);
+      
+      initializePromoCode();
+      initializeCryptoOptions();
+      loadExchangeRates();
+    });
+    
+    function updateSimulatorInfo(simulator) {
+      const simulatorNames = {
+        'ux-designer': 'UX Designer Simulator',
+        'corporate-lawyer': 'Corporate Lawyer Simulator'
+      };
+      
+      const simulatorPrices = {
+        'ux-designer': 29.00,
+        'corporate-lawyer': 29.00
+      };
+      
+      document.getElementById('simulator-name').textContent = simulatorNames[simulator] || 'Career Simulator';
+      document.getElementById('simulator-price').textContent = `$${simulatorPrices[simulator] || 29.00}`;
+      originalPrice = simulatorPrices[simulator] || 29.00;
+      currentPrice = originalPrice;
+    }
+
+    // Promo code functions
+    function applyPromoCode() {
+      const promoInput = document.getElementById('promo-code');
+      const promoMessage = document.getElementById('promo-message');
+      const promoCode = promoInput.value.trim().toLowerCase();
+      
+      if (!promoCode) {
+        showPromoMessage('Please enter a promo code', 'error');
+        return;
+      }
+      
+      if (PROMO_CODES[promoCode]) {
+        const promo = PROMO_CODES[promoCode];
+        promoApplied = true;
+        
+        if (promo.discount === 100) {
+          currentPrice = 0;
+        } else {
+          currentPrice = originalPrice * (1 - promo.discount / 100);
+        }
+        
+        updatePricing();
+        showPromoMessage(promo.description, 'success');
+        
+        promoInput.disabled = true;
+        document.getElementById('apply-promo').disabled = true;
+        
+        if (currentPrice === 0) {
+          showFreeAccess();
+        }
+        
+      } else {
+        showPromoMessage('Invalid promo code', 'error');
+      }
+    }
+    
+    function showPromoMessage(message, type) {
+      const promoMessage = document.getElementById('promo-message');
+      promoMessage.classList.remove('hidden');
+      promoMessage.className = `mt-2 text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+      promoMessage.textContent = message;
+    }
+    
+    function updatePricing() {
+      const totalPrice = document.getElementById('total-price');
+      const discountRow = document.getElementById('discount-row');
+      const discountAmount = document.getElementById('discount-amount');
+      
+      if (promoApplied) {
+        discountRow.classList.remove('hidden');
+        discountAmount.textContent = `-$${originalPrice.toFixed(2)}`;
+        totalPrice.textContent = `$${currentPrice.toFixed(2)}`;
+        
+        if (currentPrice === 0) {
+          totalPrice.className = 'text-2xl font-bold text-green-600';
+        } else {
+          totalPrice.className = 'text-2xl font-bold text-blue-600';
+        }
+      } else {
+        discountRow.classList.add('hidden');
+        totalPrice.textContent = `$${originalPrice.toFixed(2)}`;
+        totalPrice.className = 'text-2xl font-bold text-blue-600';
+      }
+    }
+    
+    function showFreeAccess() {
+      document.getElementById('payment-details').classList.add('hidden');
+      document.getElementById('free-access').classList.remove('hidden');
+    }
+    
+    function initializePromoCode() {
+      const applyButton = document.getElementById('apply-promo');
+      const promoInput = document.getElementById('promo-code');
+      
+      applyButton.addEventListener('click', applyPromoCode);
+      promoInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') applyPromoCode();
+      });
+    }
+
+    // Crypto functions
+    function initializeCryptoOptions() {
+      const container = document.getElementById('crypto-options');
+      
+      Object.entries(CRYPTO_CONFIG.currencies).forEach(([key, crypto]) => {
+        const option = document.createElement('div');
+        option.className = 'p-3 border border-slate-200 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors crypto-option';
+        option.dataset.crypto = key;
+        
+        option.innerHTML = `
+          <div class="flex items-center gap-3">
+            <img src="${crypto.icon}" alt="${crypto.name}" class="crypto-icon">
+            <div>
+              <div class="font-medium text-slate-900">${crypto.name}</div>
+              <div class="text-sm text-slate-600">${crypto.network}</div>
+            </div>
+          </div>
+        `;
+        
+        option.addEventListener('click', () => selectCrypto(key));
+        container.appendChild(option);
+      });
+    }
+    
+    function selectCrypto(cryptoKey) {
+      // Remove previous selection
+      document.querySelectorAll('.crypto-option').forEach(opt => {
+        opt.classList.remove('border-blue-500', 'bg-blue-50');
+        opt.classList.add('border-slate-200');
+      });
+      
+      // Select new crypto
+      const option = document.querySelector(`[data-crypto="${cryptoKey}"]`);
+      option.classList.add('border-blue-500', 'bg-blue-50');
+      option.classList.remove('border-slate-200');
+      
+      selectedCrypto = cryptoKey;
+      showPaymentDetails();
+    }
+    
+    function showPaymentDetails() {
+      if (!selectedCrypto) return;
+      
+      const crypto = CRYPTO_CONFIG.currencies[selectedCrypto];
+      const address = CRYPTO_CONFIG.addresses[selectedCrypto];
+      
+      // Update payment info
+      document.getElementById('crypto-amount').textContent = `${currentPrice.toFixed(2)} ${crypto.symbol}`;
+      document.getElementById('crypto-network').textContent = crypto.network;
+      document.getElementById('exchange-rate').textContent = `1 ${crypto.symbol} = $1.00`;
+      document.getElementById('wallet-address').value = address;
+      
+      // Generate QR code
+      generateQRCode(address);
+      
+      // Show payment details
+      document.getElementById('payment-details').classList.remove('hidden');
+    }
+    
+    function generateQRCode(address) {
+      const qrContainer = document.getElementById('qr-code');
+      qrContainer.innerHTML = '';
+      
+      QRCode.toCanvas(qrContainer, address, {
+        width: 200,
+        height: 200,
+        margin: 2
+      }, function(error) {
+        if (error) {
+          qrContainer.innerHTML = '<p class="text-red-600">QR code generation failed</p>';
+        }
+      });
+    }
+    
+    function loadExchangeRates() {
+      fetch(CRYPTO_CONFIG.exchangeRateAPI)
+        .then(response => response.json())
+        .then(data => {
+          exchangeRates = {
+            'BTC': data.bitcoin.usd,
+            'ETH': data.ethereum.usd,
+            'USDT': data.tether.usd,
+            'USDC': data['usd-coin'].usd
+          };
+          console.log('Exchange rates loaded:', exchangeRates);
+        })
+        .catch(error => {
+          console.warn('Failed to load exchange rates:', error);
+        });
+    }
+    
+    // Event listeners
+    document.getElementById('copy-address').addEventListener('click', function() {
+      const address = document.getElementById('wallet-address');
+      address.select();
+      document.execCommand('copy');
+      
+      const button = this;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.classList.add('bg-green-600');
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('bg-green-600');
+      }, 2000);
+    });
+    
+    document.getElementById('check-payment').addEventListener('click', function() {
+      // Simulate payment check
+      showPaymentStatus('success', 'Payment confirmed!', 'Your payment has been received and verified.');
+    });
+    
+    document.getElementById('continue-simulator').addEventListener('click', function() {
+      window.location.href = '/ux-sim.html';
+    });
+    
+    document.getElementById('continue-free').addEventListener('click', function() {
+      window.location.href = '/ux-sim.html';
+    });
+    
+    function showPaymentStatus(type, title, description) {
+      const status = document.getElementById('payment-status');
+      const icon = document.getElementById('status-icon');
+      const text = document.getElementById('status-text');
+      const desc = document.getElementById('status-description');
+      
+      status.classList.remove('hidden');
+      
+      if (type === 'success') {
+        status.className = 'mb-6 p-4 rounded-xl bg-green-50 border border-green-200';
+        icon.className = 'w-6 h-6 rounded-full flex items-center justify-center bg-green-100';
+        icon.innerHTML = '<svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+        text.textContent = title;
+        text.className = 'font-medium text-green-800';
+        desc.textContent = description;
+        desc.className = 'text-sm text-green-600 mt-2';
+        
+        document.getElementById('continue-simulator').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

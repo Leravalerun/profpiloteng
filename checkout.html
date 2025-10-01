@@ -183,6 +183,9 @@
                 <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
                   PayPal
                 </button>
+                <button id="crypto-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
+                  Crypto
+                </button>
               </div>
             </div>
 
@@ -211,6 +214,29 @@
                   </a>
                 </div>
                 <div id="paypal-button-container"></div>
+              </div>
+            </div>
+
+            <!-- Crypto Payment -->
+            <div id="crypto-payment" class="payment-method hidden">
+              <div class="mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                  <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
+                    <span class="text-orange-600 font-bold text-xs">₿</span>
+                  </div>
+                  <span class="text-slate-700 font-medium">Cryptocurrency</span>
+                </div>
+                <div class="mb-4">
+                  <p class="text-sm text-slate-600 mb-4">Pay with Bitcoin, Ethereum, USDT, or USDC. Perfect for users in Russia and worldwide.</p>
+                  <a href="/crypto-checkout.html" id="crypto-checkout-link" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
+                    Continue with Crypto
+                  </a>
+                </div>
+                <div class="text-xs text-slate-500">
+                  <p>• Supports BTC, ETH, USDT, USDC</p>
+                  <p>• Fast and secure blockchain payments</p>
+                  <p>• No bank restrictions</p>
+                </div>
               </div>
             </div>
           </div>
@@ -620,27 +646,39 @@
     function initializePaymentTabs() {
       const stripeTab = document.getElementById('stripe-tab');
       const paypalTab = document.getElementById('paypal-tab');
+      const cryptoTab = document.getElementById('crypto-tab');
       const stripePayment = document.getElementById('stripe-payment');
       const paypalPayment = document.getElementById('paypal-payment');
+      const cryptoPayment = document.getElementById('crypto-payment');
+
+      function switchToTab(activeTab, activePayment, inactiveTabs, inactivePayments) {
+        // Reset all tabs
+        [stripeTab, paypalTab, cryptoTab].forEach(tab => {
+          tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+          tab.classList.add('text-slate-600');
+        });
+        
+        // Reset all payments
+        [stripePayment, paypalPayment, cryptoPayment].forEach(payment => {
+          payment.classList.add('hidden');
+        });
+        
+        // Activate selected tab and payment
+        activeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        activeTab.classList.remove('text-slate-600');
+        activePayment.classList.remove('hidden');
+      }
 
       stripeTab.addEventListener('click', function() {
-        stripeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-        stripeTab.classList.remove('text-slate-600');
-        paypalTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-        paypalTab.classList.add('text-slate-600');
-        
-        stripePayment.classList.remove('hidden');
-        paypalPayment.classList.add('hidden');
+        switchToTab(stripeTab, stripePayment, [paypalTab, cryptoTab], [paypalPayment, cryptoPayment]);
       });
 
       paypalTab.addEventListener('click', function() {
-        paypalTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-        paypalTab.classList.remove('text-slate-600');
-        stripeTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-        stripeTab.classList.add('text-slate-600');
-        
-        paypalPayment.classList.remove('hidden');
-        stripePayment.classList.add('hidden');
+        switchToTab(paypalTab, paypalPayment, [stripeTab, cryptoTab], [stripePayment, cryptoPayment]);
+      });
+
+      cryptoTab.addEventListener('click', function() {
+        switchToTab(cryptoTab, cryptoPayment, [stripeTab, paypalTab], [stripePayment, paypalPayment]);
       });
     }
 
@@ -671,11 +709,17 @@
         // Initialize promo code functionality
         initializePromoCode();
         
-        // Update PayPal checkout link
+        // Update payment checkout links
         const simulator = getSimulatorFromURL();
         const paypalLink = document.getElementById('paypal-checkout-link');
+        const cryptoLink = document.getElementById('crypto-checkout-link');
+        
         if (paypalLink) {
           paypalLink.href = `/paypal-checkout.html?role=${simulator}`;
+        }
+        
+        if (cryptoLink) {
+          cryptoLink.href = `/crypto-checkout.html?role=${simulator}`;
         }
 
         // Initialize payment methods
