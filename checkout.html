@@ -683,6 +683,14 @@
         }
       }
       
+      // Fallback: if Firebase doesn't load after 3 seconds, continue anyway
+      setTimeout(() => {
+        if (!window.auth) {
+          console.warn('⚠️ Firebase not loaded, continuing without authentication');
+          continueInitialization();
+        }
+      }, 3000);
+      
       function continueInitialization() {
         // Update simulator info
         updateSimulatorInfo(getSimulatorFromURL());
@@ -710,6 +718,17 @@
           initializePaymentTabs();
           initializePayPal();
         }, 1000);
+        
+        // Fallback: if Firebase doesn't load, show payment methods anyway
+        setTimeout(() => {
+          if (document.getElementById('loading-state').classList.contains('hidden') === false) {
+            console.warn('⚠️ Firebase timeout, showing payment methods anyway');
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('payment-methods').classList.remove('hidden');
+            initializePaymentTabs();
+            initializePayPal();
+          }
+        }, 5000);
       }
       
       // Start checking for Firebase

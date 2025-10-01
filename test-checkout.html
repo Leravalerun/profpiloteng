@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test Checkout — ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      
+      <!-- Order Summary -->
+      <div class="bg-white rounded-2xl shadow-soft p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Order Summary</h2>
+        
+        <div class="space-y-4">
+          <div class="flex justify-between items-center py-4 border-b border-slate-200">
+            <div>
+              <h3 class="font-semibold text-slate-900">UX Designer Simulator</h3>
+              <p class="text-sm text-slate-600">3-day career test-drive</p>
+            </div>
+            <span class="font-semibold text-slate-900">$29.00</span>
+          </div>
+          
+          <div class="flex justify-between items-center py-4">
+            <span class="text-xl font-bold text-slate-900">Total</span>
+            <span class="text-2xl font-bold text-blue-600">$29.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="bg-white rounded-2xl shadow-soft p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Choose Payment Method</h2>
+        
+        <!-- Payment Method Tabs -->
+        <div class="flex space-x-1 bg-slate-100 p-1 rounded-lg mb-6">
+          <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm">
+            PayPal
+          </button>
+          <button id="crypto-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
+            Crypto
+          </button>
+        </div>
+
+        <!-- PayPal Payment -->
+        <div id="paypal-payment" class="payment-method">
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-4">
+              <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
+              <span class="text-slate-700 font-medium">PayPal</span>
+            </div>
+            <div class="mb-4">
+              <p class="text-sm text-slate-600 mb-4">Pay securely with your PayPal account or credit card.</p>
+              <a href="/paypal-checkout.html" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center">
+                Continue with PayPal
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Crypto Payment -->
+        <div id="crypto-payment" class="payment-method hidden">
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
+                <span class="text-orange-600 font-bold text-xs">₿</span>
+              </div>
+              <span class="text-slate-700 font-medium">Cryptocurrency</span>
+            </div>
+            <div class="mb-4">
+              <p class="text-sm text-slate-600 mb-4">Pay with Bitcoin, Ethereum, USDT, or USDC. Perfect for users in Russia and worldwide.</p>
+              <a href="/crypto-checkout.html" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
+                Continue with Crypto
+              </a>
+            </div>
+            <div class="text-xs text-slate-500">
+              <p>• Supports BTC, ETH, USDT, USDC</p>
+              <p>• Fast and secure blockchain payments</p>
+              <p>• No bank restrictions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Simple payment tab switching
+    document.addEventListener('DOMContentLoaded', function() {
+      const paypalTab = document.getElementById('paypal-tab');
+      const cryptoTab = document.getElementById('crypto-tab');
+      const paypalPayment = document.getElementById('paypal-payment');
+      const cryptoPayment = document.getElementById('crypto-payment');
+
+      function switchToTab(activeTab, activePayment, inactiveTabs, inactivePayments) {
+        // Reset all tabs
+        [paypalTab, cryptoTab].forEach(tab => {
+          tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+          tab.classList.add('text-slate-600');
+        });
+        
+        // Reset all payments
+        [paypalPayment, cryptoPayment].forEach(payment => {
+          payment.classList.add('hidden');
+        });
+        
+        // Activate selected tab and payment
+        activeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        activeTab.classList.remove('text-slate-600');
+        activePayment.classList.remove('hidden');
+      }
+
+      paypalTab.addEventListener('click', function() {
+        switchToTab(paypalTab, paypalPayment, [cryptoTab], [cryptoPayment]);
+      });
+
+      cryptoTab.addEventListener('click', function() {
+        switchToTab(cryptoTab, cryptoPayment, [paypalTab], [paypalPayment]);
+      });
+      
+      console.log('✅ Payment tabs initialized');
+    });
+  </script>
+</body>
+</html>
