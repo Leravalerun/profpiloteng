@@ -12,7 +12,7 @@ const PAYPAL_CONFIG = {
   
   // Production environment
   production: {
-    clientId: 'YOUR_PRODUCTION_CLIENT_ID', // Replace with your actual production client ID
+    clientId: 'YOUR_PRODUCTION_CLIENT_ID_HERE', // Replace with your actual production client ID
     environment: 'production',
     currency: 'USD',
     intent: 'capture'

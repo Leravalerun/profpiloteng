@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal Setup - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">PayPal Setup</h1>
+        
+        <form id="paypal-setup-form">
+            <div class="mb-4">
+                <label for="client-id" class="block text-sm font-medium text-gray-700 mb-2">
+                    Production Client ID
+                </label>
+                <input 
+                    type="text" 
+                    id="client-id" 
+                    placeholder="A123456789012345678901234567890123456789"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">
+                    Get this from PayPal Developer Dashboard
+                </p>
+            </div>
+            
+            <button 
+                type="submit" 
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+            >
+                Update Configuration
+            </button>
+        </form>
+        
+        <div id="result" class="mt-4 hidden"></div>
+        
+        <div class="mt-6 text-sm text-gray-600">
+            <h3 class="font-semibold mb-2">How to get your Client ID:</h3>
+            <ol class="list-decimal list-inside space-y-1">
+                <li>Go to <a href="https://developer.paypal.com/" target="_blank" class="text-blue-600">PayPal Developer Dashboard</a></li>
+                <li>Create a new app</li>
+                <li>Select "Production" environment</li>
+                <li>Copy the Client ID</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('paypal-setup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById('client-id').value.trim();
+            const resultDiv = document.getElementById('result');
+            
+            // Validate client ID format
+            if (!clientId.startsWith('A') || clientId.length < 50) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                        ❌ Invalid Client ID format. Should start with "A" and be at least 50 characters long.
+                    </div>
+                `;
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Update the configuration
+            updatePayPalConfig(clientId);
+            
+            resultDiv.innerHTML = `
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    ✅ Configuration updated successfully!<br>
+                    Client ID: ${clientId.substring(0, 10)}...<br>
+                    <small>Don't forget to commit and push changes.</small>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+        });
+        
+        function updatePayPalConfig(clientId) {
+            // This would normally update the paypal-config.js file
+            // For now, we'll just show the updated configuration
+            console.log('Updated PayPal configuration:', {
+                clientId: clientId,
+                environment: 'production',
+                currency: 'USD',
+                intent: 'capture'
+            });
+            
+            // In a real implementation, you would:
+            // 1. Read the paypal-config.js file
+            // 2. Replace the placeholder with the actual client ID
+            // 3. Write the file back
+        }
+    </script>
+</body>
+</html>

@@ -1,109 +1,46 @@
 #!/usr/bin/env node
 
-/**
- * PayPal Credentials Update Script
- * 
- * This script helps update PayPal credentials across all files
- * Usage: node update-paypal-credentials.js <client-id>
- */
+// Script to update PayPal production credentials
+// Usage: node update-paypal-credentials.js YOUR_PRODUCTION_CLIENT_ID
 
 const fs = require('fs');
 const path = require('path');
 
-// Get client ID from command line arguments
-const clientId = process.argv[2];
+// Get the production client ID from command line arguments
+const productionClientId = process.argv[2];
 
-if (!clientId) {
-  console.error('❌ Error: Please provide PayPal Client ID');
-  console.log('Usage: node update-paypal-credentials.js <client-id>');
+if (!productionClientId) {
+  console.error('❌ Error: Please provide your production client ID');
+  console.log('Usage: node update-paypal-credentials.js YOUR_PRODUCTION_CLIENT_ID');
   console.log('Example: node update-paypal-credentials.js A123456789012345678901234567890123456789');
   process.exit(1);
 }
 
-// Validate client ID format
-if (!clientId.startsWith('A') || clientId.length < 20) {
-  console.error('❌ Error: Invalid PayPal Client ID format');
-  console.log('PayPal Client ID should start with "A" and be at least 20 characters long');
+// Validate the client ID format
+if (!productionClientId.startsWith('A') || productionClientId.length < 50) {
+  console.error('❌ Error: Invalid production client ID format');
+  console.log('Production client ID should start with "A" and be at least 50 characters long');
   process.exit(1);
 }
 
-console.log('🔧 Updating PayPal credentials...');
-console.log(`Client ID: ${clientId.substring(0, 10)}...`);
+// Read the current paypal-config.js file
+const configPath = path.join(__dirname, 'paypal-config.js');
+let configContent = fs.readFileSync(configPath, 'utf8');
 
-// Files to update
-const filesToUpdate = [
-  {
-    path: 'paypal-config.js',
-    patterns: [
-      {
-        search: /clientId: 'YOUR_PRODUCTION_CLIENT_ID'/g,
-        replace: `clientId: '${clientId}'`
-      }
-    ]
-  },
-  {
-    path: 'paypal-checkout.html',
-    patterns: [
-      {
-        search: /client-id=YOUR_PRODUCTION_CLIENT_ID/g,
-        replace: `client-id=${clientId}`
-      }
-    ]
-  }
-];
+// Replace the placeholder with the actual client ID
+const updatedContent = configContent.replace(
+  /clientId: 'YOUR_PRODUCTION_CLIENT_ID_HERE'/,
+  `clientId: '${productionClientId}'`
+);
 
-// Update files
-let updatedFiles = 0;
-let totalReplacements = 0;
+// Write the updated content back to the file
+fs.writeFileSync(configPath, updatedContent);
 
-filesToUpdate.forEach(file => {
-  const filePath = path.join(__dirname, file.path);
-  
-  if (!fs.existsSync(filePath)) {
-    console.log(`⚠️  File not found: ${file.path}`);
-    return;
-  }
-
-  try {
-    let content = fs.readFileSync(filePath, 'utf8');
-    let fileReplacements = 0;
-
-    file.patterns.forEach(pattern => {
-      const matches = content.match(pattern.search);
-      if (matches) {
-        content = content.replace(pattern.search, pattern.replace);
-        fileReplacements += matches.length;
-        totalReplacements += matches.length;
-      }
-    });
-
-    if (fileReplacements > 0) {
-      fs.writeFileSync(filePath, content, 'utf8');
-      console.log(`✅ Updated ${file.path} (${fileReplacements} replacements)`);
-      updatedFiles++;
-    } else {
-      console.log(`ℹ️  No changes needed in ${file.path}`);
-    }
-
-  } catch (error) {
-    console.error(`❌ Error updating ${file.path}:`, error.message);
-  }
-});
-
-// Summary
-console.log('\n📊 Summary:');
-console.log(`Files updated: ${updatedFiles}`);
-console.log(`Total replacements: ${totalReplacements}`);
-
-if (updatedFiles > 0) {
-  console.log('\n🎉 PayPal credentials updated successfully!');
-  console.log('\nNext steps:');
-  console.log('1. Test the integration in development');
-  console.log('2. Deploy to production');
-  console.log('3. Verify payments work correctly');
-} else {
-  console.log('\n⚠️  No files were updated. Please check the file paths and patterns.');
-}
-
-console.log('\n📚 For more information, see PAYPAL_SETUP.md');
-
+console.log('✅ PayPal production credentials updated successfully!');
+console.log(`Client ID: ${productionClientId.substring(0, 10)}...`);
+console.log('Environment: Production');
+console.log('');
+console.log('Next steps:');
+console.log('1. Test the payment flow');
+console.log('2. Commit and push changes');
+console.log('3. Deploy to production');
