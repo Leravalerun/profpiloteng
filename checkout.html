@@ -177,10 +177,7 @@
               
               <!-- Payment Method Tabs -->
               <div class="flex space-x-1 bg-slate-100 p-1 rounded-lg mb-6">
-                <button id="stripe-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm">
-                  Credit Card
-                </button>
-                <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
+                <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm">
                   PayPal
                 </button>
                 <button id="crypto-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
@@ -189,19 +186,9 @@
               </div>
             </div>
 
-            <!-- Stripe Payment -->
-            <div id="stripe-payment" class="payment-method">
-              <div class="mb-6">
-                <div class="flex items-center gap-2 mb-4">
-                  <img src="https://js.stripe.com/v3/fingerprinted/img/visa-4d0529ac3c7a6b0a8b0c8b0c8b0c8b0c.png" alt="Stripe" class="h-6" />
-                  <span class="text-slate-700 font-medium">Secure payment with Stripe</span>
-                </div>
-                <div id="stripe-button-container"></div>
-              </div>
-            </div>
 
             <!-- PayPal Payment -->
-            <div id="paypal-payment" class="payment-method hidden">
+            <div id="paypal-payment" class="payment-method">
               <div class="mb-6">
                 <div class="flex items-center gap-2 mb-4">
                   <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
@@ -644,22 +631,20 @@
 
     // Handle payment method tabs
     function initializePaymentTabs() {
-      const stripeTab = document.getElementById('stripe-tab');
       const paypalTab = document.getElementById('paypal-tab');
       const cryptoTab = document.getElementById('crypto-tab');
-      const stripePayment = document.getElementById('stripe-payment');
       const paypalPayment = document.getElementById('paypal-payment');
       const cryptoPayment = document.getElementById('crypto-payment');
 
       function switchToTab(activeTab, activePayment, inactiveTabs, inactivePayments) {
         // Reset all tabs
-        [stripeTab, paypalTab, cryptoTab].forEach(tab => {
+        [paypalTab, cryptoTab].forEach(tab => {
           tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
           tab.classList.add('text-slate-600');
         });
         
         // Reset all payments
-        [stripePayment, paypalPayment, cryptoPayment].forEach(payment => {
+        [paypalPayment, cryptoPayment].forEach(payment => {
           payment.classList.add('hidden');
         });
         
@@ -669,16 +654,12 @@
         activePayment.classList.remove('hidden');
       }
 
-      stripeTab.addEventListener('click', function() {
-        switchToTab(stripeTab, stripePayment, [paypalTab, cryptoTab], [paypalPayment, cryptoPayment]);
-      });
-
       paypalTab.addEventListener('click', function() {
-        switchToTab(paypalTab, paypalPayment, [stripeTab, cryptoTab], [stripePayment, cryptoPayment]);
+        switchToTab(paypalTab, paypalPayment, [cryptoTab], [cryptoPayment]);
       });
 
       cryptoTab.addEventListener('click', function() {
-        switchToTab(cryptoTab, cryptoPayment, [stripeTab, paypalTab], [stripePayment, paypalPayment]);
+        switchToTab(cryptoTab, cryptoPayment, [paypalTab], [paypalPayment]);
       });
     }
 
