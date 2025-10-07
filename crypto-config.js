@@ -36,8 +36,8 @@ const CRYPTO_CONFIG = {
   
   // Payment addresses (replace with your actual addresses)
   addresses: {
-    'USDT': 'TYourUSDTAddressHere123456789',
-    'USDC': 'TYourUSDCAddressHere123456789', 
+    'USDT': 'TKbgFCRNwJ7R8XNVUzP7472n5tGuaiqoD7',
+    'USDC': 'TKbgFCRNwJ7R8XNVUzP7472n5tGuaiqoD7', // Same address for USDC
     'BTC': '1YourBTCAddressHere123456789',
     'ETH': '0xYourETHAddressHere123456789'
   },
