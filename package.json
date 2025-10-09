@@ -1,7 +1,7 @@
 {
   "name": "profpilot-platform",
   "version": "1.0.0",
-  "description": "ProfPilot career simulator platform with PayPal and crypto payments",
+  "description": "ProfPilot career simulator platform with crypto payments",
   "main": "index.html",
   "scripts": {
     "start": "python3 -m http.server 8000",
@@ -12,7 +12,6 @@
     "career",
     "simulator",
     "education",
-    "paypal",
     "crypto",
     "payment"
   ],

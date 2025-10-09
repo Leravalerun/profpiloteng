@@ -172,43 +172,25 @@
           <div class="mb-6">
             <p class="text-slate-600 mb-4">Choose your payment method:</p>
             
-            <!-- Payment Method Tabs -->
-            <div class="flex space-x-1 bg-slate-100 p-1 rounded-lg mb-6">
-              <button id="stripe-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm">
-                Credit Card
-              </button>
-              <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
-                PayPal
-              </button>
+            <!-- Crypto Payment Only -->
+            <div class="mb-6">
+              <p class="text-slate-600 mb-4">Pay securely with cryptocurrency:</p>
             </div>
           </div>
 
-          <!-- Stripe Payment -->
-          <div id="stripe-payment" class="payment-method">
+          <!-- Crypto Payment -->
+          <div id="crypto-payment" class="payment-method">
             <div class="mb-6">
               <div class="flex items-center gap-2 mb-4">
-                <img src="https://js.stripe.com/v3/fingerprinted/img/visa-4d0529ac3c7a6b0a8b0c8b0c8b0c8b0c.png" alt="Stripe" class="h-6" />
-                <span class="text-slate-700 font-medium">Secure payment with Stripe</span>
-              </div>
-              <div id="stripe-button-container">
-                <button id="test-payment" class="w-full bg-brand-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
-                  Test Payment (No Firebase)
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- PayPal Payment -->
-          <div id="paypal-payment" class="payment-method hidden">
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
-                <span class="text-slate-700 font-medium">PayPal</span>
+                <svg class="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="text-slate-700 font-medium">Cryptocurrency</span>
               </div>
               <div class="mb-4">
-                <p class="text-sm text-slate-600 mb-4">Pay securely with your PayPal account or credit card.</p>
-                <a href="/paypal-checkout.html" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center">
-                  Continue with PayPal
+                <p class="text-sm text-slate-600 mb-4">Pay with Bitcoin, Ethereum, USDT, or USDC. Secure and decentralized.</p>
+                <a href="/crypto-checkout.html" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
+                  Continue with Crypto
                 </a>
               </div>
             </div>
@@ -382,33 +364,6 @@
       });
     }
 
-    // Handle payment method tabs
-    function initializePaymentTabs() {
-      const stripeTab = document.getElementById('stripe-tab');
-      const paypalTab = document.getElementById('paypal-tab');
-      const stripePayment = document.getElementById('stripe-payment');
-      const paypalPayment = document.getElementById('paypal-payment');
-
-      stripeTab.addEventListener('click', function() {
-        stripeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-        stripeTab.classList.remove('text-slate-600');
-        paypalTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-        paypalTab.classList.add('text-slate-600');
-        
-        stripePayment.classList.remove('hidden');
-        paypalPayment.classList.add('hidden');
-      });
-
-      paypalTab.addEventListener('click', function() {
-        paypalTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-        paypalTab.classList.remove('text-slate-600');
-        stripeTab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-        stripeTab.classList.add('text-slate-600');
-        
-        paypalPayment.classList.remove('hidden');
-        stripePayment.classList.add('hidden');
-      });
-    }
 
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
@@ -418,13 +373,6 @@
       // Initialize promo code functionality
       initializePromoCode();
       
-      // Initialize payment tabs
-      initializePaymentTabs();
-      
-      // Test payment button
-      document.getElementById('test-payment').addEventListener('click', function() {
-        alert('This is a test payment. In a real app, this would process payment.');
-      });
       
       // Free access button
       document.getElementById('continue-free').addEventListener('click', handleFreeAccess);

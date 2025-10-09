@@ -1,23 +1,11 @@
 # Payment Integration Summary
 
 ## Overview
-This document outlines the payment integration setup for ProfPilot, including PayPal and cryptocurrency payment methods.
+This document outlines the payment integration setup for ProfPilot, focusing on cryptocurrency payment methods.
 
 ## Payment Methods
 
-### 1. PayPal
-- **Status**: Integrated
-- **Price**: $29.00 per simulator
-- **Features**:
-  - PayPal account payments
-  - Credit card payments through PayPal
-  - International payment support
-- **Files**:
-  - `paypal-checkout.html` - Dedicated PayPal checkout
-  - `paypal-config.js` - PayPal configuration
-  - `paypal-integration.js` - PayPal SDK integration
-
-### 2. Cryptocurrency
+### 1. Cryptocurrency
 - **Status**: Integrated
 - **Price**: $29.00 per simulator
 - **Features**:
@@ -37,11 +25,6 @@ This document outlines the payment integration setup for ProfPilot, including Pa
 - **Works on**: All payment methods
 
 ## Setup Instructions
-
-### PayPal Setup
-1. Get PayPal API credentials from PayPal Developer Dashboard
-2. Update `paypal-config.js` with your production client ID
-3. Test payments in sandbox mode first
 
 ### Crypto Setup
 1. Get wallet addresses for each cryptocurrency

@@ -7,7 +7,6 @@ Sitemap: https://www.profpilot.co/sitemap.xml
 # Disallow admin and private areas
 Disallow: /admin/
 Disallow: /private/
-Disallow: /test-paypal.html
 Disallow: /firebase-test.html
 
 # Allow important pages

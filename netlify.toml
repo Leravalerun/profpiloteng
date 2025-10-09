@@ -79,11 +79,6 @@
   to = "/checkout.html"
   status = 200
 
-[[redirects]]
-  from = "/test-paypal"
-  to = "/test-paypal.html"
-  status = 200
-
 # Fallback for SPA routing
 [[redirects]]
   from = "/*"

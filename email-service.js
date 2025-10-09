@@ -20,7 +20,7 @@ class EmailService {
         amount: purchaseData.amount,
         currency: purchaseData.currency || 'USD',
         payment_method: purchaseData.paymentMethod,
-        purchase_id: purchaseData.paymentIntentId || purchaseData.paypalOrderId,
+        purchase_id: purchaseData.paymentIntentId || purchaseData.cryptoTransactionId,
         dashboard_url: `${window.location.origin}/dashboard.html`,
         simulator_url: this.getSimulatorUrl(purchaseData.simulator),
         promo_code: purchaseData.promoCode || null

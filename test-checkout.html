@@ -48,34 +48,13 @@
       <div class="bg-white rounded-2xl shadow-soft p-8">
         <h2 class="text-2xl font-bold text-slate-900 mb-6">Choose Payment Method</h2>
         
-        <!-- Payment Method Tabs -->
-        <div class="flex space-x-1 bg-slate-100 p-1 rounded-lg mb-6">
-          <button id="paypal-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md bg-white text-slate-900 shadow-sm">
-            PayPal
-          </button>
-          <button id="crypto-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900">
-            Crypto
-          </button>
-        </div>
-
-        <!-- PayPal Payment -->
-        <div id="paypal-payment" class="payment-method">
-          <div class="mb-6">
-            <div class="flex items-center gap-2 mb-4">
-              <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" class="h-6" />
-              <span class="text-slate-700 font-medium">PayPal</span>
-            </div>
-            <div class="mb-4">
-              <p class="text-sm text-slate-600 mb-4">Pay securely with your PayPal account or credit card.</p>
-              <a href="/paypal-checkout.html" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-center">
-                Continue with PayPal
-              </a>
-            </div>
-          </div>
+        <!-- Crypto Payment Only -->
+        <div class="mb-6">
+          <p class="text-slate-600 mb-4">Pay securely with cryptocurrency:</p>
         </div>
 
         <!-- Crypto Payment -->
-        <div id="crypto-payment" class="payment-method hidden">
+        <div id="crypto-payment" class="payment-method">
           <div class="mb-6">
             <div class="flex items-center gap-2 mb-4">
               <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center">
@@ -101,40 +80,9 @@
   </main>
 
   <script>
-    // Simple payment tab switching
+    // Initialize crypto payment
     document.addEventListener('DOMContentLoaded', function() {
-      const paypalTab = document.getElementById('paypal-tab');
-      const cryptoTab = document.getElementById('crypto-tab');
-      const paypalPayment = document.getElementById('paypal-payment');
-      const cryptoPayment = document.getElementById('crypto-payment');
-
-      function switchToTab(activeTab, activePayment, inactiveTabs, inactivePayments) {
-        // Reset all tabs
-        [paypalTab, cryptoTab].forEach(tab => {
-          tab.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
-          tab.classList.add('text-slate-600');
-        });
-        
-        // Reset all payments
-        [paypalPayment, cryptoPayment].forEach(payment => {
-          payment.classList.add('hidden');
-        });
-        
-        // Activate selected tab and payment
-        activeTab.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
-        activeTab.classList.remove('text-slate-600');
-        activePayment.classList.remove('hidden');
-      }
-
-      paypalTab.addEventListener('click', function() {
-        switchToTab(paypalTab, paypalPayment, [cryptoTab], [cryptoPayment]);
-      });
-
-      cryptoTab.addEventListener('click', function() {
-        switchToTab(cryptoTab, cryptoPayment, [paypalTab], [paypalPayment]);
-      });
-      
-      console.log('✅ Payment tabs initialized');
+      console.log('✅ Crypto payment initialized');
     });
   </script>
 </body>

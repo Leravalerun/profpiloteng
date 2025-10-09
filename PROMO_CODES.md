@@ -33,7 +33,6 @@ const PROMO_CODES = {
 
 ### Files Updated
 - `checkout.html` - Main checkout page with promo field
-- `paypal-checkout.html` - PayPal checkout page with promo field
 - `test-promo.html` - Test page for promo functionality
 
 ## 🎨 User Experience
@@ -109,9 +108,8 @@ Use `test-promo.html` to test promo functionality:
 ## 🔧 Adding New Promo Codes
 
 ### Step 1: Update Configuration
-Add new promo code to both files:
+Add new promo code to:
 - `checkout.html` (line ~309)
-- `paypal-checkout.html` (line ~242)
 
 ### Step 2: Test
 1. Open `test-promo.html`
@@ -120,7 +118,7 @@ Add new promo code to both files:
 4. Test free access flow (if 100% discount)
 
 ### Step 3: Deploy
-1. Update both checkout pages
+1. Update checkout page
 2. Test in production
 3. Monitor analytics
 

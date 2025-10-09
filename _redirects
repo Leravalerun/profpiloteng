@@ -3,9 +3,6 @@
 # Redirect /checkout to /checkout.html
 /checkout /checkout.html 200
 
-# Redirect /paypal-checkout to /paypal-checkout.html  
-/paypal-checkout /paypal-checkout.html 200
-
 # Redirect /login to /login.html
 /login /login.html 200
 
