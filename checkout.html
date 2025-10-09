@@ -188,7 +188,7 @@
                 </div>
                 <div class="mb-4">
                   <p class="text-sm text-slate-600 mb-4">Pay with Bitcoin, Ethereum, USDT, or USDC. Secure, decentralized, and available worldwide.</p>
-                  <a href="/crypto-checkout.html" id="crypto-checkout-link" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
+                  <a href="/crypto-checkout-simple.html" id="crypto-checkout-link" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
                     Continue with Crypto
                   </a>
                 </div>
@@ -262,8 +262,8 @@
   </footer>
 
   
-  <!-- Email Service -->
-  <script src="email-service.js"></script>
+  <!-- Simple Email Service -->
+  <script src="email-service-simple.js"></script>
 
   <script>
     // Simulator data
@@ -463,7 +463,7 @@
 
 
     // Handle free access (when promo code is applied)
-    function handleFreeAccess(simulatorKey) {
+    async function handleFreeAccess(simulatorKey) {
       // Show success state
       document.getElementById('loading-state').classList.add('hidden');
       document.getElementById('payment-methods').classList.add('hidden');
@@ -471,16 +471,35 @@
 
       console.log('🎉 Free access granted for:', simulatorKey);
 
-      // Redirect to simulator immediately
+      // Send confirmation email for free access
+      if (window.SimpleEmailService) {
+        const emailService = new window.SimpleEmailService();
+        const purchaseData = {
+          simulator: simulatorKey,
+          amount: 0,
+          currency: 'USD',
+          paymentMethod: 'promo',
+          promoCode: currentPromoCode,
+          originalPrice: originalPrice,
+          discount: originalPrice,
+          freeAccess: true,
+          userEmail: 'user@example.com', // In real app, get from auth
+          userName: 'Valued Customer'
+        };
+        
+        await emailService.sendPaymentConfirmation(purchaseData);
+      }
+
+      // Redirect to simulator after showing email notification
       setTimeout(() => {
         if (simulatorKey === 'ux-designer') {
-          window.location.href = '/ux-sim.html';
+          window.location.href = '/ux-sim-simple.html';
         } else if (simulatorKey === 'lawyer') {
           window.location.href = '/lawyer-simulator.html';
         } else {
           window.location.href = '/dashboard.html';
         }
-      }, 2000);
+      }, 3000);
     }
 
     // Show error state
