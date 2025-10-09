@@ -262,12 +262,7 @@
   </footer>
 
   
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="firebase-init.js"></script>
+  <!-- Email Service -->
   <script src="email-service.js"></script>
 
   <script>
@@ -474,51 +469,18 @@
       document.getElementById('payment-methods').classList.add('hidden');
       document.getElementById('success-state').classList.remove('hidden');
 
-      // Save free access to Firebase
-      const purchaseData = {
-        simulator: simulatorKey,
-        amount: 0,
-        currency: 'USD',
-        paymentMethod: 'promo',
-        promoCode: currentPromoCode,
-        originalPrice: originalPrice,
-        discount: originalPrice,
-        freeAccess: true
-      };
+      console.log('🎉 Free access granted for:', simulatorKey);
 
-      // Save to Firebase
-      if (window.savePurchase) {
-        window.savePurchase(purchaseData);
-      }
-
-      // Send confirmation email for free access
-      if (window.EmailService) {
-        const emailService = new window.EmailService();
-        const userEmail = window.auth.currentUser?.email;
-        const userName = window.auth.currentUser?.displayName;
-        
-        if (userEmail) {
-          await emailService.sendPaymentConfirmation({
-            ...purchaseData,
-            userEmail: userEmail,
-            userName: userName
-          });
-        }
-      }
-
-      // Track analytics
-      if (window.trackEvent) {
-        window.trackEvent('free_access_granted', {
-          simulator: simulatorKey,
-          promo_code: currentPromoCode,
-          original_price: originalPrice
-        });
-      }
-
-      // Redirect to dashboard after 3 seconds
+      // Redirect to simulator immediately
       setTimeout(() => {
-        window.location.href = '/dashboard.html';
-      }, 3000);
+        if (simulatorKey === 'ux-designer') {
+          window.location.href = '/ux-sim.html';
+        } else if (simulatorKey === 'lawyer') {
+          window.location.href = '/lawyer-simulator.html';
+        } else {
+          window.location.href = '/dashboard.html';
+        }
+      }, 2000);
     }
 
     // Show error state
@@ -535,30 +497,8 @@
       // Update year in footer
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // Wait for Firebase to be ready before checking authentication
-      function checkAuthWhenReady() {
-        if (window.auth) {
-          if (!window.auth.currentUser) {
-            window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.href);
-            return;
-          }
-          // Continue with the rest of the initialization
-          continueInitialization();
-        } else {
-          // Firebase not ready yet, wait a bit more
-          setTimeout(checkAuthWhenReady, 100);
-        }
-      }
-      
-      // Fallback: if Firebase doesn't load after 3 seconds, continue anyway
-      setTimeout(() => {
-        if (!window.auth) {
-          console.warn('⚠️ Firebase not loaded, continuing without authentication');
-          continueInitialization();
-        }
-      }, 3000);
-      
-      function continueInitialization() {
+      // Initialize immediately without waiting for Firebase
+      function initializePage() {
         // Update simulator info
         updateSimulatorInfo(getSimulatorFromURL());
         
@@ -573,24 +513,15 @@
           cryptoLink.href = `/crypto-checkout.html?role=${simulator}`;
         }
 
-        // Initialize payment methods
-        setTimeout(() => {
-          document.getElementById('loading-state').classList.add('hidden');
-          document.getElementById('payment-methods').classList.remove('hidden');
-        }, 1000);
+        // Show payment methods immediately
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('payment-methods').classList.remove('hidden');
         
-        // Fallback: if Firebase doesn't load, show payment methods anyway
-        setTimeout(() => {
-          if (document.getElementById('loading-state').classList.contains('hidden') === false) {
-            console.warn('⚠️ Firebase timeout, showing payment methods anyway');
-            document.getElementById('loading-state').classList.add('hidden');
-            document.getElementById('payment-methods').classList.remove('hidden');
-          }
-        }, 5000);
+        console.log('✅ Checkout page initialized successfully');
       }
       
-      // Start checking for Firebase
-      checkAuthWhenReady();
+      // Initialize page immediately
+      initializePage();
     });
   </script>
 </body>
