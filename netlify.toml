@@ -79,6 +79,11 @@
   to = "/checkout.html"
   status = 200
 
+[[redirects]]
+  from = "/simulator-selection"
+  to = "/simulator-selection.html"
+  status = 200
+
 # Fallback for SPA routing
 [[redirects]]
   from = "/*"

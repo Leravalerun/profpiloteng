@@ -12,6 +12,7 @@ Disallow: /firebase-test.html
 # Allow important pages
 Allow: /
 Allow: /checkout
+Allow: /simulator-selection
 Allow: /login
 Allow: /dashboard
 Allow: /ux

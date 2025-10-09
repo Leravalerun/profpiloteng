@@ -11,6 +11,7 @@
   // Define redirect mappings
   const redirects = {
     '/checkout': '/checkout.html',
+    '/simulator-selection': '/simulator-selection.html',
     '/login': '/login.html',
     '/dashboard': '/dashboard.html',
     '/ux': '/ux.html',
@@ -30,6 +31,7 @@
   // Handle common variations
   const pathVariations = {
     '/checkout/': '/checkout.html',
+    '/simulator-selection/': '/simulator-selection.html',
     '/login/': '/login.html',
     '/dashboard/': '/dashboard.html',
     '/ux/': '/ux.html',

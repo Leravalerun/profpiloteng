@@ -3,6 +3,9 @@
 # Redirect /checkout to /checkout.html
 /checkout /checkout.html 200
 
+# Redirect /simulator-selection to /simulator-selection.html
+/simulator-selection /simulator-selection.html 200
+
 # Redirect /login to /login.html
 /login /login.html 200
 
