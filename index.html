@@ -260,20 +260,38 @@
           </div>
         </div>
 
-        <!-- Suggest a profession card -->
-        <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl shadow-card p-8 card-hover border border-slate-200 flex flex-col group">
-          <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-200">
+        <!-- Coming Soon card -->
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl shadow-card p-8 card-hover border border-amber-200 flex flex-col group">
+          <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-200">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 mb-4">Your Dream Career</h3>
-          <p class="text-slate-600 flex-grow leading-relaxed">
-            Didn't find the profession you're curious about? Suggest a new role and we'll notify you once it's live.
+          <h3 class="text-2xl font-bold text-slate-900 mb-4">Coming Soon</h3>
+          <p class="text-slate-600 flex-grow leading-relaxed mb-4">
+            More exciting career simulators are in development:
           </p>
+          <div class="space-y-2 mb-6">
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <div class="w-2 h-2 bg-amber-400 rounded-full"></div>
+              <span>Copywriter / Creator</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <div class="w-2 h-2 bg-amber-400 rounded-full"></div>
+              <span>Brand Marketer</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <div class="w-2 h-2 bg-amber-400 rounded-full"></div>
+              <span>Psychologist (Private Practice)</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <div class="w-2 h-2 bg-amber-400 rounded-full"></div>
+              <span>QA Automation Engineer</span>
+            </div>
+          </div>
           <div class="mt-8">
-            <button onclick="openSuggestModal()" class="w-full rounded-xl border border-brand-600 text-brand-700 px-6 py-3 font-medium hover:bg-brand-50 transition-colors duration-200 group-hover:border-brand-700 group-hover:bg-brand-100">
-              Suggest a profession
+            <button onclick="openNotifyModal()" class="w-full rounded-xl bg-amber-600 text-white px-6 py-3 font-medium hover:bg-amber-700 transition-colors duration-200 shadow-soft hover:shadow-glow">
+              Notify me when ready
             </button>
           </div>
         </div>
@@ -283,73 +301,88 @@
   </section>
 
 
-<!-- Modal -->
-<div id="suggestModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="suggestTitle">
-  <div id="suggestDialog" class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6 relative">
+<!-- Notify Modal -->
+<div id="notifyModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="notifyTitle">
+  <div id="notifyDialog" class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6 relative">
     <!-- close -->
-    <button type="button" onclick="closeSuggestModal()" aria-label="Close"
+    <button type="button" onclick="closeNotifyModal()" aria-label="Close"
       class="absolute right-3 top-3 text-slate-500 hover:text-slate-700 text-2xl leading-none">&times;</button>
 
-    <h2 id="suggestTitle" class="text-lg font-semibold text-slate-900">Suggest a Profession</h2>
-    <p class="mt-1 text-sm text-slate-500">Leave your email — we’ll notify you as soon as the simulator is available.</p>
+    <h2 id="notifyTitle" class="text-lg font-semibold text-slate-900">Get Notified</h2>
+    <p class="mt-1 text-sm text-slate-500">Leave your email and we'll notify you when these new career simulators are ready!</p>
 
     <!-- success -->
-    <div id="suggestSuccess" class="hidden mt-4 rounded-lg bg-green-50 border border-green-200 p-4 text-green-700" role="status" aria-live="polite">
-      ✅ Thanks! We’ve received your suggestion. We’ll email you once it’s live.
+    <div id="notifySuccess" class="hidden mt-4 rounded-lg bg-green-50 border border-green-200 p-4 text-green-700" role="status" aria-live="polite">
+      ✅ Thanks! We'll email you as soon as these simulators are ready.
     </div>
 
     <!-- error -->
-    <div id="suggestError" class="hidden mt-4 rounded-lg bg-red-50 border border-red-200 p-3 text-red-700" role="alert">
+    <div id="notifyError" class="hidden mt-4 rounded-lg bg-red-50 border border-red-200 p-3 text-red-700" role="alert">
       ⚠️ Oops, something went wrong. Please try again or email us: careers.inspirante@gmail.com
     </div>
 
     <!-- form (AJAX to FormSubmit) -->
-    <form id="suggestForm" class="mt-4 space-y-4" novalidate>
+    <form id="notifyForm" class="mt-4 space-y-4" novalidate>
       <!-- honeypot -->
       <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off">
 
       <div>
-        <label for="email" class="block text-sm font-medium text-slate-700">Your email</label>
-        <input type="email" id="email" name="email" required placeholder="you@example.com"
+        <label for="notifyEmail" class="block text-sm font-medium text-slate-700">Your email</label>
+        <input type="email" id="notifyEmail" name="email" required placeholder="you@example.com"
           class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600">
-        <p class="text-xs text-slate-500 mt-1">We’ll notify you once the profession is available.</p>
+        <p class="text-xs text-slate-500 mt-1">We'll notify you when the new simulators are ready.</p>
       </div>
 
       <div>
-        <label for="message" class="block text-sm font-medium text-slate-700">Profession idea</label>
-        <textarea id="message" name="message" required rows="3"
-          class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600"
-          placeholder="Which career would you like to try?"></textarea>
+        <label class="block text-sm font-medium text-slate-700 mb-2">Which simulators interest you?</label>
+        <div class="space-y-2">
+          <label class="flex items-center">
+            <input type="checkbox" name="interests" value="copywriter" class="rounded border-slate-300 text-brand-600 focus:ring-brand-600">
+            <span class="ml-2 text-sm text-slate-600">Copywriter / Creator</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="interests" value="brand-marketer" class="rounded border-slate-300 text-brand-600 focus:ring-brand-600">
+            <span class="ml-2 text-sm text-slate-600">Brand Marketer</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="interests" value="psychologist" class="rounded border-slate-300 text-brand-600 focus:ring-brand-600">
+            <span class="ml-2 text-sm text-slate-600">Psychologist (Private Practice)</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" name="interests" value="qa-engineer" class="rounded border-slate-300 text-brand-600 focus:ring-brand-600">
+            <span class="ml-2 text-sm text-slate-600">QA Automation Engineer</span>
+          </label>
+        </div>
       </div>
 
-      <button id="suggestSubmit" type="submit"
-        class="w-full rounded-xl bg-brand-600 text-white px-4 py-2 font-semibold hover:bg-brand-700 transition">
-        Send
+      <button id="notifySubmit" type="submit"
+        class="w-full rounded-xl bg-amber-600 text-white px-4 py-2 font-semibold hover:bg-amber-700 transition">
+        Notify me when ready
       </button>
 
-      <p class="text-xs text-slate-400">We send suggestions to careers.inspirante@gmail.com</p>
+      <p class="text-xs text-slate-400">We'll send notifications to careers.inspirante@gmail.com</p>
     </form>
   </div>
 </div>
 
 <script>
-  const modal = document.getElementById('suggestModal');
-  const dialog = document.getElementById('suggestDialog');
-  const form = document.getElementById('suggestForm');
-  const success = document.getElementById('suggestSuccess');
-  const errorBox = document.getElementById('suggestError');
-  const submitBtn = document.getElementById('suggestSubmit');
+  const modal = document.getElementById('notifyModal');
+  const dialog = document.getElementById('notifyDialog');
+  const form = document.getElementById('notifyForm');
+  const success = document.getElementById('notifySuccess');
+  const errorBox = document.getElementById('notifyError');
+  const submitBtn = document.getElementById('notifySubmit');
 
-  function openSuggestModal() {
+  function openNotifyModal() {
     success.classList.add('hidden');
     errorBox.classList.add('hidden');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.classList.add('overflow-hidden'); // lock scroll
-    setTimeout(() => document.getElementById('email')?.focus(), 0);
+    setTimeout(() => document.getElementById('notifyEmail')?.focus(), 0);
   }
 
-  function closeSuggestModal() {
+  function closeNotifyModal() {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.classList.remove('overflow-hidden'); // unlock scroll
@@ -357,12 +390,12 @@
 
   // close on overlay click
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeSuggestModal();
+    if (e.target === modal) closeNotifyModal();
   });
 
   // close on Esc
   document.addEventListener('keydown', (e) => {
-    if (!modal.classList.contains('hidden') && e.key === 'Escape') closeSuggestModal();
+    if (!modal.classList.contains('hidden') && e.key === 'Escape') closeNotifyModal();
   });
 
   // submit via FormSubmit AJAX (no redirect)
@@ -371,15 +404,27 @@
     errorBox.classList.add('hidden');
     success.classList.add('hidden');
 
+    const email = document.getElementById('notifyEmail').value.trim();
+    const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked')).map(cb => cb.value);
+
+    if (!email) {
+      errorBox.textContent = 'Please enter your email address.';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
+    if (interests.length === 0) {
+      errorBox.textContent = 'Please select at least one simulator you\'re interested in.';
+      errorBox.classList.remove('hidden');
+      return;
+    }
+
     const payload = {
-      email: form.email.value.trim(),
-      message: form.message.value.trim(),
-      _subject: 'New profession suggestion — ProfPilot',
+      email: email,
+      message: `New simulator notification request. Interested in: ${interests.join(', ')}`,
+      _subject: 'New Simulator Notification Request — ProfPilot',
       _captcha: 'false'
     };
-
-    // basic validation
-    if (!payload.email || !payload.message) return;
 
     // loading state
     const originalText = submitBtn.textContent;
@@ -400,7 +445,7 @@
       success.classList.remove('hidden');
 
       // auto-close after 2.5s
-      setTimeout(() => { closeSuggestModal(); success.classList.add('hidden'); }, 2500);
+      setTimeout(() => { closeNotifyModal(); success.classList.add('hidden'); }, 2500);
     } catch (err) {
       errorBox.classList.remove('hidden');
     } finally {
