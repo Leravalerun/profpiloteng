@@ -16,7 +16,7 @@ This document outlines the payment integration setup for ProfPilot, focusing on 
   - QR code generation for easy payment
   - Real-time exchange rates
 - **Files**:
-  - `crypto-checkout.html` - Dedicated crypto checkout
+  - `crypto-checkout-simple.html` - Dedicated crypto checkout
   - `crypto-config.js` - Crypto configuration
 
 ## Promo Codes

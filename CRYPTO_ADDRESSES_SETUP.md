@@ -34,7 +34,7 @@ addresses: {
 
 ### 3. Протестируйте
 
-1. Откройте `crypto-checkout.html` на localhost
+1. Откройте `crypto-checkout-simple.html` на localhost
 2. Выберите криптовалюту
 3. Проверьте, что адрес отображается правильно
 4. Убедитесь, что QR код генерируется
