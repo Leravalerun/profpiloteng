@@ -1,6 +1,7 @@
 # Firebase Configuration
 firebase-config.js
 firebase-config-local.js
+firebase-config-prod.js
 .env
 .env.local
 .env.production
