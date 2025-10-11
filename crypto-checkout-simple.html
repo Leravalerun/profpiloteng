@@ -294,12 +294,16 @@
       // Get simulator from URL
       const urlParams = new URLSearchParams(window.location.search);
       const simulator = urlParams.get('role') || 'ux-designer';
+      console.log('🔧 Simulator from URL:', simulator);
       
       // Update simulator info
       updateSimulatorInfo(simulator);
       
       // Initialize components
+      console.log('🔧 Initializing promo code...');
       initializePromoCode();
+      
+      console.log('🔧 Initializing crypto options...');
       initializeCryptoOptions();
       
       console.log('✅ Page initialized successfully');
@@ -453,31 +457,80 @@
       
       // Select new crypto
       const option = document.querySelector(`[data-crypto="${cryptoKey}"]`);
-      option.classList.add('border-blue-500', 'bg-blue-50');
-      option.classList.remove('border-slate-200');
+      if (option) {
+        option.classList.add('border-blue-500', 'bg-blue-50');
+        option.classList.remove('border-slate-200');
+        console.log('✅ Crypto option selected:', cryptoKey);
+      } else {
+        console.error('❌ Crypto option not found:', cryptoKey);
+        return;
+      }
       
       selectedCrypto = cryptoKey;
       showPaymentDetails();
     }
     
     function showPaymentDetails() {
-      if (!selectedCrypto) return;
+      if (!selectedCrypto) {
+        console.error('❌ No crypto selected');
+        return;
+      }
       
       console.log('🔧 Showing payment details for:', selectedCrypto);
       
       const crypto = CRYPTO_CONFIG.currencies[selectedCrypto];
       const address = CRYPTO_CONFIG.addresses[selectedCrypto];
       
+      if (!crypto) {
+        console.error('❌ Crypto config not found for:', selectedCrypto);
+        return;
+      }
+      
+      console.log('🔧 Crypto config:', crypto);
+      console.log('🔧 Address:', address);
+      
       // Update payment info
-      document.getElementById('crypto-amount').textContent = `${currentPrice.toFixed(2)} ${crypto.symbol}`;
-      document.getElementById('crypto-network').textContent = crypto.network;
-      document.getElementById('exchange-rate').textContent = `1 ${crypto.symbol} = $1.00`;
-      document.getElementById('wallet-address').value = address;
+      const amountEl = document.getElementById('crypto-amount');
+      const networkEl = document.getElementById('crypto-network');
+      const rateEl = document.getElementById('exchange-rate');
+      const addressEl = document.getElementById('wallet-address');
+      const detailsEl = document.getElementById('payment-details');
+      
+      if (amountEl) {
+        amountEl.textContent = `${currentPrice.toFixed(2)} ${crypto.symbol}`;
+        console.log('✅ Amount updated');
+      } else {
+        console.error('❌ crypto-amount element not found');
+      }
+      
+      if (networkEl) {
+        networkEl.textContent = crypto.network;
+        console.log('✅ Network updated');
+      } else {
+        console.error('❌ crypto-network element not found');
+      }
+      
+      if (rateEl) {
+        rateEl.textContent = `1 ${crypto.symbol} = $1.00`;
+        console.log('✅ Exchange rate updated');
+      } else {
+        console.error('❌ exchange-rate element not found');
+      }
+      
+      if (addressEl) {
+        addressEl.value = address;
+        console.log('✅ Address updated');
+      } else {
+        console.error('❌ wallet-address element not found');
+      }
       
       // Show payment details
-      document.getElementById('payment-details').classList.remove('hidden');
-      
-      console.log('✅ Payment details shown');
+      if (detailsEl) {
+        detailsEl.classList.remove('hidden');
+        console.log('✅ Payment details shown');
+      } else {
+        console.error('❌ payment-details element not found');
+      }
     }
     
     // Event listeners
@@ -507,7 +560,7 @@
       const simulator = urlParams.get('role') || 'ux-designer';
       
       if (simulator === 'ux-designer') {
-        window.location.href = '/ux-sim.html';
+        window.location.href = '/ux-sim-simple.html';
       } else if (simulator === 'lawyer') {
         window.location.href = '/lawyer-simulator.html';
       } else {
@@ -520,7 +573,7 @@
       const simulator = urlParams.get('role') || 'ux-designer';
       
       if (simulator === 'ux-designer') {
-        window.location.href = '/ux-sim.html';
+        window.location.href = '/ux-sim-simple.html';
       } else if (simulator === 'lawyer') {
         window.location.href = '/lawyer-simulator.html';
       } else {
