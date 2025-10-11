@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Payment — ProfPilot</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #1e293b;
+    }
+    
+    .logo img {
+      width: 2rem;
+      height: 2rem;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    /* Main content */
+    .main {
+      padding: 3rem 0;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 2rem;
+    }
+    
+    /* Simulator info */
+    .simulator-info {
+      background: #f1f5f9;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .simulator-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .simulator-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #059669;
+    }
+    
+    /* Promo code */
+    .promo-section {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .promo-title {
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 1rem;
+    }
+    
+    .promo-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .promo-input input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+    
+    .btn-success {
+      background: #059669;
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: #047857;
+    }
+    
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+    
+    /* Crypto options */
+    .crypto-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .crypto-option {
+      border: 2px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .crypto-option:hover {
+      border-color: #3b82f6;
+      background: #f8fafc;
+    }
+    
+    .crypto-option.selected {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    
+    .crypto-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .crypto-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .crypto-network {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    
+    /* Payment details */
+    .payment-details {
+      display: none;
+    }
+    
+    .payment-details.show {
+      display: block;
+    }
+    
+    .security-notice {
+      background: #f0fdf4;
+      border: 1px solid #22c55e;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .security-title {
+      font-weight: 600;
+      color: #15803d;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .security-text {
+      color: #166534;
+      font-size: 0.875rem;
+    }
+    
+    .payment-info {
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .payment-info h3 {
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    
+    .payment-label {
+      color: #64748b;
+    }
+    
+    .payment-value {
+      font-weight: 500;
+    }
+    
+    /* Wallet address */
+    .wallet-section {
+      margin-bottom: 2rem;
+    }
+    
+    .wallet-label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .wallet-input {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .wallet-input input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+    
+    .btn-copy {
+      background: #6b7280;
+      color: white;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .btn-copy:hover {
+      background: #4b5563;
+    }
+    
+    .btn-copy.copied {
+      background: #059669;
+    }
+    
+    /* Instructions */
+    .instructions {
+      background: #eff6ff;
+      border: 1px solid #3b82f6;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .instructions h4 {
+      font-weight: 600;
+      color: #1e40af;
+      margin-bottom: 1rem;
+    }
+    
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .step-number {
+      background: #3b82f6;
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+    
+    .step-text {
+      color: #1e40af;
+      font-size: 0.875rem;
+    }
+    
+    .step-text strong {
+      font-weight: 600;
+    }
+    
+    /* Security tips */
+    .security-tips {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .security-tips h4 {
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 1rem;
+    }
+    
+    .tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .tip-icon {
+      width: 1rem;
+      height: 1rem;
+      color: #f59e0b;
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+    
+    .tip-text {
+      color: #92400e;
+      font-size: 0.875rem;
+    }
+    
+    .tip-text strong {
+      font-weight: 600;
+    }
+    
+    /* Benefits */
+    .benefits {
+      background: #f0fdf4;
+      border: 1px solid #22c55e;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .benefits h4 {
+      font-weight: 600;
+      color: #15803d;
+      margin-bottom: 1rem;
+    }
+    
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .benefit-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #22c55e;
+      flex-shrink: 0;
+    }
+    
+    .benefit-text {
+      color: #15803d;
+      font-size: 0.875rem;
+    }
+    
+    .benefit-text strong {
+      font-weight: 600;
+    }
+    
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .btn-full {
+      width: 100%;
+      padding: 0.75rem 1rem;
+    }
+    
+    .btn-help {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .btn-help:hover {
+      background: #e2e8f0;
+    }
+    
+    /* Free access */
+    .free-access {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .free-access.show {
+      display: block;
+    }
+    
+    .success-icon {
+      width: 4rem;
+      height: 4rem;
+      background: #dcfce7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    
+    .success-icon svg {
+      width: 2rem;
+      height: 2rem;
+      color: #059669;
+    }
+    
+    .success-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .success-text {
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Footer */
+    .footer {
+      background: #1e293b;
+      color: white;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+    
+    .footer-content {
+      text-align: center;
+    }
+    
+    .footer-links {
+      margin-bottom: 1rem;
+    }
+    
+    .footer-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    
+    .footer-link:hover {
+      color: #93c5fd;
+    }
+    
+    .footer-separator {
+      color: #64748b;
+      margin: 0 0.5rem;
+    }
+    
+    .footer-copyright {
+      color: #94a3b8;
+      font-size: 0.875rem;
+    }
+    
+    /* Hidden class */
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 0.5rem;
+      }
+      
+      .main {
+        padding: 2rem 0;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .title {
+        font-size: 1.5rem;
+      }
+      
+      .crypto-options {
+        grid-template-columns: 1fr;
+      }
+      
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .wallet-input {
+        flex-direction: column;
+      }
+      
+      .promo-input {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo">
+          <img src="/logo.png" alt="ProfPilot">
+          <span class="logo-text">ProfPilot</span>
+        </a>
+        <a href="/" class="btn btn-secondary">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+      <h1 class="title">Crypto Payment</h1>
+      <p class="subtitle">Secure, fast, and private payment with cryptocurrency</p>
+
+      <!-- Simulator Info -->
+      <div class="card">
+        <div class="simulator-info">
+          <div class="simulator-title" id="simulator-title">UX Designer Simulator</div>
+          <div class="simulator-price" id="simulator-price">$29.00</div>
+        </div>
+      </div>
+
+      <!-- Promo Code -->
+      <div class="card">
+        <div class="promo-section">
+          <div class="promo-title">🎁 Have a promo code?</div>
+          <div class="promo-input">
+            <input type="text" id="promo-input" placeholder="Enter promo code">
+            <button class="btn btn-primary" id="apply-promo">Apply</button>
+          </div>
+          <div id="promo-message" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Crypto Options -->
+      <div class="card">
+        <h3 style="margin-bottom: 1rem; font-weight: 600;">Choose Cryptocurrency</h3>
+        <div class="crypto-options" id="crypto-options">
+          <!-- Crypto options will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Payment Details -->
+      <div class="card payment-details" id="payment-details">
+        <!-- Security Notice -->
+        <div class="security-notice">
+          <div class="security-title">
+            🔒 Your Payment is Secure
+          </div>
+          <div class="security-text">
+            Blockchain technology ensures your transaction is safe, transparent, and irreversible. We never store your private keys or have access to your wallet.
+          </div>
+        </div>
+
+        <div class="payment-info">
+          <h3>Payment Details</h3>
+          <div class="payment-row">
+            <span class="payment-label">Amount:</span>
+            <span class="payment-value" id="crypto-amount">29.00 USDT</span>
+          </div>
+          <div class="payment-row">
+            <span class="payment-label">Network:</span>
+            <span class="payment-value" id="crypto-network">TRC20</span>
+          </div>
+          <div class="payment-row">
+            <span class="payment-label">Exchange Rate:</span>
+            <span class="payment-value" id="exchange-rate">1 USDT = $1.00</span>
+          </div>
+        </div>
+
+        <!-- Wallet Address -->
+        <div class="wallet-section">
+          <label class="wallet-label">Send payment to this address:</label>
+          <div class="wallet-input">
+            <input type="text" id="wallet-address" readonly>
+            <button class="btn-copy" id="copy-address">Copy</button>
+          </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+          <h4>📱 How to Pay with Crypto</h4>
+          <div class="instruction-step">
+            <div class="step-number">1</div>
+            <div class="step-text"><strong>Copy the address</strong> - Click the "Copy" button above to copy our wallet address</div>
+          </div>
+          <div class="instruction-step">
+            <div class="step-number">2</div>
+            <div class="step-text"><strong>Open your wallet</strong> - Use MetaMask, Trust Wallet, Binance, or any crypto wallet</div>
+          </div>
+          <div class="instruction-step">
+            <div class="step-number">3</div>
+            <div class="step-text"><strong>Send payment</strong> - Send exactly <span id="payment-amount" style="font-weight: 600;">29.00 USDT</span> to the copied address</div>
+          </div>
+          <div class="instruction-step">
+            <div class="step-number">4</div>
+            <div class="step-text"><strong>Check network</strong> - Make sure you're using <span id="payment-network" style="font-weight: 600;">TRC20</span> network</div>
+          </div>
+          <div class="instruction-step">
+            <div class="step-number">5</div>
+            <div class="step-text"><strong>Wait for confirmation</strong> - Usually takes 1-3 minutes for TRC20</div>
+          </div>
+        </div>
+
+        <!-- Security Tips -->
+        <div class="security-tips">
+          <h4>⚠️ Important Security Tips</h4>
+          <div class="tip">
+            <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <div class="tip-text"><strong>Double-check the address</strong> - Make sure you copied the correct address</div>
+          </div>
+          <div class="tip">
+            <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <div class="tip-text"><strong>Use the right network</strong> - Wrong network = lost funds</div>
+          </div>
+          <div class="tip">
+            <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <div class="tip-text"><strong>Send exact amount</strong> - Don't send more or less than required</div>
+          </div>
+          <div class="tip">
+            <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <div class="tip-text"><strong>Save transaction hash</strong> - Keep it for support if needed</div>
+          </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="benefits">
+          <h4>🚀 Why Pay with Crypto?</h4>
+          <div class="benefits-grid">
+            <div class="benefit">
+              <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+              <div class="benefit-text"><strong>Instant</strong> - No waiting for bank approval</div>
+            </div>
+            <div class="benefit">
+              <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+              <div class="benefit-text"><strong>Private</strong> - No personal data required</div>
+            </div>
+            <div class="benefit">
+              <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+              <div class="benefit-text"><strong>Low fees</strong> - Especially with TRC20</div>
+            </div>
+            <div class="benefit">
+              <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div class="benefit-text"><strong>Global</strong> - Works from anywhere</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-primary btn-full" id="check-payment">
+            Check Payment Status
+          </button>
+          <button class="btn btn-success btn-full hidden" id="continue-simulator">
+            Continue to Simulator
+          </button>
+          <a href="/crypto-faq.html" class="btn btn-help btn-full">
+            ❓ Need Help? View FAQ
+          </a>
+        </div>
+      </div>
+
+      <!-- Free Access -->
+      <div class="card free-access" id="free-access">
+        <div class="success-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <div class="success-title">Free Access Granted!</div>
+        <div class="success-text">Your promo code has been applied successfully.</div>
+        <button class="btn btn-success" id="continue-free">
+          Continue to Simulator
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="/crypto-faq.html" class="footer-link">📖 Crypto Payment FAQ</a>
+          <span class="footer-separator">•</span>
+          <a href="mailto:careers.inspirante@gmail.com" class="footer-link">💬 Need Help? Contact Support</a>
+        </div>
+        <div class="footer-copyright">&copy; <span id="year"></span> ProfPilot. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simple crypto configuration (embedded for production)
+    const CRYPTO_CONFIG = {
+      currencies: {
+        'USDT': {
+          name: 'Tether',
+          symbol: 'USDT',
+          network: 'TRC20',
+          icon: '🟡',
+          color: '#26a17b'
+        },
+        'USDC': {
+          name: 'USD Coin',
+          symbol: 'USDC',
+          network: 'TRC20',
+          icon: '🔵',
+          color: '#2775ca'
+        },
+        'BTC': {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          network: 'Bitcoin',
+          icon: '🟠',
+          color: '#f7931a'
+        },
+        'ETH': {
+          name: 'Ethereum',
+          symbol: 'ETH',
+          network: 'Ethereum',
+          icon: '🔷',
+          color: '#627eea'
+        }
+      },
+      addresses: {
+        'USDT': 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
+        'USDC': 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
+        'BTC': '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+        'ETH': '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'
+      }
+    };
+
+    // Simulator data
+    const simulators = {
+      'ux-designer': {
+        title: 'UX Designer Simulator',
+        price: 29.00
+      },
+      'lawyer': {
+        title: 'Corporate Lawyer Simulator',
+        price: 29.00
+      }
+    };
+
+    // Promo codes
+    const promoCodes = {
+      'checkppff': {
+        discount: 100,
+        description: 'Free access granted!'
+      }
+    };
+
+    let selectedCrypto = null;
+    let currentPrice = 29.00;
+    let originalPrice = 29.00;
+    let currentPromoCode = null;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('✅ Crypto checkout prod page loaded');
+      
+      // Update year in footer
+      const yearElement = document.getElementById('year');
+      if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+      }
+      
+      // Get simulator from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'ux-designer';
+      console.log('🔧 Simulator from URL:', simulator);
+      
+      // Update simulator info
+      updateSimulatorInfo(simulator);
+      
+      // Initialize promo code functionality
+      initializePromoCode();
+      
+      // Initialize crypto options
+      initializeCryptoOptions();
+      
+      console.log('✅ Page initialized successfully');
+    });
+
+    function updateSimulatorInfo(simulatorKey) {
+      const simulator = simulators[simulatorKey];
+      if (simulator) {
+        document.getElementById('simulator-title').textContent = simulator.title;
+        document.getElementById('simulator-price').textContent = `$${simulator.price.toFixed(2)}`;
+        currentPrice = simulator.price;
+        originalPrice = simulator.price;
+        console.log('✅ Simulator info updated:', simulator.title);
+      }
+    }
+
+    function initializePromoCode() {
+      const promoInput = document.getElementById('promo-input');
+      const applyButton = document.getElementById('apply-promo');
+      const promoMessage = document.getElementById('promo-message');
+
+      applyButton.addEventListener('click', function() {
+        const code = promoInput.value.trim().toLowerCase();
+        
+        if (promoCodes[code]) {
+          const promo = promoCodes[code];
+          currentPromoCode = code;
+          
+          if (promo.discount === 100) {
+            // Free access
+            showFreeAccess();
+          } else {
+            // Discount
+            const discountAmount = (originalPrice * promo.discount) / 100;
+            currentPrice = originalPrice - discountAmount;
+            updatePricing();
+            showPromoMessage(`Promo code applied! You save $${discountAmount.toFixed(2)}`, 'success');
+          }
+        } else {
+          showPromoMessage('Invalid promo code', 'error');
+        }
+      });
+    }
+
+    function showFreeAccess() {
+      document.getElementById('payment-details').classList.remove('show');
+      document.getElementById('free-access').classList.add('show');
+      console.log('✅ Free access granted');
+    }
+
+    function showPromoMessage(message, type) {
+      const promoMessage = document.getElementById('promo-message');
+      promoMessage.textContent = message;
+      promoMessage.className = type === 'success' ? 'text-green-600' : 'text-red-600';
+      promoMessage.classList.remove('hidden');
+      
+      setTimeout(() => {
+        promoMessage.classList.add('hidden');
+      }, 3000);
+    }
+
+    function updatePricing() {
+      document.getElementById('simulator-price').textContent = `$${currentPrice.toFixed(2)}`;
+      console.log('✅ Pricing updated to:', currentPrice);
+    }
+
+    function initializeCryptoOptions() {
+      const container = document.getElementById('crypto-options');
+      container.innerHTML = '';
+
+      Object.entries(CRYPTO_CONFIG.currencies).forEach(([key, crypto]) => {
+        const option = document.createElement('div');
+        option.className = 'crypto-option';
+        option.onclick = () => selectCrypto(key);
+        
+        option.innerHTML = `
+          <div class="crypto-icon" style="background-color: ${crypto.color}20; color: ${crypto.color}">
+            ${crypto.icon}
+          </div>
+          <div class="crypto-name">${crypto.name}</div>
+          <div class="crypto-network">${crypto.network}</div>
+        `;
+        
+        container.appendChild(option);
+      });
+      
+      console.log('✅ Crypto options initialized');
+    }
+
+    function selectCrypto(cryptoKey) {
+      console.log('🔧 Selecting crypto:', cryptoKey);
+      
+      // Remove previous selection
+      document.querySelectorAll('.crypto-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selection to clicked option
+      event.currentTarget.classList.add('selected');
+      
+      selectedCrypto = cryptoKey;
+      showPaymentDetails();
+    }
+
+    function showPaymentDetails() {
+      if (!selectedCrypto) {
+        console.error('❌ No crypto selected');
+        return;
+      }
+      
+      console.log('🔧 Showing payment details for:', selectedCrypto);
+      
+      const crypto = CRYPTO_CONFIG.currencies[selectedCrypto];
+      const address = CRYPTO_CONFIG.addresses[selectedCrypto];
+      
+      console.log('🔧 Crypto config:', crypto);
+      console.log('🔧 Address:', address);
+      
+      // Update payment info
+      const amountEl = document.getElementById('crypto-amount');
+      const networkEl = document.getElementById('crypto-network');
+      const rateEl = document.getElementById('exchange-rate');
+      const addressEl = document.getElementById('wallet-address');
+      const detailsEl = document.getElementById('payment-details');
+      
+      if (amountEl) {
+        amountEl.textContent = `${currentPrice.toFixed(2)} ${crypto.symbol}`;
+        console.log('✅ Amount updated');
+      }
+      
+      if (networkEl) {
+        networkEl.textContent = crypto.network;
+        console.log('✅ Network updated');
+      }
+      
+      if (rateEl) {
+        rateEl.textContent = `1 ${crypto.symbol} = $1.00`;
+        console.log('✅ Exchange rate updated');
+      }
+      
+      if (addressEl) {
+        addressEl.value = address;
+        console.log('✅ Address updated');
+      }
+      
+      // Update instruction amounts
+      const paymentAmountEl = document.getElementById('payment-amount');
+      const paymentNetworkEl = document.getElementById('payment-network');
+      
+      if (paymentAmountEl) {
+        paymentAmountEl.textContent = `${currentPrice.toFixed(2)} ${crypto.symbol}`;
+      }
+      
+      if (paymentNetworkEl) {
+        paymentNetworkEl.textContent = crypto.network;
+      }
+      
+      // Show payment details
+      if (detailsEl) {
+        detailsEl.classList.add('show');
+        console.log('✅ Payment details shown');
+      }
+    }
+
+    // Event listeners
+    document.getElementById('copy-address').addEventListener('click', function() {
+      const address = document.getElementById('wallet-address');
+      address.select();
+      document.execCommand('copy');
+      
+      const button = this;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.classList.add('copied');
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('copied');
+      }, 2000);
+    });
+
+    document.getElementById('check-payment').addEventListener('click', function() {
+      // Simulate payment check
+      showPaymentStatus('success', 'Payment confirmed!', 'Your payment has been received and verified.');
+    });
+
+    document.getElementById('continue-simulator').addEventListener('click', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'ux-designer';
+      
+      if (simulator === 'ux-designer') {
+        window.location.href = '/ux-sim-simple.html';
+      } else if (simulator === 'lawyer') {
+        window.location.href = '/lawyer-simulator.html';
+      } else {
+        window.location.href = '/dashboard.html';
+      }
+    });
+
+    document.getElementById('continue-free').addEventListener('click', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'ux-designer';
+      
+      if (simulator === 'ux-designer') {
+        window.location.href = '/ux-sim-simple.html';
+      } else if (simulator === 'lawyer') {
+        window.location.href = '/lawyer-simulator.html';
+      } else {
+        window.location.href = '/dashboard.html';
+      }
+    });
+
+    function showPaymentStatus(type, title, description) {
+      if (type === 'success') {
+        document.getElementById('continue-simulator').classList.remove('hidden');
+        console.log('✅ Payment confirmed, showing continue button');
+      }
+    }
+  </script>
+</body>
+</html>
