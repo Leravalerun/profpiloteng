@@ -51,8 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Делаем db доступным глобально
     window.firebaseDB = db;
     
-    // Тестируем подключение
-    testFirebaseConnection();
+    // Тестируем подключение (асинхронно, без блокировки)
+    setTimeout(() => {
+      testFirebaseConnection();
+    }, 1000);
     
     console.log('✅ Firebase initialization completed');
     
@@ -81,11 +83,15 @@ async function testFirebaseConnection() {
       });
     });
     
-    } catch (error) {
-    console.error('❌ Firebase connection test failed:', error);
+  } catch (error) {
+    console.warn('⚠️ Firebase connection test failed:', error.message);
     
-    // Показываем уведомление пользователю
-    showFirebaseError();
+    // Показываем уведомление только если это критическая ошибка
+    if (error.code === 'permission-denied' || error.code === 'not-found') {
+      showFirebaseError();
+    } else {
+      console.log('ℹ️ Non-critical Firebase error, continuing...');
+    }
   }
 }
 

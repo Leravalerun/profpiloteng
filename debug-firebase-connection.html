@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Connection Debug - ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .log-success { color: #10b981; }
+    .log-error { color: #ef4444; }
+    .log-warning { color: #f59e0b; }
+    .log-info { color: #3b82f6; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-slate-900">🔍 Firebase Connection Debug</h1>
+        <a href="/firebase-test.html" class="text-blue-600 hover:text-blue-700 font-medium">← Back to Test</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    
+    <!-- Debug Log -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-4">Debug Log</h2>
+      <div id="debug-log" class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm h-96 overflow-y-auto">
+        <div class="log-info">🔍 Starting Firebase connection debug...</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-4">Quick Actions</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button id="test-connection" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          Test Connection
+        </button>
+        <button id="test-write" class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+          Test Write
+        </button>
+        <button id="test-read" class="bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition-colors">
+          Test Read
+        </button>
+        <button id="clear-log" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+          Clear Log
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+
+  <script>
+    const logDiv = document.getElementById('debug-log');
+    
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = document.createElement('div');
+      logEntry.className = `log-${type}`;
+      logEntry.textContent = `[${timestamp}] ${message}`;
+      logDiv.appendChild(logEntry);
+      logDiv.scrollTop = logDiv.scrollHeight;
+      console.log(`[${timestamp}] ${message}`);
+    }
+
+    // Test connection
+    document.getElementById('test-connection').addEventListener('click', async function() {
+      log('🧪 Testing Firebase connection...', 'info');
+      
+      try {
+        // Check if Firebase is loaded
+        if (typeof firebase === 'undefined') {
+          log('❌ Firebase SDK not loaded', 'error');
+          return;
+        }
+        log('✅ Firebase SDK loaded', 'success');
+
+        // Check configuration
+        if (typeof window.firebaseConfig === 'undefined') {
+          log('❌ Firebase config not found', 'error');
+          return;
+        }
+        log('✅ Firebase config found', 'success');
+
+        // Check app initialization
+        const app = firebase.app();
+        log(`✅ Firebase app initialized: ${app.name}`, 'success');
+
+        // Check Firestore
+        const db = firebase.firestore();
+        log('✅ Firestore instance created', 'success');
+
+        // Test basic connection
+        const testDoc = await db.collection('_test').doc('connection-test').get();
+        log('✅ Database connection successful', 'success');
+
+      } catch (error) {
+        log(`❌ Connection test failed: ${error.message}`, 'error');
+        log(`Error code: ${error.code}`, 'error');
+        log(`Error details: ${JSON.stringify(error)}`, 'error');
+      }
+    });
+
+    // Test write
+    document.getElementById('test-write').addEventListener('click', async function() {
+      log('🧪 Testing write permissions...', 'info');
+      
+      try {
+        const db = firebase.firestore();
+        const testData = {
+          test: true,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          message: 'Write test from debug page'
+        };
+        
+        const docRef = await db.collection('purchases').add(testData);
+        log(`✅ Write test successful: ${docRef.id}`, 'success');
+        
+        // Clean up
+        await docRef.delete();
+        log('✅ Test record cleaned up', 'success');
+        
+      } catch (error) {
+        log(`❌ Write test failed: ${error.message}`, 'error');
+        log(`Error code: ${error.code}`, 'error');
+        
+        if (error.code === 'permission-denied') {
+          log('🔧 SOLUTION: Update Firestore rules to allow write', 'warning');
+        }
+      }
+    });
+
+    // Test read
+    document.getElementById('test-read').addEventListener('click', async function() {
+      log('🧪 Testing read permissions...', 'info');
+      
+      try {
+        const db = firebase.firestore();
+        const snapshot = await db.collection('purchases').limit(5).get();
+        log(`✅ Read test successful: ${snapshot.size} records found`, 'success');
+        
+        snapshot.forEach(doc => {
+          log(`  - ${doc.id}: ${JSON.stringify(doc.data())}`, 'info');
+        });
+        
+      } catch (error) {
+        log(`❌ Read test failed: ${error.message}`, 'error');
+        log(`Error code: ${error.code}`, 'error');
+        
+        if (error.code === 'permission-denied') {
+          log('🔧 SOLUTION: Update Firestore rules to allow read', 'warning');
+        }
+      }
+    });
+
+    // Clear log
+    document.getElementById('clear-log').addEventListener('click', function() {
+      logDiv.innerHTML = '<div class="log-info">🔍 Log cleared...</div>';
+    });
+
+    // Auto-run diagnostics on load
+    document.addEventListener('DOMContentLoaded', function() {
+      log('🚀 Firebase Connection Debug Tool Loaded', 'info');
+      log('Click "Test Connection" to start diagnostics', 'info');
+      
+      // Auto-run basic checks
+      setTimeout(async () => {
+        log('🔍 Running automatic diagnostics...', 'info');
+        
+        // Check Firebase SDK
+        if (typeof firebase === 'undefined') {
+          log('❌ Firebase SDK not loaded - check script tags', 'error');
+          return;
+        }
+        log('✅ Firebase SDK loaded', 'success');
+
+        // Check config
+        if (typeof window.firebaseConfig === 'undefined') {
+          log('❌ Firebase config not found - check firebase-config.js', 'error');
+          return;
+        }
+        log('✅ Firebase config found', 'success');
+
+        // Check app
+        try {
+          const app = firebase.app();
+          log(`✅ Firebase app: ${app.name}`, 'success');
+        } catch (error) {
+          log(`❌ Firebase app error: ${error.message}`, 'error');
+        }
+
+        // Check Firestore
+        try {
+          const db = firebase.firestore();
+          log('✅ Firestore instance created', 'success');
+        } catch (error) {
+          log(`❌ Firestore error: ${error.message}`, 'error');
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
