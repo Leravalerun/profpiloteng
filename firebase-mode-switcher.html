@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Mode Switcher - ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h1 class="text-2xl font-bold text-slate-900 mb-6">🔄 Firebase Mode Switcher</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Online Mode -->
+        <div class="border border-slate-200 rounded-lg p-6">
+          <h2 class="text-xl font-semibold text-slate-900 mb-4">🌐 Online Mode (Firebase)</h2>
+          <p class="text-slate-600 mb-4">Use real Firebase with Firestore database</p>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-gray-400" id="firebase-status"></div>
+              <span id="firebase-text">Checking...</span>
+            </div>
+          </div>
+          
+          <button id="test-firebase" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors mb-2">
+            Test Firebase Connection
+          </button>
+          
+          <button id="enable-firebase" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+            Enable Firebase Mode
+          </button>
+        </div>
+        
+        <!-- Offline Mode -->
+        <div class="border border-slate-200 rounded-lg p-6">
+          <h2 class="text-xl font-semibold text-slate-900 mb-4">💾 Offline Mode (localStorage)</h2>
+          <p class="text-slate-600 mb-4">Use localStorage for testing without Firebase</p>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-green-400"></div>
+              <span>Always available</span>
+            </div>
+          </div>
+          
+          <button id="test-offline" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors mb-2">
+            Test Offline Mode
+          </button>
+          
+          <button id="enable-offline" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+            Enable Offline Mode
+          </button>
+        </div>
+      </div>
+      
+      <!-- Current Mode -->
+      <div class="mt-6 p-4 bg-slate-100 rounded-lg">
+        <h3 class="font-semibold text-slate-900 mb-2">Current Mode:</h3>
+        <div id="current-mode" class="text-slate-600">Checking...</div>
+      </div>
+      
+      <!-- Test Results -->
+      <div id="test-results" class="mt-6 space-y-2">
+        <!-- Results will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseStatus = document.getElementById('firebase-status');
+    const firebaseText = document.getElementById('firebase-text');
+    const currentMode = document.getElementById('current-mode');
+    const testResults = document.getElementById('test-results');
+    
+    function addResult(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `p-3 rounded-lg ${
+        type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+        type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+        type === 'warning' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+        'bg-blue-50 text-blue-700 border border-blue-200'
+      }`;
+      div.textContent = message;
+      testResults.appendChild(div);
+    }
+    
+    function checkCurrentMode() {
+      // Check if Firebase is available
+      if (typeof firebase !== 'undefined' && firebase.app) {
+        try {
+          const app = firebase.app();
+          if (app.name === '[DEFAULT]') {
+            currentMode.textContent = '🌐 Online Mode (Firebase)';
+            return 'online';
+          }
+        } catch (error) {
+          // Firebase not properly initialized
+        }
+      }
+      
+      currentMode.textContent = '💾 Offline Mode (localStorage)';
+      return 'offline';
+    }
+    
+    async function testFirebase() {
+      addResult('🧪 Testing Firebase connection...', 'info');
+      
+      try {
+        if (typeof firebase === 'undefined') {
+          addResult('❌ Firebase SDK not loaded', 'error');
+          return false;
+        }
+        
+        const db = firebase.firestore();
+        await db.collection('purchases').limit(1).get();
+        
+        addResult('✅ Firebase connection successful', 'success');
+        firebaseStatus.className = 'w-3 h-3 rounded-full bg-green-400';
+        firebaseText.textContent = 'Connected';
+        return true;
+      } catch (error) {
+        addResult(`❌ Firebase connection failed: ${error.message}`, 'error');
+        firebaseStatus.className = 'w-3 h-3 rounded-full bg-red-400';
+        firebaseText.textContent = 'Failed';
+        return false;
+      }
+    }
+    
+    async function testOffline() {
+      addResult('🧪 Testing offline mode...', 'info');
+      
+      try {
+        // Test localStorage
+        const testData = { test: true, timestamp: new Date().toISOString() };
+        localStorage.setItem('test_data', JSON.stringify(testData));
+        const retrieved = JSON.parse(localStorage.getItem('test_data'));
+        
+        if (retrieved.test) {
+          addResult('✅ Offline mode working', 'success');
+          localStorage.removeItem('test_data');
+          return true;
+        } else {
+          addResult('❌ Offline mode failed', 'error');
+          return false;
+        }
+      } catch (error) {
+        addResult(`❌ Offline mode failed: ${error.message}`, 'error');
+        return false;
+      }
+    }
+    
+    function enableFirebase() {
+      addResult('🔄 Switching to Firebase mode...', 'info');
+      addResult('⚠️ Please update firebase-config.js with real Firebase data', 'warning');
+      addResult('📝 Then refresh the page to use Firebase mode', 'info');
+    }
+    
+    function enableOffline() {
+      addResult('🔄 Switching to offline mode...', 'info');
+      addResult('📝 Rename firebase-config.js to firebase-config-backup.js', 'info');
+      addResult('📝 Rename firebase-config-offline.js to firebase-config.js', 'info');
+      addResult('🔄 Then refresh the page to use offline mode', 'info');
+    }
+    
+    // Event listeners
+    document.getElementById('test-firebase').addEventListener('click', testFirebase);
+    document.getElementById('test-offline').addEventListener('click', testOffline);
+    document.getElementById('enable-firebase').addEventListener('click', enableFirebase);
+    document.getElementById('enable-offline').addEventListener('click', enableOffline);
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      checkCurrentMode();
+      addResult('🔄 Firebase Mode Switcher loaded', 'info');
+      addResult('📝 Use this tool to switch between Firebase and offline modes', 'info');
+    });
+  </script>
+</body>
+</html>
