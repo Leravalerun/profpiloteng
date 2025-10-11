@@ -1,0 +1,62 @@
+# 🔒 Firestore Security Rules
+
+## Для тестирования (временно разрешить все)
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /purchases/{purchaseId} {
+      // Временно разрешить все для тестирования
+      allow read, write: if true;
+    }
+  }
+}
+
+## Для продакшена (строгие правила)
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /purchases/{purchaseId} {
+      // Разрешить чтение только авторизованным пользователям
+      allow read: if request.auth != null;
+      
+      // Разрешить запись только с валидацией
+      allow write: if request.auth != null 
+        && resource.data.userId == request.auth.token.email
+        && validatePurchaseData(request.resource.data);
+    }
+  }
+  
+  function validatePurchaseData(data) {
+    return data.keys().hasAll(['userId', 'simulator', 'amount', 'status'])
+      && data.userId is string
+      && data.simulator in ['ux-designer', 'lawyer']
+      && data.amount is number
+      && data.status in ['pending', 'confirmed', 'failed']
+      && data.amount >= 0
+      && data.amount <= 1000; // Максимальная сумма
+  }
+}
+
+## Для анонимного доступа (если нужен)
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /purchases/{purchaseId} {
+      // Разрешить чтение всем
+      allow read: if true;
+      
+      // Разрешить запись только с валидацией
+      allow write: if validatePurchaseData(request.resource.data);
+    }
+  }
+  
+  function validatePurchaseData(data) {
+    return data.keys().hasAll(['userId', 'simulator', 'amount', 'status'])
+      && data.userId is string
+      && data.simulator in ['ux-designer', 'lawyer']
+      && data.amount is number
+      && data.status in ['pending', 'confirmed', 'failed']
+      && data.amount >= 0
+      && data.amount <= 1000;
+  }
+}

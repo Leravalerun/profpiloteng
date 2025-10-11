@@ -1,118 +1,275 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Firebase Test — ProfPilot</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Test - ProfPilot</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .status-success { background-color: #10b981; }
+    .status-error { background-color: #ef4444; }
+    .status-warning { background-color: #f59e0b; }
+  </style>
 </head>
-<body class="bg-slate-50 p-8">
-  
-  <div class="max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-8">Firebase Test</h1>
-    
-    <div class="bg-white rounded-lg shadow p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Status</h2>
-      <div id="status" class="text-sm space-y-2">
-        <div>Loading...</div>
+<body class="bg-slate-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-slate-900">🔥 Firebase Test</h1>
+        <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">← Back to Home</a>
       </div>
     </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
     
-    <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-xl font-semibold mb-4">Test Firebase</h2>
-      <button id="test-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" disabled>
-        Test Firebase Connection
-      </button>
-      <div id="result" class="mt-4 text-sm"></div>
+    <!-- Connection Status -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-4">Connection Status</h2>
+      <div id="connection-status" class="space-y-2">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-gray-400" id="firebase-status"></div>
+          <span id="firebase-text">Checking Firebase...</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-gray-400" id="firestore-status"></div>
+          <span id="firestore-text">Checking Firestore...</span>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <!-- Test Operations -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-4">Test Operations</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Create Test Record -->
+        <div class="border border-slate-200 rounded-lg p-4">
+          <h3 class="font-medium text-slate-900 mb-2">Create Test Record</h3>
+          <p class="text-sm text-slate-600 mb-3">Create a test payment record in Firestore</p>
+          <button id="create-test" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            Create Test Record
+          </button>
+          <div id="create-result" class="mt-2 text-sm"></div>
+        </div>
+
+        <!-- Read Records -->
+        <div class="border border-slate-200 rounded-lg p-4">
+          <h3 class="font-medium text-slate-900 mb-2">Read Records</h3>
+          <p class="text-sm text-slate-600 mb-3">Read all payment records from Firestore</p>
+          <button id="read-records" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+            Read Records
+          </button>
+          <div id="read-result" class="mt-2 text-sm"></div>
+        </div>
+
+        <!-- Update Record -->
+        <div class="border border-slate-200 rounded-lg p-4">
+          <h3 class="font-medium text-slate-900 mb-2">Update Record</h3>
+          <p class="text-sm text-slate-600 mb-3">Update the last created record</p>
+          <button id="update-record" class="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition-colors">
+            Update Record
+          </button>
+          <div id="update-result" class="mt-2 text-sm"></div>
+        </div>
+
+        <!-- Delete Records -->
+        <div class="border border-slate-200 rounded-lg p-4">
+          <h3 class="font-medium text-slate-900 mb-2">Clean Up</h3>
+          <p class="text-sm text-slate-600 mb-3">Delete all test records</p>
+          <button id="delete-records" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+            Delete Test Records
+          </button>
+          <div id="delete-result" class="mt-2 text-sm"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Records Display -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-4">Records in Database</h2>
+      <div id="records-display" class="space-y-2">
+        <p class="text-slate-500">No records loaded yet. Click "Read Records" to load data.</p>
+      </div>
+    </div>
+
+  </main>
 
   <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
   <script src="firebase-init.js"></script>
 
   <script>
-    const statusDiv = document.getElementById('status');
-    const testBtn = document.getElementById('test-btn');
-    const resultDiv = document.getElementById('result');
-    
-    function addStatus(message, type = 'info') {
-      const div = document.createElement('div');
-      div.className = `p-2 rounded text-sm ${
-        type === 'error' ? 'bg-red-100 text-red-700' :
-        type === 'success' ? 'bg-green-100 text-green-700' :
-        type === 'warning' ? 'bg-yellow-100 text-yellow-700' :
-        'bg-blue-100 text-blue-700'
-      }`;
-      div.textContent = message;
-      statusDiv.appendChild(div);
-    }
-    
-    // Check Firebase status every second
-    let checkCount = 0;
-    const maxChecks = 30;
-    
-    function checkFirebaseStatus() {
-      checkCount++;
-      
-      addStatus(`Check ${checkCount}: Checking Firebase status...`);
-      
+    let lastCreatedId = null;
+
+    // Check connection status
+    function checkConnectionStatus() {
+      const firebaseStatus = document.getElementById('firebase-status');
+      const firebaseText = document.getElementById('firebase-text');
+      const firestoreStatus = document.getElementById('firestore-status');
+      const firestoreText = document.getElementById('firestore-text');
+
+      // Check Firebase
       if (typeof firebase !== 'undefined') {
-        addStatus('✅ Firebase SDK loaded', 'success');
-        
-        if (firebase.apps && firebase.apps.length > 0) {
-          addStatus('✅ Firebase app initialized', 'success');
-          
-          if (window.auth && window.db) {
-            addStatus('✅ Firebase services available', 'success');
-            testBtn.disabled = false;
-            addStatus('🎉 Firebase is ready!', 'success');
-            return;
-          } else {
-            addStatus('⚠️ Firebase app initialized but services not available', 'warning');
-          }
-        } else {
-          addStatus('⚠️ Firebase SDK loaded but app not initialized', 'warning');
-        }
+        firebaseStatus.className = 'w-3 h-3 rounded-full status-success';
+        firebaseText.textContent = 'Firebase SDK loaded';
       } else {
-        addStatus('❌ Firebase SDK not loaded', 'error');
+        firebaseStatus.className = 'w-3 h-3 rounded-full status-error';
+        firebaseText.textContent = 'Firebase SDK not loaded';
       }
-      
-      if (checkCount < maxChecks) {
-        setTimeout(checkFirebaseStatus, 1000);
+
+      // Check Firestore
+      if (typeof firebase !== 'undefined' && firebase.firestore) {
+        firestoreStatus.className = 'w-3 h-3 rounded-full status-success';
+        firestoreText.textContent = 'Firestore ready';
       } else {
-        addStatus('❌ Firebase failed to initialize after 30 seconds', 'error');
+        firestoreStatus.className = 'w-3 h-3 rounded-full status-error';
+        firestoreText.textContent = 'Firestore not available';
       }
     }
-    
-    // Start checking
-    setTimeout(checkFirebaseStatus, 1000);
-    
-    // Test button
-    testBtn.addEventListener('click', async () => {
+
+    // Create test record
+    document.getElementById('create-test').addEventListener('click', async function() {
+      const resultDiv = document.getElementById('create-result');
+      resultDiv.textContent = 'Creating...';
+      resultDiv.className = 'mt-2 text-sm text-blue-600';
+
       try {
-        resultDiv.innerHTML = '<div class="text-blue-600">Testing Firebase connection...</div>';
-        
-        // Test auth
-        const auth = firebase.auth();
-        resultDiv.innerHTML += '<div class="text-green-600">✅ Auth service working</div>';
-        
-        // Test firestore
         const db = firebase.firestore();
-        resultDiv.innerHTML += '<div class="text-green-600">✅ Firestore service working</div>';
+        const testData = {
+          userId: 'test@example.com',
+          simulator: 'ux-designer',
+          amount: 29.00,
+          currency: 'USD',
+          status: 'test',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          testRecord: true
+        };
+
+        const docRef = await db.collection('purchases').add(testData);
+        lastCreatedId = docRef.id;
         
-        // Test configuration
-        const config = getFirebaseConfig();
-        resultDiv.innerHTML += `<div class="text-green-600">✅ Config loaded: ${config.projectId}</div>`;
-        
-        resultDiv.innerHTML += '<div class="text-green-600 font-semibold">🎉 All Firebase services working correctly!</div>';
-        
+        resultDiv.textContent = `✅ Test record created with ID: ${docRef.id}`;
+        resultDiv.className = 'mt-2 text-sm text-green-600';
       } catch (error) {
-        resultDiv.innerHTML = `<div class="text-red-600">❌ Error: ${error.message}</div>`;
+        resultDiv.textContent = `❌ Error: ${error.message}`;
+        resultDiv.className = 'mt-2 text-sm text-red-600';
       }
+    });
+
+    // Read records
+    document.getElementById('read-records').addEventListener('click', async function() {
+      const resultDiv = document.getElementById('read-result');
+      const displayDiv = document.getElementById('records-display');
+      
+      resultDiv.textContent = 'Reading...';
+      resultDiv.className = 'mt-2 text-sm text-blue-600';
+
+      try {
+        const db = firebase.firestore();
+        const snapshot = await db.collection('purchases').orderBy('createdAt', 'desc').get();
+        
+        resultDiv.textContent = `✅ Found ${snapshot.size} records`;
+        resultDiv.className = 'mt-2 text-sm text-green-600';
+
+        // Display records
+        if (snapshot.empty) {
+          displayDiv.innerHTML = '<p class="text-slate-500">No records found.</p>';
+        } else {
+          let html = '';
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            html += `
+              <div class="border border-slate-200 rounded-lg p-3">
+                <div class="flex justify-between items-start mb-2">
+                  <span class="font-medium text-slate-900">${doc.id}</span>
+                  <span class="text-xs text-slate-500">${data.createdAt ? data.createdAt.toDate().toLocaleString() : 'No date'}</span>
+                </div>
+                <div class="text-sm text-slate-600">
+                  <div>User: ${data.userId}</div>
+                  <div>Simulator: ${data.simulator}</div>
+                  <div>Amount: $${data.amount}</div>
+                  <div>Status: ${data.status}</div>
+                  ${data.testRecord ? '<div class="text-yellow-600 font-medium">Test Record</div>' : ''}
+                </div>
+              </div>
+            `;
+          });
+          displayDiv.innerHTML = html;
+        }
+      } catch (error) {
+        resultDiv.textContent = `❌ Error: ${error.message}`;
+        resultDiv.className = 'mt-2 text-sm text-red-600';
+        displayDiv.innerHTML = '<p class="text-red-600">Error loading records.</p>';
+      }
+    });
+
+    // Update record
+    document.getElementById('update-record').addEventListener('click', async function() {
+      const resultDiv = document.getElementById('update-result');
+      
+      if (!lastCreatedId) {
+        resultDiv.textContent = '❌ No record to update. Create a record first.';
+        resultDiv.className = 'mt-2 text-sm text-red-600';
+        return;
+      }
+
+      resultDiv.textContent = 'Updating...';
+      resultDiv.className = 'mt-2 text-sm text-blue-600';
+
+      try {
+        const db = firebase.firestore();
+        await db.collection('purchases').doc(lastCreatedId).update({
+          status: 'confirmed',
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        resultDiv.textContent = '✅ Record updated successfully';
+        resultDiv.className = 'mt-2 text-sm text-green-600';
+      } catch (error) {
+        resultDiv.textContent = `❌ Error: ${error.message}`;
+        resultDiv.className = 'mt-2 text-sm text-red-600';
+      }
+    });
+
+    // Delete records
+    document.getElementById('delete-records').addEventListener('click', async function() {
+      const resultDiv = document.getElementById('delete-result');
+      resultDiv.textContent = 'Deleting...';
+      resultDiv.className = 'mt-2 text-sm text-blue-600';
+
+      try {
+        const db = firebase.firestore();
+        const snapshot = await db.collection('purchases').where('testRecord', '==', true).get();
+        
+        const batch = db.batch();
+        snapshot.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        
+        await batch.commit();
+        
+        resultDiv.textContent = `✅ Deleted ${snapshot.size} test records`;
+        resultDiv.className = 'mt-2 text-sm text-green-600';
+        
+        // Clear display
+        document.getElementById('records-display').innerHTML = '<p class="text-slate-500">No records loaded yet. Click "Read Records" to load data.</p>';
+      } catch (error) {
+        resultDiv.textContent = `❌ Error: ${error.message}`;
+        resultDiv.className = 'mt-2 text-sm text-red-600';
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      checkConnectionStatus();
+      
+      // Check again after Firebase loads
+      setTimeout(checkConnectionStatus, 2000);
     });
   </script>
 </body>
