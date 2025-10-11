@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase Stability Test - ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h1 class="text-2xl font-bold text-slate-900 mb-6">🧪 Firebase Stability Test</h1>
+      
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900 mb-3">Тест стабильности Firebase:</h2>
+        
+        <div class="space-y-4">
+          <button id="run-stability-test" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            🚀 Запустить тест стабильности
+          </button>
+          
+          <button id="clear-cache" class="bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition-colors">
+            🗑️ Очистить кэш
+          </button>
+          
+          <button id="test-simple" class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+            ✅ Простой тест
+          </button>
+        </div>
+      </div>
+      
+      <div id="results" class="space-y-2">
+        <!-- Результаты тестов -->
+      </div>
+      
+      <div class="mt-6 p-4 bg-slate-100 rounded-lg">
+        <h3 class="font-semibold text-slate-900 mb-2">Статус:</h3>
+        <div id="status" class="text-slate-600">
+          Нажмите "Запустить тест стабильности" для проверки
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const resultsDiv = document.getElementById('results');
+    const statusDiv = document.getElementById('status');
+    
+    function addResult(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `p-3 rounded-lg ${
+        type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+        type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+        type === 'warning' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+        'bg-blue-50 text-blue-700 border border-blue-200'
+      }`;
+      div.textContent = message;
+      resultsDiv.appendChild(div);
+    }
+    
+    // Простой тест
+    document.getElementById('test-simple').addEventListener('click', async function() {
+      addResult('🧪 Простой тест Firebase...', 'info');
+      
+      try {
+        if (typeof firebase === 'undefined') {
+          addResult('❌ Firebase не загружен', 'error');
+          return;
+        }
+        
+        const db = firebase.firestore();
+        const snapshot = await db.collection('purchases').limit(1).get();
+        addResult('✅ Простой тест прошел успешно', 'success');
+        
+      } catch (error) {
+        addResult(`❌ Простой тест не прошел: ${error.message}`, 'error');
+      }
+    });
+    
+    // Тест стабильности
+    document.getElementById('run-stability-test').addEventListener('click', async function() {
+      addResult('🚀 Запускаем тест стабильности...', 'info');
+      
+      let successCount = 0;
+      let errorCount = 0;
+      const totalTests = 10;
+      
+      for (let i = 1; i <= totalTests; i++) {
+        try {
+          const db = firebase.firestore();
+          await db.collection('purchases').limit(1).get();
+          addResult(`✅ Тест ${i}/${totalTests} прошел`, 'success');
+          successCount++;
+        } catch (error) {
+          addResult(`❌ Тест ${i}/${totalTests} не прошел: ${error.message}`, 'error');
+          errorCount++;
+        }
+        
+        // Небольшая пауза между тестами
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      
+      const successRate = (successCount / totalTests) * 100;
+      addResult(`📊 Результат: ${successCount}/${totalTests} тестов прошли (${successRate.toFixed(1)}%)`, 'info');
+      
+      if (successRate >= 90) {
+        statusDiv.innerHTML = '✅ <strong>Firebase работает стабильно!</strong><br>Система готова к использованию.';
+      } else if (successRate >= 50) {
+        statusDiv.innerHTML = '⚠️ <strong>Firebase работает нестабильно.</strong><br>Рекомендуется очистить кэш и переопубликовать правила.';
+      } else {
+        statusDiv.innerHTML = '❌ <strong>Firebase не работает.</strong><br>Нужно исправить правила в Firebase Console.';
+      }
+    });
+    
+    // Очистка кэша
+    document.getElementById('clear-cache').addEventListener('click', function() {
+      addResult('🗑️ Очищаем кэш браузера...', 'info');
+      addResult('ℹ️ Нажмите Ctrl+Shift+R (или Cmd+Shift+R на Mac) для принудительного обновления', 'warning');
+      addResult('ℹ️ Или закройте и откройте браузер заново', 'info');
+      
+      // Попытка очистить кэш программно
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => {
+            caches.delete(name);
+          });
+          addResult('✅ Кэш очищен программно', 'success');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
