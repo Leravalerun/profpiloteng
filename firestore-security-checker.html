@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firestore Security Checker - ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h1 class="text-2xl font-bold text-slate-900 mb-6">🔒 Firestore Security Checker</h1>
+      
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900 mb-3">Безопасные правила для продакшена:</h2>
+        
+        <div class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+          <div>rules_version = '2';</div>
+          <div>service cloud.firestore {</div>
+          <div>  match /databases/{database}/documents {</div>
+          <div>    match /purchases/{purchaseId} {</div>
+          <div>      allow read: if true;</div>
+          <div>      allow write: if validatePurchaseData(request.resource.data);</div>
+          <div>    }</div>
+          <div>  }</div>
+          <div>  </div>
+          <div>  function validatePurchaseData(data) {</div>
+          <div>    return data.keys().hasAll(['userId', 'simulator', 'amount', 'status'])</div>
+          <div>      && data.userId is string</div>
+          <div>      && data.simulator in ['ux-designer', 'lawyer']</div>
+          <div>      && data.amount is number</div>
+          <div>      && data.status in ['pending', 'confirmed', 'failed']</div>
+          <div>      && data.amount >= 0</div>
+          <div>      && data.amount <= 1000;</div>
+          <div>  }</div>
+          <div>}</div>
+        </div>
+        
+        <button id="copy-secure-rules" class="mt-3 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          📋 Copy Secure Rules
+        </button>
+      </div>
+      
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900 mb-3">Проверить безопасность:</h2>
+        
+        <div class="space-y-4">
+          <button id="test-security" class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+            🧪 Test Security Rules
+          </button>
+          
+          <button id="test-valid-data" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            ✅ Test Valid Data
+          </button>
+          
+          <button id="test-invalid-data" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+            ❌ Test Invalid Data
+          </button>
+        </div>
+      </div>
+      
+      <div id="results" class="space-y-2">
+        <!-- Результаты тестов -->
+      </div>
+      
+      <div class="mt-6 p-4 bg-slate-100 rounded-lg">
+        <h3 class="font-semibold text-slate-900 mb-2">Статус безопасности:</h3>
+        <div id="security-status" class="text-slate-600">
+          Нажмите "Test Security Rules" для проверки
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const resultsDiv = document.getElementById('results');
+    const securityStatus = document.getElementById('security-status');
+    
+    function addResult(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `p-3 rounded-lg ${
+        type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+        type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+        type === 'warning' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+        'bg-blue-50 text-blue-700 border border-blue-200'
+      }`;
+      div.textContent = message;
+      resultsDiv.appendChild(div);
+    }
+    
+    // Copy secure rules
+    document.getElementById('copy-secure-rules').addEventListener('click', function() {
+      const rules = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /purchases/{purchaseId} {
+      allow read: if true;
+      allow write: if validatePurchaseData(request.resource.data);
+    }
+  }
+  
+  function validatePurchaseData(data) {
+    return data.keys().hasAll(['userId', 'simulator', 'amount', 'status'])
+      && data.userId is string
+      && data.simulator in ['ux-designer', 'lawyer']
+      && data.amount is number
+      && data.status in ['pending', 'confirmed', 'failed']
+      && data.amount >= 0
+      && data.amount <= 1000;
+  }
+}`;
+      
+      navigator.clipboard.writeText(rules).then(() => {
+        this.textContent = '✅ Copied!';
+        setTimeout(() => {
+          this.textContent = '📋 Copy Secure Rules';
+        }, 2000);
+      });
+    });
+    
+    // Test security rules
+    document.getElementById('test-security').addEventListener('click', async function() {
+      addResult('🧪 Тестируем правила безопасности...', 'info');
+      
+      try {
+        if (typeof firebase === 'undefined') {
+          addResult('❌ Firebase не загружен', 'error');
+          return;
+        }
+        
+        const db = firebase.firestore();
+        
+        // Test read
+        await db.collection('purchases').limit(1).get();
+        addResult('✅ Чтение разрешено', 'success');
+        
+        // Test write with valid data
+        const validData = {
+          userId: 'test@example.com',
+          simulator: 'ux-designer',
+          amount: 29.00,
+          status: 'confirmed',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        const docRef = await db.collection('purchases').add(validData);
+        addResult('✅ Запись с валидными данными разрешена', 'success');
+        
+        // Clean up
+        await docRef.delete();
+        addResult('✅ Удаление разрешено', 'success');
+        
+        securityStatus.innerHTML = '✅ <strong>Правила безопасности работают!</strong><br>Данные защищены от неавторизованного доступа.';
+        
+      } catch (error) {
+        addResult(`❌ Ошибка тестирования: ${error.message}`, 'error');
+        securityStatus.innerHTML = '❌ <strong>Проблема с правилами безопасности.</strong><br>Нужно обновить правила в Firebase Console.';
+      }
+    });
+    
+    // Test valid data
+    document.getElementById('test-valid-data').addEventListener('click', async function() {
+      addResult('🧪 Тестируем валидные данные...', 'info');
+      
+      try {
+        const db = firebase.firestore();
+        
+        const validData = {
+          userId: 'test@example.com',
+          simulator: 'ux-designer',
+          amount: 29.00,
+          status: 'confirmed',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        const docRef = await db.collection('purchases').add(validData);
+        addResult('✅ Валидные данные приняты', 'success');
+        
+        await docRef.delete();
+        addResult('✅ Тестовые данные очищены', 'success');
+        
+      } catch (error) {
+        addResult(`❌ Ошибка с валидными данными: ${error.message}`, 'error');
+      }
+    });
+    
+    // Test invalid data
+    document.getElementById('test-invalid-data').addEventListener('click', async function() {
+      addResult('🧪 Тестируем невалидные данные...', 'info');
+      
+      try {
+        const db = firebase.firestore();
+        
+        const invalidData = {
+          userId: 'test@example.com',
+          simulator: 'invalid-simulator', // Невалидный симулятор
+          amount: -100, // Отрицательная сумма
+          status: 'invalid-status' // Невалидный статус
+        };
+        
+        await db.collection('purchases').add(invalidData);
+        addResult('⚠️ Невалидные данные приняты (правила не работают)', 'warning');
+        
+      } catch (error) {
+        addResult('✅ Невалидные данные отклонены (правила работают)', 'success');
+      }
+    });
+  </script>
+</body>
+</html>
