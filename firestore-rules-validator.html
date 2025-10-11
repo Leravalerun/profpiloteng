@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firestore Rules Validator - ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h1 class="text-2xl font-bold text-slate-900 mb-6">🔍 Firestore Rules Validator</h1>
+      
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900 mb-3">Copy and paste these rules into Firebase Console:</h2>
+        
+        <div class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+          <div>rules_version = '2';</div>
+          <div>service cloud.firestore {</div>
+          <div>  match /databases/{database}/documents {</div>
+          <div>    match /{document=**} {</div>
+          <div>      allow read, write: if true;</div>
+          <div>    }</div>
+          <div>  }</div>
+          <div>}</div>
+        </div>
+        
+        <button id="copy-rules" class="mt-3 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          📋 Copy Rules
+        </button>
+      </div>
+      
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900 mb-3">Step-by-step instructions:</h2>
+        
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+            <div>
+              <div class="font-medium">Go to Firebase Console</div>
+              <div class="text-sm text-slate-600">Open <a href="https://console.firebase.google.com/" target="_blank" class="text-blue-600 hover:underline">console.firebase.google.com</a></div>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+            <div>
+              <div class="font-medium">Select your project</div>
+              <div class="text-sm text-slate-600">Choose "profpiloteng" from the project list</div>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+            <div>
+              <div class="font-medium">Go to Firestore Database</div>
+              <div class="text-sm text-slate-600">Click on "Firestore Database" in the left menu</div>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+            <div>
+              <div class="font-medium">Click on "Rules" tab</div>
+              <div class="text-sm text-slate-600">You'll see the rules editor</div>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
+            <div>
+              <div class="font-medium">Delete all existing rules</div>
+              <div class="text-sm text-slate-600">Clear the entire rules editor</div>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
+            <div>
+              <div class="font-medium">Paste the new rules</div>
+              <div class="text-sm text-slate-600">Copy and paste the rules from above</div>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">7</div>
+            <div>
+              <div class="font-medium">Click "Publish"</div>
+              <div class="text-sm text-slate-600">Wait for "Rules published successfully" message</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-slate-900 mb-3">Test your rules:</h2>
+        <button id="test-rules" class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+          🧪 Test Rules
+        </button>
+        <div id="test-result" class="mt-3"></div>
+      </div>
+      
+      <div class="text-sm text-slate-600">
+        <p><strong>Note:</strong> These rules allow all read and write operations. This is safe for testing but should be restricted for production.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Copy rules to clipboard
+    document.getElementById('copy-rules').addEventListener('click', function() {
+      const rules = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}`;
+      
+      navigator.clipboard.writeText(rules).then(() => {
+        this.textContent = '✅ Copied!';
+        setTimeout(() => {
+          this.textContent = '📋 Copy Rules';
+        }, 2000);
+      });
+    });
+    
+    // Test rules
+    document.getElementById('test-rules').addEventListener('click', async function() {
+      const resultDiv = document.getElementById('test-result');
+      resultDiv.innerHTML = '<div class="text-blue-600">🧪 Testing rules...</div>';
+      
+      try {
+        // Check if Firebase is available
+        if (typeof firebase === 'undefined') {
+          resultDiv.innerHTML = '<div class="text-red-600">❌ Firebase not loaded. Please refresh the page.</div>';
+          return;
+        }
+        
+        const db = firebase.firestore();
+        
+        // Test read
+        await db.collection('purchases').limit(1).get();
+        
+        // Test write
+        const testData = {
+          test: true,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        const docRef = await db.collection('purchases').add(testData);
+        
+        // Test delete
+        await docRef.delete();
+        
+        resultDiv.innerHTML = '<div class="text-green-600">✅ Rules are working correctly!</div>';
+        
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="text-red-600">❌ Rules test failed: ${error.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
