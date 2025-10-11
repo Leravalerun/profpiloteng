@@ -52,9 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
     window.firebaseDB = db;
     
     // Тестируем подключение (асинхронно, без блокировки)
-    setTimeout(() => {
-      testFirebaseConnection();
-    }, 1000);
+    // Временно отключено для устранения ошибки
+    // setTimeout(() => {
+    //   testFirebaseConnection();
+    // }, 1000);
     
     console.log('✅ Firebase initialization completed');
     

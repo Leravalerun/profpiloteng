@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Firestore Rules - ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="max-w-2xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <h1 class="text-2xl font-bold text-slate-900 mb-6">🔍 Check Firestore Rules</h1>
+      
+      <div id="status" class="mb-6">
+        <div class="text-lg font-medium text-slate-700">Status: <span id="status-text" class="text-blue-600">Checking...</span></div>
+      </div>
+      
+      <div id="results" class="space-y-4">
+        <!-- Results will be populated here -->
+      </div>
+      
+      <div class="mt-6">
+        <button id="test-btn" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+          Test Again
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const statusText = document.getElementById('status-text');
+    const resultsDiv = document.getElementById('results');
+    
+    function addResult(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `p-3 rounded-lg ${
+        type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
+        type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+        type === 'warning' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+        'bg-blue-50 text-blue-700 border border-blue-200'
+      }`;
+      div.textContent = message;
+      resultsDiv.appendChild(div);
+    }
+    
+    async function testFirestore() {
+      resultsDiv.innerHTML = '';
+      statusText.textContent = 'Testing...';
+      statusText.className = 'text-blue-600';
+      
+      try {
+        // Check Firebase
+        if (typeof firebase === 'undefined') {
+          addResult('❌ Firebase SDK not loaded', 'error');
+          statusText.textContent = 'Failed';
+          statusText.className = 'text-red-600';
+          return;
+        }
+        addResult('✅ Firebase SDK loaded', 'success');
+        
+        // Check config
+        if (typeof window.firebaseConfig === 'undefined') {
+          addResult('❌ Firebase config not found', 'error');
+          statusText.textContent = 'Failed';
+          statusText.className = 'text-red-600';
+          return;
+        }
+        addResult('✅ Firebase config found', 'success');
+        
+        // Test Firestore
+        const db = firebase.firestore();
+        addResult('✅ Firestore instance created', 'success');
+        
+        // Test read
+        try {
+          await db.collection('purchases').limit(1).get();
+          addResult('✅ Read permissions: OK', 'success');
+        } catch (error) {
+          addResult(`❌ Read permissions failed: ${error.message}`, 'error');
+          statusText.textContent = 'Failed';
+          statusText.className = 'text-red-600';
+          return;
+        }
+        
+        // Test write
+        try {
+          const testData = {
+            test: true,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          const docRef = await db.collection('purchases').add(testData);
+          addResult('✅ Write permissions: OK', 'success');
+          
+          // Clean up
+          await docRef.delete();
+          addResult('✅ Delete permissions: OK', 'success');
+        } catch (error) {
+          addResult(`❌ Write permissions failed: ${error.message}`, 'error');
+          statusText.textContent = 'Failed';
+          statusText.className = 'text-red-600';
+          return;
+        }
+        
+        statusText.textContent = 'Success!';
+        statusText.className = 'text-green-600';
+        addResult('🎉 All tests passed! Firestore rules are working correctly.', 'success');
+        
+      } catch (error) {
+        addResult(`❌ Test failed: ${error.message}`, 'error');
+        statusText.textContent = 'Failed';
+        statusText.className = 'text-red-600';
+      }
+    }
+    
+    // Test button
+    document.getElementById('test-btn').addEventListener('click', testFirestore);
+    
+    // Auto-run on load
+    document.addEventListener('DOMContentLoaded', testFirestore);
+  </script>
+</body>
+</html>
