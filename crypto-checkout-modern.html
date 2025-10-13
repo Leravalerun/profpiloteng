@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Payment — ProfPilot</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .crypto-option {
+      transition: all 0.2s ease;
+    }
+    .crypto-option:hover {
+      transform: scale(1.02);
+    }
+    .crypto-option.selected {
+      border-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-sm">P</span>
+          </div>
+          <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+        </a>
+        <a href="/" class="text-slate-600 hover:text-slate-900 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Title Section -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-slate-900 mb-4">Crypto Payment</h1>
+      <p class="text-xl text-slate-600">Secure, fast, and private payment with cryptocurrency</p>
+    </div>
+
+    <!-- Simulator Info -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mb-6 card-hover">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900" id="simulator-title">Copywriter / Creator Simulator</h2>
+          <p class="text-slate-600 mt-1">3-day immersive experience</p>
+        </div>
+        <div class="text-right">
+          <div class="text-3xl font-bold text-slate-900" id="simulator-price">$29.00</div>
+          <div class="text-sm text-slate-500">One-time payment</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Promo Code -->
+    <div class="bg-white rounded-3xl shadow-lg p-6 mb-6 card-hover">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="text-2xl">🎁</span>
+          <span class="font-semibold text-slate-900">Have a promo code?</span>
+        </div>
+        <div class="flex space-x-3">
+          <input type="text" id="promo-input" placeholder="Enter code" 
+                 class="px-4 py-2 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <button class="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold" id="apply-promo">
+            Apply
+          </button>
+        </div>
+      </div>
+      <div id="promo-message" class="hidden mt-4 p-4 rounded-xl"></div>
+    </div>
+
+    <!-- Email Collection -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mb-6 card-hover" id="email-collection">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-900 mb-2">Get Access to Your Simulator</h3>
+        <p class="text-slate-600">Enter your email to receive access after payment confirmation</p>
+      </div>
+      
+      <form id="email-form" class="max-w-md mx-auto">
+        <div class="mb-6">
+          <label for="user-email" class="block text-sm font-semibold text-slate-700 mb-2">Your email address</label>
+          <input type="email" id="user-email" name="email" required placeholder="you@example.com"
+                 class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+          <p class="text-sm text-slate-500 mt-2">We'll send you access details after payment confirmation</p>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors text-lg">
+          Continue to Payment
+        </button>
+      </form>
+    </div>
+
+    <!-- Crypto Options -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mb-6 card-hover hidden" id="crypto-section">
+      <h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Choose Cryptocurrency</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="crypto-options">
+        <!-- Crypto options will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Payment Details -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mb-6 card-hover hidden" id="payment-details">
+      <!-- Security Notice -->
+      <div class="bg-green-50 border border-green-200 rounded-2xl p-6 mb-6">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="text-2xl">🔒</span>
+          <h4 class="text-lg font-semibold text-green-800">Your Payment is Secure</h4>
+        </div>
+        <p class="text-green-700">Blockchain technology ensures your transaction is safe, transparent, and irreversible.</p>
+      </div>
+
+      <!-- Payment Info -->
+      <div class="bg-slate-50 rounded-2xl p-6 mb-6">
+        <h4 class="text-lg font-semibold text-slate-900 mb-4">Payment Details</h4>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-slate-600">Amount:</span>
+            <span class="font-semibold text-slate-900" id="crypto-amount">29.00 USDT</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-600">Network:</span>
+            <span class="font-semibold text-slate-900" id="crypto-network">TRC20</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-600">Exchange Rate:</span>
+            <span class="font-semibold text-slate-900" id="exchange-rate">1 USDT = $1.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wallet Address -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-slate-700 mb-2">Send payment to this address:</label>
+        <div class="flex space-x-3">
+          <input type="text" id="wallet-address" readonly
+                 class="flex-1 px-4 py-3 border border-slate-300 rounded-xl bg-slate-50 font-mono text-sm">
+          <button class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold" id="copy-address">
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Instructions -->
+      <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+        <h4 class="text-lg font-semibold text-blue-800 mb-3">📱 How to Pay</h4>
+        <div class="space-y-2 text-blue-700">
+          <p>1. <strong>Copy the address</strong> above</p>
+          <p>2. <strong>Open your wallet</strong> (MetaMask, Trust Wallet, etc.)</p>
+          <p>3. <strong>Send exactly</strong> <span id="amount-display">29.00 USDT</span></p>
+          <p>4. <strong>Use TRC20 network</strong> (usually takes 1-3 minutes)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <button class="px-8 py-3 bg-slate-600 text-white rounded-xl hover:bg-slate-700 transition-colors font-semibold hidden" id="check-payment">
+        Check Payment Status
+      </button>
+      <button class="px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-semibold hidden" id="continue-simulator">
+        Continue to Simulator
+      </button>
+    </div>
+
+    <!-- Free Access Success -->
+    <div class="bg-white rounded-3xl shadow-lg p-8 mb-6 card-hover hidden" id="free-access">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-900 mb-2">Free Access Granted!</h3>
+        <p class="text-slate-600 mb-6">Your promo code has been applied successfully.</p>
+        <button class="px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-semibold" id="continue-free">
+          Continue to Simulator
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-12 text-slate-500">
+      <p>📖 <a href="/crypto-faq.html" class="text-blue-600 hover:text-blue-700">Crypto Payment FAQ</a> • 💬 <a href="mailto:careers.inspirante@gmail.com" class="text-blue-600 hover:text-blue-700">Need Help? Contact Support</a></p>
+      <p class="mt-2">© ProfPilot. All rights reserved.</p>
+    </div>
+  </main>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+  
+  <!-- Payment Tracker -->
+  <script src="payment-tracker.js"></script>
+
+  <script>
+    // Game State
+    let gameState = {
+      currentPrice: 29.00,
+      originalPrice: 29.00,
+      currentPromoCode: null,
+      userEmail: '',
+      selectedCrypto: null
+    };
+
+    // Simulator data
+    const simulators = {
+      'ux-designer': {
+        title: 'UX Designer Simulator',
+        price: 29.00
+      },
+      'lawyer': {
+        title: 'Corporate Lawyer Simulator',
+        price: 29.00
+      },
+      'copywriter': {
+        title: 'Copywriter / Creator Simulator',
+        price: 29.00
+      }
+    };
+
+    // Promo codes
+    const promoCodes = {
+      'checkppff': {
+        discount: 100,
+        description: 'Free access to all simulators'
+      }
+    };
+
+    // Crypto configuration
+    const CRYPTO_CONFIG = {
+      currencies: {
+        'USDT': {
+          name: 'Tether',
+          symbol: 'USDT',
+          network: 'TRC20',
+          icon: '💎'
+        },
+        'USDC': {
+          name: 'USD Coin',
+          symbol: 'USDC',
+          network: 'ERC20',
+          icon: '🪙'
+        },
+        'BTC': {
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          network: 'Bitcoin',
+          icon: '₿'
+        },
+        'ETH': {
+          name: 'Ethereum',
+          symbol: 'ETH',
+          network: 'Ethereum',
+          icon: 'Ξ'
+        }
+      },
+      addresses: {
+        'USDT': 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
+        'USDC': '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+        'BTC': '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+        'ETH': '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'
+      }
+    };
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      initializePage();
+    });
+
+    function initializePage() {
+      // Get simulator from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulatorKey = urlParams.get('role') || 'copywriter';
+      
+      // Update simulator info
+      const simulator = simulators[simulatorKey];
+      if (simulator) {
+        document.getElementById('simulator-title').textContent = simulator.title;
+        document.getElementById('simulator-price').textContent = `$${simulator.price.toFixed(2)}`;
+        gameState.currentPrice = simulator.price;
+        gameState.originalPrice = simulator.price;
+      }
+
+      // Initialize promo code
+      initializePromoCode();
+      
+      // Initialize crypto options
+      initializeCryptoOptions();
+      
+      // Initialize email form
+      initializeEmailForm();
+    }
+
+    function initializePromoCode() {
+      const applyButton = document.getElementById('apply-promo');
+      const promoInput = document.getElementById('promo-input');
+      const promoMessage = document.getElementById('promo-message');
+
+      applyButton.addEventListener('click', function() {
+        const code = promoInput.value.trim().toLowerCase();
+        
+        if (promoCodes[code]) {
+          const promo = promoCodes[code];
+          gameState.currentPromoCode = code;
+          gameState.currentPrice = gameState.originalPrice * (1 - promo.discount / 100);
+          
+          // Update price display
+          document.getElementById('simulator-price').textContent = `$${gameState.currentPrice.toFixed(2)}`;
+          
+          // Show success message
+          promoMessage.className = 'mt-4 p-4 rounded-xl bg-green-100 text-green-800 border border-green-200';
+          promoMessage.textContent = `✅ ${promo.description}`;
+          promoMessage.classList.remove('hidden');
+          
+          // If free access, show free access section
+          if (promo.discount === 100) {
+            setTimeout(() => {
+              showFreeAccess();
+            }, 1000);
+          }
+        } else {
+          promoMessage.className = 'mt-4 p-4 rounded-xl bg-red-100 text-red-800 border border-red-200';
+          promoMessage.textContent = '❌ Invalid promo code';
+          promoMessage.classList.remove('hidden');
+        }
+      });
+    }
+
+    function initializeCryptoOptions() {
+      const cryptoOptions = document.getElementById('crypto-options');
+      
+      Object.entries(CRYPTO_CONFIG.currencies).forEach(([key, crypto]) => {
+        const option = document.createElement('div');
+        option.className = 'crypto-option p-4 border-2 border-slate-200 rounded-2xl text-center cursor-pointer';
+        option.innerHTML = `
+          <div class="text-3xl mb-2">${crypto.icon}</div>
+          <div class="font-semibold text-slate-900">${crypto.symbol}</div>
+          <div class="text-sm text-slate-600">${crypto.name}</div>
+        `;
+        
+        option.addEventListener('click', () => selectCrypto(key));
+        cryptoOptions.appendChild(option);
+      });
+    }
+
+    function selectCrypto(cryptoKey) {
+      // Remove previous selection
+      document.querySelectorAll('.crypto-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selection to clicked option
+      event.currentTarget.classList.add('selected');
+      
+      gameState.selectedCrypto = cryptoKey;
+      showPaymentDetails();
+    }
+
+    function showPaymentDetails() {
+      if (!gameState.selectedCrypto) return;
+      
+      const crypto = CRYPTO_CONFIG.currencies[gameState.selectedCrypto];
+      const address = CRYPTO_CONFIG.addresses[gameState.selectedCrypto];
+      
+      // Update payment details
+      document.getElementById('crypto-amount').textContent = `${gameState.currentPrice.toFixed(2)} ${crypto.symbol}`;
+      document.getElementById('crypto-network').textContent = crypto.network;
+      document.getElementById('exchange-rate').textContent = `1 ${crypto.symbol} = $1.00`;
+      document.getElementById('wallet-address').value = address;
+      document.getElementById('amount-display').textContent = `${gameState.currentPrice.toFixed(2)} ${crypto.symbol}`;
+      
+      // Show payment details
+      document.getElementById('payment-details').classList.remove('hidden');
+      document.getElementById('check-payment').classList.remove('hidden');
+    }
+
+    function initializeEmailForm() {
+      const emailForm = document.getElementById('email-form');
+      
+      emailForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('user-email').value.trim();
+        if (!email) return;
+        
+        gameState.userEmail = email;
+        
+        // Check if this is free access
+        if (gameState.currentPromoCode && promoCodes[gameState.currentPromoCode] && promoCodes[gameState.currentPromoCode].discount === 100) {
+          showFreeAccess();
+        } else {
+          // Show crypto options
+          document.getElementById('email-collection').classList.add('hidden');
+          document.getElementById('crypto-section').classList.remove('hidden');
+          
+          // Create payment record
+          createPaymentRecord();
+        }
+      });
+    }
+
+    function showFreeAccess() {
+      document.getElementById('email-collection').classList.add('hidden');
+      document.getElementById('crypto-section').classList.add('hidden');
+      document.getElementById('payment-details').classList.add('hidden');
+      document.getElementById('free-access').classList.remove('hidden');
+      
+      // Create payment record for free access
+      createPaymentRecord();
+    }
+
+    async function createPaymentRecord() {
+      if (!gameState.userEmail) return;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'copywriter';
+      
+      const paymentData = {
+        userEmail: gameState.userEmail,
+        simulator: simulator,
+        amount: gameState.currentPrice,
+        currency: 'USD',
+        originalPrice: gameState.originalPrice,
+        discount: gameState.originalPrice - gameState.currentPrice,
+        promoCode: gameState.currentPromoCode,
+        freeAccess: gameState.currentPrice === 0
+      };
+
+      try {
+        if (window.PaymentTracker) {
+          const tracker = new window.PaymentTracker();
+          await tracker.recordPayment(paymentData);
+        }
+      } catch (error) {
+        console.error('Error creating payment record:', error);
+      }
+    }
+
+    // Copy address functionality
+    document.getElementById('copy-address').addEventListener('click', function() {
+      const address = document.getElementById('wallet-address').value;
+      navigator.clipboard.writeText(address).then(() => {
+        const button = document.getElementById('copy-address');
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        button.classList.add('bg-green-600');
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('bg-green-600');
+        }, 2000);
+      });
+    });
+
+    // Continue to simulator buttons
+    document.getElementById('continue-simulator').addEventListener('click', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'copywriter';
+      
+      if (simulator === 'copywriter') {
+        window.location.href = '/copywriter-simulator.html';
+      } else if (simulator === 'ux-designer') {
+        window.location.href = '/ux-sim-simple.html';
+      } else if (simulator === 'lawyer') {
+        window.location.href = '/lawyer-simulator.html';
+      } else {
+        window.location.href = '/dashboard.html';
+      }
+    });
+
+    document.getElementById('continue-free').addEventListener('click', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'copywriter';
+      
+      if (simulator === 'copywriter') {
+        window.location.href = '/copywriter-simulator.html';
+      } else if (simulator === 'ux-designer') {
+        window.location.href = '/ux-sim-simple.html';
+      } else if (simulator === 'lawyer') {
+        window.location.href = '/lawyer-simulator.html';
+      } else {
+        window.location.href = '/dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>
