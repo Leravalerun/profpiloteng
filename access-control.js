@@ -44,6 +44,25 @@ class AccessControl {
       await this.initialize();
     }
 
+    // Проверяем тестовые данные из localStorage
+    const testPaymentData = localStorage.getItem('testPaymentData');
+    if (testPaymentData) {
+      try {
+        const testData = JSON.parse(testPaymentData);
+        if (testData.simulator === simulator && testData.accessGranted) {
+          console.log('✅ Test access granted for:', simulator);
+          return {
+            hasAccess: true,
+            source: 'test',
+            email: testData.email,
+            paymentId: testData.paymentId
+          };
+        }
+      } catch (error) {
+        console.error('❌ Error parsing test payment data:', error);
+      }
+    }
+
     // Сначала проверяем кэш
     const cacheKey = `${simulator}_${userEmail || 'anonymous'}`;
     if (this.accessCache.has(cacheKey)) {

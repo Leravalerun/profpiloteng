@@ -968,9 +968,43 @@
     }
 
     function showFreeAccess() {
-      document.getElementById('payment-details').classList.remove('show');
+      // Check if email is collected
+      if (!userEmail) {
+        // Show email collection form for free access
+        showEmailFormForFreeAccess();
+      } else {
+        // Email already collected, show free access
+        document.getElementById('payment-details').classList.remove('show');
+        document.getElementById('free-access').classList.add('show');
+        console.log('✅ Free access granted');
+      }
+    }
+
+    function showEmailFormForFreeAccess() {
+      // Hide crypto options and show email form
+      document.getElementById('crypto-options').parentElement.classList.add('hidden');
+      document.getElementById('email-collection').classList.remove('hidden');
+      
+      // Update the form title and description for free access
+      document.querySelector('#email-collection h3').textContent = '📧 Get Free Access to Your Simulator';
+      document.querySelector('#email-collection p').textContent = 'Enter your email to receive free access to the simulator.';
+      
+      // Update the button text
+      const submitButton = document.querySelector('#email-form button');
+      submitButton.textContent = 'Get Free Access';
+      
+      console.log('✅ Email form shown for free access');
+    }
+
+    async function showFreeAccessSuccess() {
+      // Create payment record for free access
+      await createPaymentRecord();
+      
+      // Hide email form and show free access success
+      document.getElementById('email-collection').classList.add('hidden');
       document.getElementById('free-access').classList.add('show');
-      console.log('✅ Free access granted');
+      
+      console.log('✅ Free access granted with email:', userEmail);
     }
 
     function showPromoMessage(message, type) {
@@ -1035,12 +1069,18 @@
         userEmail = email;
         console.log('✅ User email collected:', email);
         
-        // Hide email form and show crypto options
-        document.getElementById('email-collection').classList.add('hidden');
-        document.getElementById('crypto-options').parentElement.classList.remove('hidden');
-        
-        // Create payment record
-        createPaymentRecord();
+        // Check if this is free access (promo code applied)
+        if (currentPromoCode && promoCodes[currentPromoCode] && promoCodes[currentPromoCode].discount === 100) {
+          // Free access - show success message and redirect
+          showFreeAccessSuccess();
+        } else {
+          // Regular payment - show crypto options
+          document.getElementById('email-collection').classList.add('hidden');
+          document.getElementById('crypto-options').parentElement.classList.remove('hidden');
+          
+          // Create payment record
+          createPaymentRecord();
+        }
       });
     }
 
@@ -1060,7 +1100,8 @@
         currency: 'USD',
         originalPrice: originalPrice,
         discount: originalPrice - currentPrice,
-        promoCode: currentPromoCode
+        promoCode: currentPromoCode,
+        freeAccess: currentPrice === 0
       };
 
       try {

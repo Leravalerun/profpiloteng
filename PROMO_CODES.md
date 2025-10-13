@@ -47,7 +47,13 @@ const PROMO_CODES = {
 - **Success**: Green message with checkmark
 - **Error**: Red message for invalid codes
 - **Price Update**: Dynamic pricing with discount row
-- **Free Access**: Special "Continue to Simulator" button
+- **Free Access**: Email collection form before access
+
+### Email Collection for Free Access
+- **Required**: Email must be collected even for free access
+- **Form**: "📧 Get Free Access to Your Simulator"
+- **Purpose**: To provide access to the simulator
+- **Button**: "Get Free Access"
 
 ### Pricing Display
 - Original price: $29.00

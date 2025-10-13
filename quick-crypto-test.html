@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Crypto Test - ProfPilot</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background 0.2s;
+            display: block;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #2563eb;
+        }
+        .btn-success {
+            background: #10b981;
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+            text-align: center;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .instructions {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #374151;
+        }
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Quick Crypto Test</h1>
+            <p>Test crypto payment without real transactions</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 How to Test:</h3>
+            <ol>
+                <li>Enter your test email</li>
+                <li>Select simulator and cryptocurrency</li>
+                <li>Click "Simulate Payment"</li>
+                <li>System will create fake payment record</li>
+                <li>Access will be granted automatically</li>
+            </ol>
+        </div>
+
+        <div class="form-group">
+            <label for="test-email">Test Email:</label>
+            <input type="email" id="test-email" value="test@example.com" placeholder="Enter test email">
+        </div>
+        
+        <div class="form-group">
+            <label for="test-simulator">Simulator:</label>
+            <select id="test-simulator">
+                <option value="ux-designer">UX Designer Simulator</option>
+                <option value="lawyer">Corporate Lawyer Simulator</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="test-crypto">Cryptocurrency:</label>
+            <select id="test-crypto">
+                <option value="USDT">USDT (Tether)</option>
+                <option value="USDC">USDC (USD Coin)</option>
+                <option value="BTC">BTC (Bitcoin)</option>
+                <option value="ETH">ETH (Ethereum)</option>
+            </select>
+        </div>
+
+        <button class="btn btn-success" onclick="simulatePayment()">💰 Simulate Payment</button>
+        
+        <div id="status" class="status info">
+            Ready to test. Click "Simulate Payment" to start.
+        </div>
+
+        <button class="btn" onclick="openSimulator()">🎯 Open Simulator</button>
+        <button class="btn" onclick="openFullTest()">🧪 Open Full Test</button>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="payment-tracker.js"></script>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+        }
+
+        async function simulatePayment() {
+            const email = document.getElementById('test-email').value;
+            const simulator = document.getElementById('test-simulator').value;
+            const crypto = document.getElementById('test-crypto').value;
+            
+            if (!email) {
+                updateStatus('Please enter a test email', 'error');
+                return;
+            }
+            
+            updateStatus('Simulating payment...', 'info');
+            
+            // Generate test data
+            const paymentId = `test_${Date.now()}`;
+            const transactionHash = `0x${Math.random().toString(16).substr(2, 40)}`;
+            
+            try {
+                // Initialize Payment Tracker
+                if (window.PaymentTracker) {
+                    const tracker = new window.PaymentTracker();
+                    
+                    // Record payment
+                    tracker.recordPayment(
+                        paymentId,
+                        simulator,
+                        email,
+                        29.00,
+                        'USD',
+                        transactionHash
+                    );
+                    
+                    // Simulate confirmation delay
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // Confirm payment
+                    tracker.confirmPayment(paymentId);
+                    
+                    // Grant access
+                    tracker.grantAccess(paymentId);
+                    
+                    // Save to Firebase
+                    await saveToFirebase(email, simulator, crypto, paymentId, transactionHash);
+                    
+                    updateStatus('✅ Payment simulated successfully! Access granted.', 'success');
+                    
+                    // Store test data for simulator access
+                    localStorage.setItem('testPaymentData', JSON.stringify({
+                        email: email,
+                        simulator: simulator,
+                        paymentId: paymentId,
+                        accessGranted: true
+                    }));
+                    
+                } else {
+                    updateStatus('❌ PaymentTracker not available', 'error');
+                }
+                
+            } catch (error) {
+                updateStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function saveToFirebase(email, simulator, crypto, paymentId, transactionHash) {
+            try {
+                if (window.firebaseDB) {
+                    const paymentData = {
+                        userEmail: email,
+                        simulator: simulator,
+                        amount: 29.00,
+                        currency: 'USD',
+                        cryptoCurrency: crypto,
+                        paymentId: paymentId,
+                        transactionHash: transactionHash,
+                        status: 'confirmed',
+                        accessGranted: true,
+                        timestamp: new Date().toISOString(),
+                        testMode: true
+                    };
+                    
+                    await window.firebaseDB.collection('payments').add(paymentData);
+                    console.log('✅ Payment data saved to Firebase');
+                }
+            } catch (error) {
+                console.error('❌ Error saving to Firebase:', error);
+            }
+        }
+
+        function openSimulator() {
+            const simulator = document.getElementById('test-simulator').value;
+            if (simulator === 'ux-designer') {
+                window.open('/ux-sim-simple.html', '_blank');
+            } else if (simulator === 'lawyer') {
+                window.open('/lawyer-simulator.html', '_blank');
+            }
+        }
+
+        function openFullTest() {
+            window.open('/test-crypto-payment.html', '_blank');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('⚡ Quick Crypto Test loaded');
+        });
+    </script>
+</body>
+</html>

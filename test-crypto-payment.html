@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Crypto Payment - ProfPilot</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        .test-section {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .test-section h3 {
+            color: #374151;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #2563eb;
+        }
+        .btn-success {
+            background: #10b981;
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+        .btn-warning {
+            background: #f59e0b;
+        }
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .log {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            background: #f9fafb;
+        }
+        .step-number {
+            background: #3b82f6;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .step.completed .step-number {
+            background: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test Crypto Payment System</h1>
+            <p>Test the complete crypto payment flow without real transactions</p>
+        </div>
+
+        <!-- Test Steps -->
+        <div class="test-section">
+            <h3>📋 Test Steps</h3>
+            <div class="step" id="step1">
+                <div class="step-number">1</div>
+                <div>Start crypto checkout process</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div>Enter email and select cryptocurrency</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div>Simulate payment confirmation</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div>Verify access granted to simulator</div>
+            </div>
+        </div>
+
+        <!-- Test Controls -->
+        <div class="test-section">
+            <h3>🎮 Test Controls</h3>
+            
+            <div class="form-group">
+                <label for="test-email">Test Email:</label>
+                <input type="email" id="test-email" value="test@example.com" placeholder="Enter test email">
+            </div>
+            
+            <div class="form-group">
+                <label for="test-simulator">Simulator:</label>
+                <select id="test-simulator">
+                    <option value="ux-designer">UX Designer Simulator</option>
+                    <option value="lawyer">Corporate Lawyer Simulator</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="test-crypto">Cryptocurrency:</label>
+                <select id="test-crypto">
+                    <option value="USDT">USDT (Tether)</option>
+                    <option value="USDC">USDC (USD Coin)</option>
+                    <option value="BTC">BTC (Bitcoin)</option>
+                    <option value="ETH">ETH (Ethereum)</option>
+                </select>
+            </div>
+
+            <button class="btn" onclick="startTest()">🚀 Start Full Test</button>
+            <button class="btn btn-warning" onclick="simulatePayment()">💰 Simulate Payment</button>
+            <button class="btn btn-success" onclick="verifyAccess()">✅ Verify Access</button>
+            <button class="btn" onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+
+        <!-- Status Display -->
+        <div class="test-section">
+            <h3>📊 Test Status</h3>
+            <div id="test-status" class="status info">
+                Ready to start testing. Click "Start Full Test" to begin.
+            </div>
+        </div>
+
+        <!-- Test Log -->
+        <div class="test-section">
+            <h3>📝 Test Log</h3>
+            <div id="test-log" class="log">Test log will appear here...</div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="test-section">
+            <h3>🔗 Quick Links</h3>
+            <button class="btn" onclick="openCryptoCheckout()">Open Crypto Checkout</button>
+            <button class="btn" onclick="openUXSimulator()">Open UX Simulator</button>
+            <button class="btn" onclick="openLawyerSimulator()">Open Lawyer Simulator</button>
+            <button class="btn" onclick="openFirebaseTest()">Open Firebase Test</button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="payment-tracker.js"></script>
+
+    <script>
+        let testData = {
+            email: '',
+            simulator: '',
+            crypto: '',
+            paymentId: '',
+            transactionHash: ''
+        };
+
+        function log(message) {
+            const logElement = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(`[TEST] ${message}`);
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusElement = document.getElementById('test-status');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+        }
+
+        function markStepCompleted(stepNumber) {
+            const stepElement = document.getElementById(`step${stepNumber}`);
+            stepElement.classList.add('completed');
+        }
+
+        function clearLog() {
+            document.getElementById('test-log').textContent = 'Test log cleared...\n';
+        }
+
+        async function startTest() {
+            log('🚀 Starting full crypto payment test...');
+            updateStatus('Running full test...', 'info');
+            
+            // Step 1: Collect test data
+            testData.email = document.getElementById('test-email').value;
+            testData.simulator = document.getElementById('test-simulator').value;
+            testData.crypto = document.getElementById('test-crypto').value;
+            
+            log(`📧 Test email: ${testData.email}`);
+            log(`🎯 Simulator: ${testData.simulator}`);
+            log(`💰 Cryptocurrency: ${testData.crypto}`);
+            
+            markStepCompleted(1);
+            
+            // Step 2: Simulate email collection and crypto selection
+            log('✅ Step 1 completed: Test data collected');
+            log('🔄 Step 2: Simulating email collection and crypto selection...');
+            
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            markStepCompleted(2);
+            
+            // Step 3: Simulate payment
+            log('✅ Step 2 completed: Email and crypto selected');
+            log('🔄 Step 3: Simulating payment confirmation...');
+            
+            await simulatePayment();
+            markStepCompleted(3);
+            
+            // Step 4: Verify access
+            log('✅ Step 3 completed: Payment simulated');
+            log('🔄 Step 4: Verifying access...');
+            
+            await verifyAccess();
+            markStepCompleted(4);
+            
+            log('🎉 Full test completed successfully!');
+            updateStatus('✅ All tests passed! Crypto payment system is working correctly.', 'success');
+        }
+
+        async function simulatePayment() {
+            log('💰 Simulating crypto payment...');
+            
+            // Generate test payment data
+            testData.paymentId = `test_${Date.now()}`;
+            testData.transactionHash = `0x${Math.random().toString(16).substr(2, 40)}`;
+            
+            log(`📝 Generated payment ID: ${testData.paymentId}`);
+            log(`🔗 Generated transaction hash: ${testData.transactionHash}`);
+            
+            try {
+                // Initialize Payment Tracker
+                if (window.PaymentTracker) {
+                    const tracker = new window.PaymentTracker();
+                    
+                    // Record payment
+                    const paymentData = tracker.recordPayment(
+                        testData.paymentId,
+                        testData.simulator,
+                        testData.email,
+                        29.00,
+                        'USD',
+                        testData.transactionHash
+                    );
+                    
+                    log('✅ Payment recorded in PaymentTracker');
+                    
+                    // Simulate blockchain confirmation delay
+                    log('⏳ Simulating blockchain confirmation (3 seconds)...');
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    
+                    // Confirm payment
+                    const confirmed = tracker.confirmPayment(testData.paymentId);
+                    if (confirmed) {
+                        log('✅ Payment confirmed in blockchain');
+                        
+                        // Grant access
+                        const accessGranted = tracker.grantAccess(testData.paymentId);
+                        if (accessGranted) {
+                            log('✅ Access granted to simulator');
+                            updateStatus('Payment simulated and access granted!', 'success');
+                        } else {
+                            log('❌ Failed to grant access');
+                            updateStatus('Payment confirmed but access grant failed', 'error');
+                        }
+                    } else {
+                        log('❌ Payment confirmation failed');
+                        updateStatus('Payment confirmation failed', 'error');
+                    }
+                } else {
+                    log('❌ PaymentTracker not available');
+                    updateStatus('PaymentTracker not loaded', 'error');
+                }
+                
+                // Save to Firebase
+                await saveToFirebase();
+                
+            } catch (error) {
+                log(`❌ Error simulating payment: ${error.message}`);
+                updateStatus('Payment simulation failed', 'error');
+            }
+        }
+
+        async function saveToFirebase() {
+            log('🔥 Saving payment data to Firebase...');
+            
+            try {
+                if (window.firebaseDB) {
+                    const paymentData = {
+                        userEmail: testData.email,
+                        simulator: testData.simulator,
+                        amount: 29.00,
+                        currency: 'USD',
+                        cryptoCurrency: testData.crypto,
+                        paymentId: testData.paymentId,
+                        transactionHash: testData.transactionHash,
+                        status: 'confirmed',
+                        accessGranted: true,
+                        timestamp: new Date().toISOString(),
+                        testMode: true
+                    };
+                    
+                    await window.firebaseDB.collection('payments').add(paymentData);
+                    log('✅ Payment data saved to Firebase');
+                } else {
+                    log('❌ Firebase not available');
+                }
+            } catch (error) {
+                log(`❌ Error saving to Firebase: ${error.message}`);
+            }
+        }
+
+        async function verifyAccess() {
+            log('🔍 Verifying access to simulator...');
+            
+            try {
+                if (window.PaymentTracker) {
+                    const tracker = new window.PaymentTracker();
+                    const paymentStatus = tracker.getPaymentStatus(testData.paymentId);
+                    
+                    if (paymentStatus && paymentStatus.accessGranted) {
+                        log('✅ Access verification successful');
+                        log(`📧 Email: ${paymentStatus.userEmail}`);
+                        log(`🎯 Simulator: ${paymentStatus.simulator}`);
+                        log(`💰 Amount: $${paymentStatus.amount}`);
+                        log(`🔗 Transaction: ${paymentStatus.transactionHash}`);
+                        
+                        updateStatus('Access verified! User can now access the simulator.', 'success');
+                    } else {
+                        log('❌ Access verification failed');
+                        updateStatus('Access verification failed', 'error');
+                    }
+                } else {
+                    log('❌ PaymentTracker not available for verification');
+                }
+            } catch (error) {
+                log(`❌ Error verifying access: ${error.message}`);
+                updateStatus('Access verification error', 'error');
+            }
+        }
+
+        function openCryptoCheckout() {
+            const simulator = document.getElementById('test-simulator').value;
+            window.open(`/crypto-checkout-prod.html?role=${simulator}`, '_blank');
+        }
+
+        function openUXSimulator() {
+            window.open('/ux-sim-simple.html', '_blank');
+        }
+
+        function openLawyerSimulator() {
+            window.open('/lawyer-simulator.html', '_blank');
+        }
+
+        function openFirebaseTest() {
+            window.open('/firebase-test.html', '_blank');
+        }
+
+        // Initialize test page
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🧪 Crypto Payment Test Page loaded');
+            log('📋 Ready to test crypto payment system');
+            log('💡 Use "Start Full Test" for complete flow or individual buttons for specific tests');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copywriter / Creator Simulator - JobHunter.ai - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Access Control -->
+    <script src="access-control.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .task-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .task-completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .task-locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .day-progress {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .alex-chat {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+        }
+        
+        .email-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #cbd5e1;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .choice-button {
+            transition: all 0.2s ease;
+        }
+        
+        .choice-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .choice-selected {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-slate-600 hover:text-slate-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="text-2xl font-bold gradient-text">Copywriter / Creator Simulator</h1>
+                        <p class="text-sm text-slate-600">JobHunter.ai - Smart Profile Campaign</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-slate-600">
+                        <span id="current-day">Day 1</span> of 3
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Overview -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Your Progress</h2>
+                <div class="flex items-center gap-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-amber-600" id="currentDay">0</div>
+                        <div class="text-sm text-slate-600">Day</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600" id="currentExperience">0</div>
+                        <div class="text-sm text-slate-600">Experience</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="w-full bg-slate-200 rounded-full h-4 mb-4">
+                <div class="day-progress h-4 rounded-full transition-all duration-500" id="dayProgressBar" style="width: 0%"></div>
+            </div>
+            <div class="text-center text-sm text-slate-600">
+                <span id="dayProgressText">0/3 days completed</span>
+            </div>
+        </div>
+
+        <!-- Tasks Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Day 1 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300" id="day1Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">1</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 1</h3>
+                    <p class="text-sm text-slate-600 mb-4">Brief, Audience & Insight</p>
+                    <div class="text-xs text-slate-500" id="day1Status">Ready to start</div>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="day2Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">2</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 2</h3>
+                    <p class="text-sm text-slate-600 mb-4">Concepts & Variations</p>
+                    <div class="text-xs text-slate-500" id="day2Status">Locked</div>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="day3Card">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">3</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 3</h3>
+                    <p class="text-sm text-slate-600 mb-4">Test & Present</p>
+                    <div class="text-xs text-slate-500" id="day3Status">Locked</div>
+                </div>
+            </div>
+
+            <!-- Final -->
+            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="finalCard">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-white">🏆</span>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-900">Final</h3>
+                    <p class="text-sm text-slate-600 mb-4">Complete & Get Resources</p>
+                    <div class="text-xs text-slate-500" id="finalStatus">Locked</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Day Section -->
+        <div id="currentDaySection" class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4" id="dayTitle">Welcome to JobHunter.ai!</h2>
+                <p class="text-lg text-slate-600" id="dayDescription">You're about to start your copywriting journey</p>
+            </div>
+            
+            <div id="dayContent">
+                <!-- Day content will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg">
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-900">Alex - Your Copywriting Mentor</h3>
+                    <p class="text-sm text-slate-600">Senior Copywriter at JobHunter.ai</p>
+                </div>
+            </div>
+            
+            <div id="chat-container" class="space-y-4 max-h-96 overflow-y-auto mb-6">
+                <!-- Chat messages will be inserted here -->
+            </div>
+            
+            <div id="input-area" class="hidden">
+                <div class="flex space-x-4">
+                    <input type="text" id="user-input" placeholder="Type your response..." 
+                           class="flex-1 px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                    <button id="send-button" class="px-6 py-3 bg-amber-600 text-white rounded-xl hover:bg-amber-700 transition-colors">
+                        Send
+                    </button>
+                </div>
+            </div>
+            
+            <div id="choices-container" class="hidden">
+                <!-- Choice buttons will be inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Game State
+        let gameState = {
+            currentDay: 0,
+            currentScene: 'intro',
+            playerName: '',
+            completedDays: [],
+            insights: [],
+            userChoices: {},
+            experience: 0
+        };
+
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check access control
+            if (window.AccessControl) {
+                const accessControl = new window.AccessControl();
+                accessControl.checkSimulatorAccess('copywriter').then(result => {
+                    if (!result.hasAccess) {
+                        window.location.href = '/checkout.html?role=copywriter';
+                        return;
+                    }
+                });
+            }
+            
+            initializeGame();
+        });
+
+        function initializeGame() {
+            // Set up day card click handlers
+            document.getElementById('day1Card').addEventListener('click', () => startDay(1));
+            document.getElementById('day2Card').addEventListener('click', () => startDay(2));
+            document.getElementById('day3Card').addEventListener('click', () => startDay(3));
+            document.getElementById('finalCard').addEventListener('click', () => startDay('final'));
+            
+            // Start with intro
+            showIntro();
+        }
+
+        function startDay(dayNumber) {
+            if (dayNumber === 1) {
+                startDay1();
+            } else if (dayNumber === 2) {
+                if (gameState.completedDays.includes(1)) {
+                    startDay2();
+                }
+            } else if (dayNumber === 3) {
+                if (gameState.completedDays.includes(2)) {
+                    startDay3();
+                }
+            } else if (dayNumber === 'final') {
+                if (gameState.completedDays.includes(3)) {
+                    showFinal();
+                }
+            }
+        }
+
+        function showIntro() {
+            document.getElementById('dayTitle').textContent = 'Welcome to JobHunter.ai!';
+            document.getElementById('dayDescription').textContent = 'You\'re about to start your copywriting journey';
+            document.getElementById('dayContent').innerHTML = `
+                <div class="text-center">
+                    <p class="text-lg text-slate-600 mb-6">Click on Day 1 to begin your copywriting simulation.</p>
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-amber-800 mb-2">What you'll learn:</h3>
+                        <ul class="text-amber-700 space-y-1">
+                            <li>• How to understand your audience</li>
+                            <li>• Creating compelling copy concepts</li>
+                            <li>• Testing and presenting your work</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startIntro() {
+            addMessage('alex', "Hey there! Welcome to JobHunter.ai — and congrats on joining us as our new Copywriter.");
+            setTimeout(() => {
+                addMessage('alex', "Before we start, tell me your name — I want the team to know who's joining.");
+                showInput();
+            }, 2000);
+        }
+
+        function addMessage(sender, message, isHtml = false) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            
+            if (sender === 'alex') {
+                messageDiv.className += ' alex-chat p-4 rounded-2xl';
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-slate-900 mb-1">Alex</p>
+                            <div class="text-slate-700">${isHtml ? message : message.replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (sender === 'user') {
+                messageDiv.className += ' bg-slate-100 p-4 rounded-2xl ml-8';
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-slate-500 to-slate-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-semibold text-sm">You</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-slate-900 mb-1">You</p>
+                            <div class="text-slate-700">${message}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (sender === 'email') {
+                messageDiv.className += ' email-card p-4 rounded-2xl';
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-slate-900 mb-1">Email from Mike</p>
+                            <div class="text-slate-700">${isHtml ? message : message.replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (sender === 'event') {
+                messageDiv.className += ' bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 p-4 rounded-2xl text-center';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center justify-center space-x-2">
+                        <div class="text-amber-600 font-semibold text-lg">${message}</div>
+                    </div>
+                `;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showInput() {
+            document.getElementById('input-area').classList.remove('hidden');
+            document.getElementById('user-input').focus();
+            
+            document.getElementById('send-button').addEventListener('click', handleUserInput);
+            document.getElementById('user-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleUserInput();
+                }
+            });
+        }
+
+        function showChoices(choices, callback) {
+            const choicesContainer = document.getElementById('choices-container');
+            choicesContainer.innerHTML = '';
+            choicesContainer.classList.remove('hidden');
+            
+            choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all mb-3';
+                button.innerHTML = `
+                    <div class="font-medium text-slate-900">${choice.text}</div>
+                    ${choice.feedback ? `<div class="text-sm text-slate-600 mt-1 hidden feedback">${choice.feedback}</div>` : ''}
+                `;
+                
+                button.addEventListener('click', () => {
+                    // Показываем feedback для выбранного варианта
+                    const feedback = button.querySelector('.feedback');
+                    if (feedback) {
+                        feedback.classList.remove('hidden');
+                    }
+                    
+                    // Скрываем все кнопки через небольшую задержку
+                    setTimeout(() => {
+                        choicesContainer.classList.add('hidden');
+                        addMessage('user', choice.text);
+                        
+                        // Показываем feedback от Alex
+                        if (choice.feedback) {
+                            setTimeout(() => {
+                                addMessage('alex', choice.feedback);
+                            }, 1000);
+                        }
+                        
+                        if (callback) callback(choice);
+                    }, 500);
+                });
+                
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        function handleUserInput() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage('user', message);
+            input.value = '';
+            document.getElementById('input-area').classList.add('hidden');
+            
+            // Handle different game states
+            if (gameState.currentScene === 'intro') {
+                handleIntroResponse(message);
+            }
+            // Add more handlers as needed
+        }
+
+        function handleIntroResponse(name) {
+            gameState.playerName = name;
+            
+            setTimeout(() => {
+                addMessage('alex', `Nice to meet you, ${name}. You'll be helping us launch Smart Profile — a feature that turns raw user info into a confident, recruiter-ready profile in minutes.`);
+                setTimeout(() => {
+                    addMessage('alex', "Ready to start your first day?");
+                    showChoices([
+                        { text: "Let's go!", feedback: "Great attitude!" }
+                    ], () => {
+                        startDay1();
+                    });
+                }, 2000);
+            }, 1000);
+        }
+
+        function startDay1() {
+            gameState.currentDay = 1;
+            gameState.currentScene = 'day1-brief';
+            
+            // Update UI
+            document.getElementById('dayTitle').textContent = 'Day 1 - Brief, Audience & Insight';
+            document.getElementById('dayDescription').textContent = 'Understand the problem, the audience, and define one clear message';
+            document.getElementById('dayContent').innerHTML = `
+                <div class="text-center">
+                    <p class="text-lg text-slate-600 mb-6">Today you'll work with the team to understand the Smart Profile campaign brief.</p>
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-amber-800 mb-2">Today's goals:</h3>
+                        <ul class="text-amber-700 space-y-1">
+                            <li>• Read the creative brief</li>
+                            <li>• Understand your audience</li>
+                            <li>• Define your core message</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            updateProgress();
+            clearChat();
+            
+            setTimeout(() => {
+                addMessage('alex', "Welcome to Day 1! Today we'll understand the problem, the audience, and define one clear message.");
+                setTimeout(() => {
+                    addMessage('alex', "Let's start with the team kickoff meeting.");
+                    setTimeout(() => {
+                        showSlackMessage();
+                    }, 2000);
+                }, 2000);
+            }, 1000);
+        }
+
+        function showSlackMessage() {
+            addMessage('event', "📱 Slack #team-launch");
+            setTimeout(() => {
+                addMessage('alex', "Mike (Product Manager): Hey team, today's the kickoff for our Smart Profile campaign. We need a message that makes people feel safe and excited to create their profile fast. " + gameState.playerName + ", you'll lead the copy direction. Start by reading the brief I just sent.");
+                setTimeout(() => {
+                    addMessage('alex', "Remember, " + gameState.playerName + " — great copy starts with empathy. Don't rush to write; understand what users fear and hope for first.");
+                    setTimeout(() => {
+                        showEmail();
+                    }, 4000);
+                }, 4000);
+            }, 3000);
+        }
+
+        function showEmail() {
+            const emailContent = `
+                <div class="border-b border-slate-200 pb-4 mb-4">
+                    <h4 class="font-semibold text-slate-900">Creative Brief: Smart Profile</h4>
+                    <p class="text-sm text-slate-600">From: Mike (Product Manager)</p>
+                    <p class="text-sm text-slate-600">Subject: Brief — Smart Profile Launch Copy</p>
+                </div>
+                <div class="space-y-3 text-sm">
+                    <p><strong>Goal:</strong> increase completed profiles by 15% in 2 weeks</p>
+                    <p><strong>Audience:</strong> career switchers 25–35 y/o, anxious about "how to describe themselves"</p>
+                    <p><strong>Tone:</strong> supportive, human, confident</p>
+                    <p><strong>Tagline limit:</strong> 7 words</p>
+                    <p><strong>Avoid:</strong> "AI writes for you" — users need ownership</p>
+                </div>
+            `;
+            
+            addMessage('email', emailContent, true);
+            setTimeout(() => {
+                addMessage('alex', "☕ Coffee Break with Alex");
+                setTimeout(() => {
+                    addMessage('alex', "What emotion do you want your audience to feel after reading your message?");
+                    showChoices([
+                        { 
+                            text: "Inspired — 'They can reinvent themselves.'", 
+                            feedback: "✅ Inspiration works when it's grounded in truth." 
+                        },
+                        { 
+                            text: "Safe — 'They can trust the process.'", 
+                            feedback: "✅ Strong psychological insight; trust is key." 
+                        },
+                        { 
+                            text: "Curious — 'They want to try the tool.'", 
+                            feedback: "⚠️ Curiosity helps clicks, but we want depth." 
+                        }
+                    ], (choice) => {
+                        gameState.userChoices.emotion = choice.text;
+                        setTimeout(() => {
+                            showTeamChat();
+                        }, 3000);
+                    });
+                }, 4000);
+            }, 4000);
+        }
+
+        function showTeamChat() {
+            addMessage('event', "💬 Internal Chat #smart-profile-team");
+            setTimeout(() => {
+                addMessage('alex', "Emma (UX Researcher): Most users said: 'I freeze when I have to describe myself.' The problem isn't laziness — it's fear of being judged.");
+                setTimeout(() => {
+                    addMessage('alex', "Mike: Exactly. Let's position Smart Profile as a mirror that helps you see your best self.");
+                    setTimeout(() => {
+                        addMessage('alex', "Now, " + gameState.playerName + ", write one simple sentence that could open our campaign.");
+                        setTimeout(() => {
+                            addMessage('alex', "Let me show you some options to compare:");
+                            showChoices([
+                                { 
+                                    text: "Be your own career story.", 
+                                    feedback: "✅ Emotional, puts user in charge." 
+                                },
+                                { 
+                                    text: "Meet the profile that finally gets you.", 
+                                    feedback: "✅ Very empathetic — potential winner." 
+                                },
+                                { 
+                                    text: "Create your dream job in 5 minutes.", 
+                                    feedback: "❌ Too transactional — we sell confidence, not speed." 
+                                }
+                            ], (choice) => {
+                                gameState.userChoices.openingLine = choice.text;
+                                setTimeout(() => {
+                                    showAfternoonSync();
+                                }, 3000);
+                            });
+                        }, 2000);
+                        updateCurrentTask("Choose your opening line for the campaign.");
+                    }, 4000);
+                }, 4000);
+            }, 3000);
+        }
+
+
+        function showAfternoonSync() {
+            addMessage('event', "📅 Afternoon Sync");
+            setTimeout(() => {
+                addMessage('alex', "Sarah (HR Lead): Love the direction. We need both emotion and clarity — users should instantly know what Smart Profile does.");
+                setTimeout(() => {
+                    addMessage('alex', "Exactly. Tomorrow we'll build real ad concepts — social, banners, landing page. But first, your reflection.");
+                    setTimeout(() => {
+                        addMessage('alex', "What's today's biggest takeaway?");
+                        showChoices([
+                            { 
+                                text: "A clear message starts from empathy.", 
+                                feedback: "✅ Correct — empathy before execution." 
+                            },
+                            { 
+                                text: "Taglines must always be short.", 
+                                feedback: "❌ Short ≠ meaningful." 
+                            },
+                            { 
+                                text: "Speed is the key factor.", 
+                                feedback: "❌ Trust > speed." 
+                            }
+                        ], (choice) => {
+                            gameState.userChoices.day1Takeaway = choice.text;
+                            endDay1();
+                        });
+                    }, 4000);
+                }, 4000);
+            }, 3000);
+        }
+
+        function endDay1() {
+            addMessage('event', "🌇 End-of-Day Reflection");
+            setTimeout(() => {
+                addMessage('alex', "Nice work today, " + gameState.playerName + ". You didn't just write copy — you uncovered truth. Tomorrow we'll test your message with users.");
+                setTimeout(() => {
+                    addMessage('alex', "Insight of the Day: 💡 Good copy isn't about words — it's about knowing what people need to hear before they believe you.");
+                    addInsight("💡 Good copy isn't about words — it's about knowing what people need to hear before they believe you.");
+                    completeDay(1);
+                    
+                    setTimeout(() => {
+                        addMessage('alex', "Day 1 complete! You can now click on Day 2 to continue your journey.");
+                    }, 3000);
+                }, 4000);
+            }, 3000);
+        }
+
+        function startDay2() {
+            gameState.currentDay = 2;
+            gameState.currentScene = 'day2-concepts';
+            updateCurrentTask("Day 2: Turn insights into real campaign ideas and balance emotion + clarity.");
+            updateDayProgress(2, 0);
+            
+            setTimeout(() => {
+                addMessage('event', "📅 Day 2 - Concepts & Variations");
+                setTimeout(() => {
+                    addMessage('alex', "Morning, " + gameState.playerName + "! Ready for concepts? Yesterday you found the emotional truth. Today we make it tangible.");
+                    setTimeout(() => {
+                        addMessage('alex', "We'll need three directions for Smart Profile: Emotional, Functional, Social. Emma's got data.");
+                        setTimeout(() => {
+                            addMessage('alex', "Which creative direction do we start with?");
+                            showChoices([
+                                { 
+                                    text: "Emotional — 'Rewrite your story.'", 
+                                    feedback: "✅ Emotion = trust." 
+                                },
+                                { 
+                                    text: "Functional — 'Finish your profile in minutes.'", 
+                                    feedback: "⚠️ Usable but cold." 
+                                },
+                                { 
+                                    text: "Social — 'Share who you are with confidence.'", 
+                                    feedback: "✅ Adds community angle — good for social ads." 
+                                }
+                            ], (choice) => {
+                                gameState.userChoices.day2Direction = choice.text;
+                                setTimeout(() => {
+                                    addMessage('alex', "Great choice! Now let's create some headlines. Imagine scrolling LinkedIn and seeing your own ad. What would stop you from scrolling?");
+                                    setTimeout(() => {
+                                        showChoices([
+                                            { 
+                                                text: "See your career through clear eyes.", 
+                                                feedback: "✅ Poetic & empathetic — great for video." 
+                                            },
+                                            { 
+                                                text: "Finally, a profile that gets you.", 
+                                                feedback: "✅ Strong insight — great for landing page." 
+                                            },
+                                            { 
+                                                text: "Turn data into confidence.", 
+                                                feedback: "❌ Too technical." 
+                                            }
+                                        ], (choice) => {
+                                            gameState.userChoices.headline = choice.text;
+                                            endDay2();
+                                        });
+                                    }, 3000);
+                                }, 3000);
+                            });
+                        }, 3000);
+                    }, 3000);
+                }, 3000);
+            }, 2000);
+        }
+
+        function endDay2() {
+            addMessage('event', "🌇 End of Day 2");
+            setTimeout(() => {
+                addMessage('alex', "Excellent work today, " + gameState.playerName + "! You've created compelling concepts that balance emotion with clarity.");
+                setTimeout(() => {
+                    addMessage('alex', "Insight of the Day: 💡 Creativity = empathy + structure — emotion meets strategy.");
+                    addInsight("💡 Creativity = empathy + structure — emotion meets strategy.");
+                    updateDayProgress(2, 100);
+                    updateCurrentTask("Day 2 complete! Ready for Day 3 tomorrow.");
+                    gameState.completedTasks.push('day2');
+                    
+                    // Add button to continue to Day 3
+                    setTimeout(() => {
+                        addMessage('alex', "Ready for Day 3? We'll test your concepts and present them to the team.");
+                        showChoices([
+                            { 
+                                text: "Let's continue to Day 3!", 
+                                feedback: "Perfect! Time to validate and present." 
+                            }
+                        ], () => {
+                            startDay3();
+                        });
+                    }, 3000);
+                }, 4000);
+            }, 3000);
+        }
+
+        function startDay3() {
+            gameState.currentDay = 3;
+            gameState.currentScene = 'day3-test';
+            updateCurrentTask("Day 3: Validate ideas with data and present confidently.");
+            updateDayProgress(3, 0);
+            
+            setTimeout(() => {
+                addMessage('event', "📅 Day 3 - Test & Present");
+                setTimeout(() => {
+                    addMessage('alex', "Morning! Our social ads ran overnight. Let's see the results:");
+                    setTimeout(() => {
+                        addMessage('alex', "• Concept A — CTR 4.2%\n• Concept B — CTR 6.7%");
+                        setTimeout(() => {
+                            addMessage('alex', "Which would you present as lead, " + gameState.playerName + "?");
+                            showChoices([
+                                { 
+                                    text: "A — More emotional resonance.", 
+                                    feedback: "✅ Emotion drives loyalty — balance it with data." 
+                                },
+                                { 
+                                    text: "B — Higher click rate = proof.", 
+                                    feedback: "✅ Data matters — explain why it works." 
+                                },
+                                { 
+                                    text: "Blend both — emotion + clarity.", 
+                                    feedback: "💎 Best answer — you think like a strategist." 
+                                }
+                            ], (choice) => {
+                                gameState.userChoices.presentationChoice = choice.text;
+                                endDay3();
+                            });
+                        }, 3000);
+                    }, 3000);
+                }, 3000);
+            }, 2000);
+        }
+
+        function endDay3() {
+            addMessage('event', "🏁 Simulation Complete");
+            setTimeout(() => {
+                addMessage('alex', "Congratulations, " + gameState.playerName + "! You've completed the Copywriter / Creator simulation.");
+                setTimeout(() => {
+                    addMessage('alex', "Final Insight: 💡 The best copywriters don't chase attention — they earn trust.");
+                    addInsight("💡 The best copywriters don't chase attention — they earn trust.");
+                    updateDayProgress(3, 100);
+                    updateCurrentTask("Simulation complete! You've mastered the art of copywriting.");
+                    gameState.completedTasks.push('day3');
+                    
+                    setTimeout(() => {
+                        addMessage('alex', "What was your real job this week?");
+                        showChoices([
+                            { 
+                                text: "To write beautiful words.", 
+                                feedback: "❌ Words are just tools." 
+                            },
+                            { 
+                                text: "To make people believe in themselves.", 
+                                feedback: "✅ That's the heart of copywriting." 
+                            },
+                            { 
+                                text: "To sell the product at any cost.", 
+                                feedback: "❌ We persuade, not manipulate." 
+                            }
+                        ], (choice) => {
+                            setTimeout(() => {
+                                addMessage('alex', "You did it, " + gameState.playerName + ". You came to write ads and left understanding people.");
+                                setTimeout(() => {
+                                    addMessage('alex', "🎉 Simulation Complete! You've successfully completed all 3 days of the Copywriter / Creator simulation.");
+                                }, 3000);
+                            }, 2000);
+                        });
+                    }, 3000);
+                }, 4000);
+            }, 3000);
+        }
+
+        function updateProgress() {
+            document.getElementById('currentDay').textContent = gameState.currentDay;
+            document.getElementById('currentExperience').textContent = gameState.experience;
+            
+            const totalDays = 3;
+            const completedDays = gameState.completedDays.length;
+            const progress = (completedDays / totalDays) * 100;
+            
+            document.getElementById('dayProgressBar').style.width = progress + '%';
+            document.getElementById('dayProgressText').textContent = `${completedDays}/${totalDays} days completed`;
+        }
+
+        function clearChat() {
+            document.getElementById('chat-container').innerHTML = '';
+            document.getElementById('input-area').classList.add('hidden');
+            document.getElementById('choices-container').classList.add('hidden');
+        }
+
+        function completeDay(dayNumber) {
+            if (!gameState.completedDays.includes(dayNumber)) {
+                gameState.completedDays.push(dayNumber);
+                gameState.experience += 100;
+                
+                // Update day card
+                const dayCard = document.getElementById(`day${dayNumber}Card`);
+                dayCard.classList.remove('task-locked', 'cursor-not-allowed', 'opacity-60');
+                dayCard.classList.add('task-completed');
+                document.getElementById(`day${dayNumber}Status`).textContent = 'Completed';
+                
+                // Unlock next day
+                if (dayNumber < 3) {
+                    const nextDayCard = document.getElementById(`day${dayNumber + 1}Card`);
+                    nextDayCard.classList.remove('task-locked', 'cursor-not-allowed', 'opacity-60');
+                    document.getElementById(`day${dayNumber + 1}Status`).textContent = 'Ready to start';
+                } else {
+                    // Unlock final
+                    const finalCard = document.getElementById('finalCard');
+                    finalCard.classList.remove('task-locked', 'cursor-not-allowed', 'opacity-60');
+                    document.getElementById('finalStatus').textContent = 'Ready to complete';
+                }
+                
+                updateProgress();
+            }
+        }
+
+        function updateDayProgress(day, percentage) {
+            document.getElementById(`day${day}-progress`).style.width = percentage + '%';
+            
+            // Update overall progress
+            const totalTasks = 3;
+            const completedDays = gameState.completedTasks.length;
+            const currentDayProgress = percentage / 100;
+            const overallProgress = (completedDays + currentDayProgress) / totalTasks;
+            
+            document.getElementById('overall-progress').style.width = (overallProgress * 100) + '%';
+            document.getElementById('progress-percentage').textContent = Math.round(overallProgress * 100) + '%';
+        }
+
+        function addInsight(insight) {
+            gameState.insights.push(insight);
+            const insightsContainer = document.getElementById('insights-container');
+            const insightDiv = document.createElement('div');
+            insightDiv.className = 'text-sm text-slate-600';
+            insightDiv.textContent = insight;
+            insightsContainer.appendChild(insightDiv);
+        }
+    </script>
+</body>
+</html>
