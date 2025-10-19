@@ -454,7 +454,16 @@
                     showChoices([
                         { text: "Let's go!", feedback: "Great attitude!" }
                     ], () => {
-                        startDay1();
+                        // Continue with Day 1 content directly
+                        setTimeout(() => {
+                            addMessage('alex', "Welcome to Day 1! Today we'll understand the problem, the audience, and define one clear message.");
+                            setTimeout(() => {
+                                addMessage('alex', "Let's start with the team kickoff meeting.");
+                                setTimeout(() => {
+                                    showSlackMessage();
+                                }, 2000);
+                            }, 2000);
+                        }, 1000);
                     });
                 }, 2000);
             }, 1000);
@@ -484,15 +493,21 @@
             updateProgress();
             clearChat();
             
-            setTimeout(() => {
-                addMessage('alex', "Welcome to Day 1! Today we'll understand the problem, the audience, and define one clear message.");
+            // Start the intro if player name is not set
+            if (!gameState.playerName) {
+                startIntro();
+            } else {
+                // Continue with Day 1 content
                 setTimeout(() => {
-                    addMessage('alex', "Let's start with the team kickoff meeting.");
+                    addMessage('alex', "Welcome to Day 1! Today we'll understand the problem, the audience, and define one clear message.");
                     setTimeout(() => {
-                        showSlackMessage();
+                        addMessage('alex', "Let's start with the team kickoff meeting.");
+                        setTimeout(() => {
+                            showSlackMessage();
+                        }, 2000);
                     }, 2000);
-                }, 2000);
-            }, 1000);
+                }, 1000);
+            }
         }
 
         function showSlackMessage() {

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Copywriter Simulator - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8 gradient-text">Test Copywriter Simulator</h1>
+        
+        <div class="max-w-4xl mx-auto space-y-6">
+            <!-- Test Access -->
+            <div class="bg-white rounded-2xl p-6 shadow-card">
+                <h2 class="text-xl font-bold mb-4">🔐 Test Access Control</h2>
+                <p class="text-slate-600 mb-4">Test the access control system for the copywriter simulator.</p>
+                <button onclick="testAccess()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                    Test Access
+                </button>
+                <div id="access-result" class="mt-4 p-4 rounded-lg hidden"></div>
+            </div>
+
+            <!-- Test Simulator -->
+            <div class="bg-white rounded-2xl p-6 shadow-card">
+                <h2 class="text-xl font-bold mb-4">🎮 Test Simulator</h2>
+                <p class="text-slate-600 mb-4">Test the copywriter simulator directly.</p>
+                <a href="/copywriter-simulator.html" class="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 inline-block">
+                    Open Simulator
+                </a>
+            </div>
+
+            <!-- Test Payment Flow -->
+            <div class="bg-white rounded-2xl p-6 shadow-card">
+                <h2 class="text-xl font-bold mb-4">💳 Test Payment Flow</h2>
+                <p class="text-slate-600 mb-4">Test the complete payment flow for copywriter simulator.</p>
+                <a href="/checkout.html?role=copywriter" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 inline-block">
+                    Test Checkout
+                </a>
+            </div>
+
+            <!-- Test Crypto Payment -->
+            <div class="bg-white rounded-2xl p-6 shadow-card">
+                <h2 class="text-xl font-bold mb-4">₿ Test Crypto Payment</h2>
+                <p class="text-slate-600 mb-4">Test the crypto payment flow for copywriter simulator.</p>
+                <a href="/crypto-checkout-prod.html?role=copywriter" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 inline-block">
+                    Test Crypto Checkout
+                </a>
+            </div>
+
+            <!-- Test Promo Code -->
+            <div class="bg-white rounded-2xl p-6 shadow-card">
+                <h2 class="text-xl font-bold mb-4">🎟️ Test Promo Code</h2>
+                <p class="text-slate-600 mb-4">Test promo code flow for copywriter simulator.</p>
+                <a href="/crypto-checkout-prod.html?role=copywriter&promo=checkppff" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 inline-block">
+                    Test with Promo Code
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="access-control.js"></script>
+    <script>
+        async function testAccess() {
+            const resultDiv = document.getElementById('access-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<div class="text-blue-600">🔄 Testing access control...</div>';
+
+            try {
+                const accessControl = new AccessControl();
+                await accessControl.initialize();
+                
+                const access = await accessControl.checkSimulatorAccess('copywriter', 'test@example.com');
+                
+                if (access.hasAccess) {
+                    resultDiv.innerHTML = `
+                        <div class="text-green-600">
+                            ✅ Access granted!<br>
+                            Source: ${access.source}<br>
+                            Email: ${access.email || 'N/A'}<br>
+                            Payment ID: ${access.paymentId || 'N/A'}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="text-red-600">
+                            ❌ Access denied<br>
+                            Reason: ${access.reason || 'Unknown'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="text-red-600">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

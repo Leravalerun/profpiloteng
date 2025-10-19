@@ -136,7 +136,8 @@ class SimpleEmailService {
     const names = {
       'ux-designer': 'UX Designer Simulator',
       'lawyer': 'Corporate Lawyer Simulator',
-      'corporate-lawyer': 'Corporate Lawyer Simulator'
+      'corporate-lawyer': 'Corporate Lawyer Simulator',
+      'copywriter': 'Copywriter / Creator Simulator'
     };
     return names[simulatorKey] || 'Career Simulator';
   }
@@ -146,7 +147,8 @@ class SimpleEmailService {
     const urls = {
       'ux-designer': '/ux-sim-simple.html',
       'lawyer': '/lawyer-simulator.html',
-      'corporate-lawyer': '/lawyer-simulator.html'
+      'corporate-lawyer': '/lawyer-simulator.html',
+      'copywriter': '/copywriter-simulator.html'
     };
     return `${window.location.origin}${urls[simulatorKey] || '/dashboard.html'}`;
   }
