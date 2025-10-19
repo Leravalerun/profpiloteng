@@ -304,6 +304,15 @@
                     </div>
                 </div>
             `;
+            
+            // Clear chat and show welcome message
+            clearChat();
+            setTimeout(() => {
+                addMessage('alex', "Welcome to JobHunter.ai! I'm Alex, your copywriting mentor.");
+                setTimeout(() => {
+                    addMessage('alex', "Click on Day 1 to start your copywriting journey. We'll work together to create compelling campaigns that connect with your audience.");
+                }, 2000);
+            }, 1000);
         }
 
         function startIntro() {

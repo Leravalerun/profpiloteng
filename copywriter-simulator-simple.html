@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copywriter / Creator Simulator - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Access Control -->
+    <script src="access-control.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .content-block {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .content-block.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .content-block.locked {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .choice-button {
+            transition: all 0.2s ease;
+        }
+        
+        .choice-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .choice-button.selected {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: white;
+            border-color: #f59e0b;
+        }
+        
+        .feedback {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feedback.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900">Copywriter / Creator Simulator</h1>
+                        <p class="text-sm text-slate-600">JobHunter.ai Campaign</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <div class="text-sm text-slate-600">Day <span id="currentDay">1</span></div>
+                        <div class="text-xs text-slate-500">Experience: <span id="experience">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-slate-700">Progress</span>
+                <span class="text-sm text-slate-500" id="progressText">Day 1 of 3</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+                <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all duration-500" id="progressBar" style="width: 33%"></div>
+            </div>
+        </div>
+
+        <!-- Content Blocks -->
+        <div class="space-y-6">
+            <!-- Day 1 Block -->
+            <div class="content-block show" id="day1Block">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg">1</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Day 1 - Brief, Audience & Insight</h2>
+                            <p class="text-slate-600">Understand the problem, the audience, and define one clear message</p>
+                        </div>
+                    </div>
+
+                    <!-- Team Kickoff -->
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
+                        </div>
+                        <p class="text-slate-700">"Hey team, today's the kickoff for our Smart Profile campaign. We need a message that makes people feel safe and excited to create their profile fast. You'll lead the copy direction. Start by reading the brief I just sent."</p>
+                    </div>
+
+                    <!-- Alex's Guidance -->
+                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                        </div>
+                        <p class="text-slate-700">"Remember — great copy starts with empathy. Don't rush to write; understand what users fear and hope for first. Let's start with the team kickoff meeting."</p>
+                    </div>
+
+                    <!-- Creative Brief -->
+                    <div class="mb-6 p-6 bg-amber-50 border border-amber-200 rounded-xl">
+                        <h3 class="text-lg font-semibold text-amber-800 mb-4">📋 Creative Brief</h3>
+                        <div class="space-y-3 text-amber-700">
+                            <p><strong>Objective:</strong> Increase Smart Profile completion rates by 40%</p>
+                            <p><strong>Target Audience:</strong> Job seekers who feel overwhelmed by profile creation</p>
+                            <p><strong>Key Message:</strong> "Turn your raw info into a confident, recruiter-ready profile in minutes"</p>
+                            <p><strong>Channels:</strong> Social media ads, landing page, email campaign</p>
+                        </div>
+                    </div>
+
+                    <!-- Question 1 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">What's the core emotional truth here?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Perfect! Fear of judgment is the real barrier.">
+                                <div class="font-medium text-slate-900">People are afraid of being judged by recruiters</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ That's a symptom, not the root cause.">
+                                <div class="font-medium text-slate-900">People don't know what to write</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Too surface level. Dig deeper.">
+                                <div class="font-medium text-slate-900">People are lazy about profile creation</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question 1.5 - Additional insight -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">How do we address this fear in our messaging?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Exactly! Show them they're not alone in this feeling.">
+                                <div class="font-medium text-slate-900">Acknowledge the fear and show empathy</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ That might make the fear worse.">
+                                <div class="font-medium text-slate-900">Ignore it and focus on the benefits</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="⚠️ Good start, but we need more than just speed.">
+                                <div class="font-medium text-slate-900">Emphasize how quick and easy it is</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Insight -->
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day1Insight">
+                        <h4 class="font-semibold text-green-800 mb-2">💡 Key Insight</h4>
+                        <p class="text-green-700">"The best copywriters don't chase attention — they earn trust by understanding what people really fear and hope for."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 Block -->
+            <div class="content-block locked" id="day2Block">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg">2</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Day 2 - Concepts & Variations</h2>
+                            <p class="text-slate-600">Turn insights into real campaign ideas and balance emotion + clarity</p>
+                        </div>
+                    </div>
+
+                    <!-- Creative Workshop -->
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                        </div>
+                        <p class="text-slate-700">"Morning! Ready for concepts? Yesterday you found the emotional truth. Today we make it tangible. We'll need three directions for Smart Profile: Emotional, Functional, Social."</p>
+                    </div>
+
+                    <!-- Miro Board Session -->
+                    <div class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">📱 Miro Board Session</span>
+                        </div>
+                        <p class="text-slate-700">"Let's map out our concepts on the Miro board. I've set up three columns: Emotional, Functional, and Social. Each direction needs a headline, sub-line, and key message."</p>
+                    </div>
+
+                    <!-- Emma's Data -->
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Emma (Data Analyst)</span>
+                        </div>
+                        <p class="text-slate-700">"I've got some insights from our user research. People who complete profiles are 3x more likely to get interviews. The main drop-off happens at the 'About Me' section."</p>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Which creative direction do we start with?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotion = trust.">
+                                <div class="font-medium text-slate-900">Emotional — "Rewrite your story."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="⚠️ Usable but cold.">
+                                <div class="font-medium text-slate-900">Functional — "Finish your profile in minutes."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Adds community angle — good for social ads.">
+                                <div class="font-medium text-slate-900">Social — "Share who you are with confidence."</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Now let's create some headlines. What would stop you from scrolling?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Poetic & empathetic — great for video.">
+                                <div class="font-medium text-slate-900">"See your career through clear eyes."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Strong insight — great for landing page.">
+                                <div class="font-medium text-slate-900">"Finally, a profile that gets you."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Too technical.">
+                                <div class="font-medium text-slate-900">"Turn data into confidence."</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Insight -->
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day2Insight">
+                        <h4 class="font-semibold text-green-800 mb-2">💡 Key Insight</h4>
+                        <p class="text-green-700">"Creativity = empathy + structure — emotion meets strategy."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3 Block -->
+            <div class="content-block locked" id="day3Block">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg">3</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Day 3 - Test & Present</h2>
+                            <p class="text-slate-600">Validate ideas with data and present confidently</p>
+                        </div>
+                    </div>
+
+                    <!-- A/B Test Results -->
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Emma (Data Analyst)</span>
+                        </div>
+                        <p class="text-slate-700">"Our social ads ran overnight. Here are the results: • Concept A — CTR 4.2% • Concept B — CTR 6.7%"</p>
+                    </div>
+
+                    <!-- Team Debrief -->
+                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
+                        </div>
+                        <p class="text-slate-700">"Great work on the concepts! Now let's present our findings to the team. We need to show why our approach works and how it aligns with our business goals."</p>
+                    </div>
+
+                    <!-- Presentation Prep -->
+                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                        </div>
+                        <p class="text-slate-700">"Remember, the best presentations tell a story. Start with the problem, show your solution, and end with the results. Make it about the user, not the product."</p>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Which would you present as lead?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotion drives loyalty — balance it with data.">
+                                <div class="font-medium text-slate-900">A — More emotional resonance.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Data matters — explain why it works.">
+                                <div class="font-medium text-slate-900">B — Higher click rate = proof.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="💎 Best answer — you think like a strategist.">
+                                <div class="font-medium text-slate-900">Blend both — emotion + clarity.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Final Question -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">What was your real job this week?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Words are just tools.">
+                                <div class="font-medium text-slate-900">To write beautiful words.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ That's the heart of copywriting.">
+                                <div class="font-medium text-slate-900">To make people believe in themselves.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ We persuade, not manipulate.">
+                                <div class="font-medium text-slate-900">To sell the product at any cost.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Insight -->
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day3Insight">
+                        <h4 class="font-semibold text-green-800 mb-2">💡 Final Insight</h4>
+                        <p class="text-green-700">"The best copywriters don't chase attention — they earn trust."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Block -->
+            <div class="content-block locked" id="completionBlock">
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-card p-8 border border-amber-200">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">🎉 Simulation Complete!</h2>
+                        <p class="text-xl text-slate-600 mb-6">You've successfully completed the Copywriter / Creator simulation.</p>
+                        <p class="text-lg text-slate-700 mb-8">You came to write ads and left understanding people.</p>
+                        
+                        <div class="bg-white rounded-xl p-6 mb-6">
+                            <h3 class="text-lg font-semibold text-slate-900 mb-4">What you've learned:</h3>
+                            <ul class="text-slate-600 space-y-2 text-left">
+                                <li>• How to find emotional truth in your audience</li>
+                                <li>• Creating compelling copy concepts that balance emotion and clarity</li>
+                                <li>• Testing and presenting your work with confidence</li>
+                                <li>• The real job of a copywriter: making people believe in themselves</li>
+                            </ul>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="/copywriter.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
+                                Learn More
+                            </a>
+                            <a href="/simulator-selection.html" class="inline-block rounded-xl bg-amber-600 text-white px-6 py-3 font-medium hover:bg-amber-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow">
+                                Try Another Simulator
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentDay = 1;
+        let experience = 0;
+        let completedQuestions = 0;
+        const totalQuestions = 6;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check access control
+            if (window.AccessControl) {
+                const accessControl = new window.AccessControl();
+                accessControl.checkSimulatorAccess('copywriter').then(result => {
+                    if (!result.hasAccess) {
+                        window.location.href = '/checkout.html?role=copywriter';
+                        return;
+                    }
+                });
+            }
+            
+            initializeSimulator();
+        });
+
+        function initializeSimulator() {
+            // Add click handlers to all choice buttons
+            document.querySelectorAll('.choice-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    handleChoice(this);
+                });
+            });
+            
+            updateProgress();
+        }
+
+        function handleChoice(button) {
+            // Remove selected class from all buttons in the same question
+            const questionContainer = button.closest('.mb-6');
+            questionContainer.querySelectorAll('.choice-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            
+            // Show feedback
+            const feedback = button.dataset.feedback;
+            if (feedback) {
+                showFeedback(button, feedback);
+            }
+            
+            // Mark question as completed
+            completedQuestions++;
+            
+            // Check if we can unlock next day
+            if (completedQuestions === 2) {
+                unlockDay(2);
+                showInsight('day1Insight');
+            } else if (completedQuestions === 4) {
+                unlockDay(3);
+                showInsight('day2Insight');
+            } else if (completedQuestions === 6) {
+                unlockDay('completion');
+                showInsight('day3Insight');
+                showCompletion();
+            }
+            
+            updateProgress();
+        }
+
+        function showFeedback(button, feedback) {
+            // Create feedback element
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'feedback mt-2 p-3 rounded-lg text-sm';
+            
+            if (feedback.startsWith('✅') || feedback.startsWith('💎')) {
+                feedbackDiv.className += ' bg-green-50 text-green-700 border border-green-200';
+            } else if (feedback.startsWith('⚠️')) {
+                feedbackDiv.className += ' bg-yellow-50 text-yellow-700 border border-yellow-200';
+            } else {
+                feedbackDiv.className += ' bg-red-50 text-red-700 border border-red-200';
+            }
+            
+            feedbackDiv.textContent = feedback;
+            
+            // Insert after button
+            button.parentNode.insertBefore(feedbackDiv, button.nextSibling);
+            
+            // Show feedback with animation
+            setTimeout(() => {
+                feedbackDiv.classList.add('show');
+            }, 100);
+        }
+
+        function showInsight(insightId) {
+            const insight = document.getElementById(insightId);
+            if (insight) {
+                insight.classList.remove('hidden');
+                insight.classList.add('show');
+            }
+        }
+
+        function unlockDay(dayNumber) {
+            let blockId;
+            if (dayNumber === 2) {
+                blockId = 'day2Block';
+                currentDay = 2;
+            } else if (dayNumber === 3) {
+                blockId = 'day3Block';
+                currentDay = 3;
+            } else if (dayNumber === 'completion') {
+                blockId = 'completionBlock';
+                currentDay = 4;
+            }
+            
+            if (blockId) {
+                const block = document.getElementById(blockId);
+                block.classList.remove('locked');
+                block.classList.add('show');
+                
+                // Add click handlers to new buttons
+                block.querySelectorAll('.choice-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        handleChoice(this);
+                    });
+                });
+            }
+        }
+
+        function showCompletion() {
+            experience += 100;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById('currentDay').textContent = currentDay;
+            document.getElementById('experience').textContent = experience;
+            
+            const progress = (completedQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            if (currentDay === 4) {
+                document.getElementById('progressText').textContent = 'Complete!';
+            } else {
+                document.getElementById('progressText').textContent = `Day ${currentDay} of 3`;
+            }
+        }
+    </script>
+</body>
+</html>

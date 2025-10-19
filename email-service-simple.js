@@ -148,7 +148,7 @@ class SimpleEmailService {
       'ux-designer': '/ux-sim-simple.html',
       'lawyer': '/lawyer-simulator.html',
       'corporate-lawyer': '/lawyer-simulator.html',
-      'copywriter': '/copywriter-simulator.html'
+      'copywriter': '/copywriter-simulator-simple.html'
     };
     return `${window.location.origin}${urls[simulatorKey] || '/dashboard.html'}`;
   }
