@@ -8,6 +8,10 @@ ProfPilot is an innovative career exploration platform that lets you test-drive 
 
 Our platform addresses a critical gap in career education: **only about 27% of career change program graduates land a job in their new field within 6 months** (Course Report, 2023). ProfPilot helps you make smarter career decisions by providing hands-on experience before you commit.
 
+> 🧠 Built with a human-in-the-loop philosophy — ProfPilot uses AI mentors and human feedback
+> to explore how intelligent systems can expand real-world learning and career design.
+
+
 ## 🎯 What We Offer
 
 ### 💼 **Career Simulators**
@@ -333,4 +337,17 @@ For licensing inquiries, please contact: careers.inspirante@gmail.com
 **Ready to discover your dream career? Start your 3-day test-drive with ProfPilot today!** 🚀💼
 
 *For questions, suggestions, or support, please reach out to our team. We're building the future of career exploration, one simulator at a time.*
+
+---
+
+## 👩‍💻 About the Author
+
+**Valeriia Khramchenkova — AI Career Architect**
+
+Researching how humans × AI redesign work.  
+Creator of [ProfPilot](https://github.com/Leravalerun/profpiloteng)).  
+Building ethical, experience-based learning systems.
+
+[LinkedIn](https://linkedin.com/in/valeriyakhramchenkova) · [GitHub](https://github.com/ValeriiaKhramchenkova)
+
 
