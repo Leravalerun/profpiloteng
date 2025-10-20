@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copywriter / Creator Simulator - JobHunter.ai - ProfPilot</title>
+    <title>Copywriter / Creator Simulator - ProfPilot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Access Control -->
     <script src="access-control.js"></script>
@@ -15,57 +15,26 @@
         }
         
         .gradient-text {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        .task-card {
+        .content-block {
             transition: all 0.3s ease;
-            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
         }
         
-        .task-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        .content-block.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         
-        .task-completed {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-        
-        .task-locked {
-            opacity: 0.5;
+        .content-block.locked {
+            opacity: 0.3;
             pointer-events: none;
-        }
-        
-        .chat-message {
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .day-progress {
-            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
-        }
-        
-        .alex-chat {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 2px solid #f59e0b;
-        }
-        
-        .email-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 1px solid #cbd5e1;
-        }
-        
-        .hidden {
-            display: none;
         }
         
         .choice-button {
@@ -74,34 +43,45 @@
         
         .choice-button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
-        .choice-selected {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        .choice-button.selected {
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
             color: white;
+            border-color: #f59e0b;
+        }
+        
+        .feedback {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feedback.show {
+            opacity: 1;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+<body class="bg-slate-50 min-h-screen">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
-                    <a href="dashboard.html" class="text-slate-600 hover:text-slate-900">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
-                    </a>
+                    </div>
                     <div>
-                        <h1 class="text-2xl font-bold gradient-text">Copywriter / Creator Simulator</h1>
-                        <p class="text-sm text-slate-600">JobHunter.ai - Smart Profile Campaign</p>
+                        <h1 class="text-xl font-bold text-slate-900">Copywriter / Creator Simulator</h1>
+                        <p class="text-sm text-slate-600">JobHunter.ai Campaign</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="text-sm text-slate-600">
-                        <span id="current-day">Day 1</span> of 3
+                    <div class="text-right">
+                        <div class="text-sm text-slate-600">Day <span id="currentDay">1</span></div>
+                        <div class="text-xs text-slate-500">Experience: <span id="experience">0</span></div>
                     </div>
                 </div>
             </div>
@@ -109,141 +89,446 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Progress Overview -->
-        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-slate-900">Your Progress</h2>
-                <div class="flex items-center gap-4">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Progress Bar -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-slate-700">Progress</span>
+                <span class="text-sm text-slate-500" id="progressText">Day 1 of 3</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+                <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all duration-500" id="progressBar" style="width: 33%"></div>
+            </div>
+        </div>
+
+        <!-- Content Blocks -->
+        <div class="space-y-6">
+            <!-- Intro Block -->
+            <div class="content-block show" id="introBlock">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Welcome to JobHunter.ai</h2>
+                            <p class="text-slate-600">You're about to start your copywriting journey</p>
+                        </div>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="mb-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-4">🎯 About Smart Profile</h3>
+                        <div class="space-y-3 text-blue-700">
+                            <p><strong>What it is:</strong> A feature that helps job seekers create compelling, recruiter-ready profiles in minutes instead of hours.</p>
+                            <p><strong>How it works:</strong> Users input basic info about their experience, and Smart Profile generates a professional summary, highlights key skills, and suggests improvements.</p>
+                            <p><strong>Target users:</strong> Career switchers (25-35) who struggle with self-description and feel overwhelmed by profile creation.</p>
+                            <p><strong>Current problem:</strong> Only 23% of users complete their profiles, leading to missed opportunities.</p>
+                        </div>
+                    </div>
+
+                    <!-- Alex's Welcome -->
+                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                        </div>
+                        <p class="text-slate-700">"Welcome to JobHunter.ai — and congrats on joining us as our new Copywriter. You'll be working on our Smart Profile campaign to help more people create confident, compelling profiles. Before we start, tell me your name so the team can welcome you properly."</p>
+                    </div>
+
+                    <!-- Name Input -->
+                    <div class="mb-6">
+                        <label for="playerName" class="block text-sm font-medium text-slate-700 mb-2">Your name</label>
+                        <input type="text" id="playerName" placeholder="Enter your name" 
+                               class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                        <button id="startButton" class="mt-4 w-full bg-amber-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-amber-700 transition-colors">
+                            Let's start!
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 1 Block -->
+            <div class="content-block locked" id="day1Block">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg">1</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Day 1 - Brief, Audience & Insight</h2>
+                            <p class="text-slate-600">Understand the problem, the audience, and define one clear message</p>
+                        </div>
+                    </div>
+
+                    <!-- Team Kickoff -->
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
+                        </div>
+                        <p class="text-slate-700">"Hey team, today's the kickoff for our Smart Profile campaign. We need a message that makes people feel safe and excited to create their profile fast. <span id="playerNameDisplay">[Your Name]</span>, you'll lead the copy direction. Our goal is to increase profile completion rates from 23% to 40% in the next 2 weeks."</p>
+                    </div>
+
+                    <!-- Email Brief -->
+                    <div class="mb-6 p-6 bg-blue-50 border border-blue-200 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-900">📧 From: Mike (PM)</div>
+                                <div class="text-sm text-slate-600">Subject: Creative Brief — Smart Profile</div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg text-sm">
+                            <p><strong>Goal:</strong> +15% completed profiles in 2 weeks.</p>
+                            <p><strong>Audience:</strong> career switchers 25–35, anxious about describing themselves.</p>
+                            <p><strong>Tone:</strong> supportive, human, confident.</p>
+                            <p><strong>Tagline limit:</strong> 7 words.</p>
+                            <p><strong>Avoid:</strong> 'AI writes for you' — users need ownership.</p>
+                        </div>
+                    </div>
+
+                    <!-- Coffee Break -->
+                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-white text-lg">☕</span>
+                            </div>
+                            <span class="font-semibold text-slate-900">Coffee Break with Alex</span>
+                        </div>
+                        <p class="text-slate-700">"Great copy starts with empathy. What do we want people to feel after reading our message?"</p>
+                    </div>
+
+                    <!-- Question 1: Core Emotion -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Pick the core emotion to evoke.</h3>
+                        <p class="text-sm text-slate-600 mb-4">Emotion is the feeling your words should consistently trigger.</p>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Works if grounded in real support (don't overpromise).">
+                                <div class="font-medium text-slate-900">Inspired — they can reinvent themselves.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Strong for anxious users; trust increases completion.">
+                                <div class="font-medium text-slate-900">Safe — they can trust the process.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="⚠️ Fine for clicks, but we need depth and confidence.">
+                                <div class="font-medium text-slate-900">Curious — they want to try the tool.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Smart Profile Example -->
+                    <div class="mb-6 p-6 bg-slate-50 border border-slate-200 rounded-xl">
+                        <h3 class="text-lg font-semibold text-slate-800 mb-4">📱 Smart Profile Example</h3>
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <div class="space-y-3">
+                                <div class="border-l-4 border-blue-500 pl-4">
+                                    <p class="text-sm text-slate-600">User input:</p>
+                                    <p class="text-slate-800">"I'm a marketing manager with 5 years experience, worked at startups, good at campaigns"</p>
+                                </div>
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <p class="text-sm text-slate-600">Smart Profile output:</p>
+                                    <p class="text-slate-800">"Results-driven Marketing Manager with 5+ years of experience scaling growth campaigns at high-growth startups. Proven track record of increasing user engagement by 40% through data-driven strategies and creative problem-solving."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emma's Research -->
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Emma (UX Researcher)</span>
+                        </div>
+                        <p class="text-slate-700">"Interviews show users freeze at 'Describe yourself'. It's fear of judgment, not laziness. They worry about sounding too boastful or not impressive enough. Let's position Smart Profile as a mirror that helps you see your best self — not AI writing for you, but helping you find the right words."</p>
+                    </div>
+
+                    <!-- Task: Write One-liner -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Write 1-line opener</h3>
+                        <p class="text-sm text-slate-600 mb-4">Keep it human and clear (tagline ≤ 7 words if used as a tag).</p>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotional, puts user in charge.">
+                                <div class="font-medium text-slate-900">Be your own career story.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="💎 Empathetic, highly relevant to fear of being misunderstood.">
+                                <div class="font-medium text-slate-900">Meet the profile that finally gets you.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Too transactional — we sell confidence, not speed.">
+                                <div class="font-medium text-slate-900">Create your dream job in 5 minutes.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">What's today's biggest takeaway?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Correct — empathy before execution.">
+                                <div class="font-medium text-slate-900">A clear message starts from empathy.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Short ≠ meaningful; clarity first.">
+                                <div class="font-medium text-slate-900">Taglines must always be short.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Trust > speed for anxious users.">
+                                <div class="font-medium text-slate-900">Speed is the key factor.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Insight -->
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day1Insight">
+                        <h4 class="font-semibold text-green-800 mb-2">💡 Key Insight</h4>
+                        <p class="text-green-700">"Good copy isn't about words — it's about knowing what people need to hear before they believe you."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 Block -->
+            <div class="content-block locked" id="day2Block">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg">2</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Day 2 - Concepts & Variations</h2>
+                            <p class="text-slate-600">Turn insights into real campaign ideas and balance emotion + clarity</p>
+                        </div>
+                    </div>
+
+                    <!-- Creative Workshop -->
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                        </div>
+                        <p class="text-slate-700">"Morning! Ready for concepts? Yesterday you found the emotional truth. Today we make it tangible. We'll need three directions for Smart Profile: Emotional, Functional, Social."</p>
+                    </div>
+
+                    <!-- Miro Board Session -->
+                    <div class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">📱 Miro Board Session</span>
+                        </div>
+                        <p class="text-slate-700">"Let's map out our concepts on the Miro board. I've set up three columns: Emotional, Functional, and Social. Each direction needs a headline, sub-line, and key message."</p>
+                    </div>
+
+                    <!-- Emma's Data -->
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Emma (Data Analyst)</span>
+                        </div>
+                        <p class="text-slate-700">"I've got some insights from our user research. People who complete profiles are 3x more likely to get interviews. The main drop-off happens at the 'About Me' section."</p>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Which creative direction do we start with?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotion = trust.">
+                                <div class="font-medium text-slate-900">Emotional — "Rewrite your story."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="⚠️ Usable but cold.">
+                                <div class="font-medium text-slate-900">Functional — "Finish your profile in minutes."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Adds community angle — good for social ads.">
+                                <div class="font-medium text-slate-900">Social — "Share who you are with confidence."</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Now let's create some headlines. What would stop you from scrolling?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Poetic & empathetic — great for video.">
+                                <div class="font-medium text-slate-900">"See your career through clear eyes."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Strong insight — great for landing page.">
+                                <div class="font-medium text-slate-900">"Finally, a profile that gets you."</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Too technical.">
+                                <div class="font-medium text-slate-900">"Turn data into confidence."</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Insight -->
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day2Insight">
+                        <h4 class="font-semibold text-green-800 mb-2">💡 Key Insight</h4>
+                        <p class="text-green-700">"Creativity = empathy + structure — emotion meets strategy."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3 Block -->
+            <div class="content-block locked" id="day3Block">
+                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-lg">3</span>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Day 3 - Test & Present</h2>
+                            <p class="text-slate-600">Validate ideas with data and present confidently</p>
+                        </div>
+                    </div>
+
+                    <!-- A/B Test Results -->
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Emma (Data Analyst)</span>
+                        </div>
+                        <p class="text-slate-700">"Our social ads ran overnight. Here are the results: • Concept A — CTR 4.2% • Concept B — CTR 6.7%"</p>
+                    </div>
+
+                    <!-- Team Debrief -->
+                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
+                        </div>
+                        <p class="text-slate-700">"Great work on the concepts! Now let's present our findings to the team. We need to show why our approach works and how it aligns with our business goals."</p>
+                    </div>
+
+                    <!-- Presentation Prep -->
+                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                        </div>
+                        <p class="text-slate-700">"Remember, the best presentations tell a story. Start with the problem, show your solution, and end with the results. Make it about the user, not the product."</p>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Which would you present as lead?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotion drives loyalty — balance it with data.">
+                                <div class="font-medium text-slate-900">A — More emotional resonance.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Data matters — explain why it works.">
+                                <div class="font-medium text-slate-900">B — Higher click rate = proof.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="💎 Best answer — you think like a strategist.">
+                                <div class="font-medium text-slate-900">Blend both — emotion + clarity.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Final Question -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">What was your real job this week?</h3>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Words are just tools.">
+                                <div class="font-medium text-slate-900">To write beautiful words.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ That's the heart of copywriting.">
+                                <div class="font-medium text-slate-900">To make people believe in themselves.</div>
+                            </button>
+                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ We persuade, not manipulate.">
+                                <div class="font-medium text-slate-900">To sell the product at any cost.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Key Insight -->
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day3Insight">
+                        <h4 class="font-semibold text-green-800 mb-2">💡 Final Insight</h4>
+                        <p class="text-green-700">"The best copywriters don't chase attention — they earn trust."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Block -->
+            <div class="content-block locked" id="completionBlock">
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-card p-8 border border-amber-200">
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-amber-600" id="currentDay">0</div>
-                        <div class="text-sm text-slate-600">Day</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-green-600" id="currentExperience">0</div>
-                        <div class="text-sm text-slate-600">Experience</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="w-full bg-slate-200 rounded-full h-4 mb-4">
-                <div class="day-progress h-4 rounded-full transition-all duration-500" id="dayProgressBar" style="width: 0%"></div>
-            </div>
-            <div class="text-center text-sm text-slate-600">
-                <span id="dayProgressText">0/3 days completed</span>
-            </div>
-        </div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-slate-900 mb-4">🎉 Simulation Complete!</h2>
+                        <p class="text-xl text-slate-600 mb-6">You've successfully completed the Copywriter / Creator simulation.</p>
+                        <p class="text-lg text-slate-700 mb-8">You came to write ads and left understanding people.</p>
+                        
+                        <div class="bg-white rounded-xl p-6 mb-6">
+                            <h3 class="text-lg font-semibold text-slate-900 mb-4">What you've learned:</h3>
+                            <ul class="text-slate-600 space-y-2 text-left">
+                                <li>• How to find emotional truth in your audience</li>
+                                <li>• Creating compelling copy concepts that balance emotion and clarity</li>
+                                <li>• Testing and presenting your work with confidence</li>
+                                <li>• The real job of a copywriter: making people believe in themselves</li>
+                            </ul>
+                        </div>
 
-        <!-- Tasks Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Day 1 -->
-            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300" id="day1Card">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <span class="text-2xl font-bold text-white">1</span>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="/copywriter.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
+                                Learn More
+                            </a>
+                            <a href="/simulator-selection.html" class="inline-block rounded-xl bg-amber-600 text-white px-6 py-3 font-medium hover:bg-amber-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow">
+                                Try Another Simulator
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 1</h3>
-                    <p class="text-sm text-slate-600 mb-4">Brief, Audience & Insight</p>
-                    <div class="text-xs text-slate-500" id="day1Status">Ready to start</div>
                 </div>
-            </div>
-
-            <!-- Day 2 -->
-            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="day2Card">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <span class="text-2xl font-bold text-white">2</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 2</h3>
-                    <p class="text-sm text-slate-600 mb-4">Concepts & Variations</p>
-                    <div class="text-xs text-slate-500" id="day2Status">Locked</div>
-                </div>
-            </div>
-
-            <!-- Day 3 -->
-            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="day3Card">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <span class="text-2xl font-bold text-white">3</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900">Day 3</h3>
-                    <p class="text-sm text-slate-600 mb-4">Test & Present</p>
-                    <div class="text-xs text-slate-500" id="day3Status">Locked</div>
-                </div>
-            </div>
-
-            <!-- Final -->
-            <div class="task-card bg-white rounded-2xl border border-slate-200 p-6 shadow-lg task-locked cursor-not-allowed opacity-60" id="finalCard">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <span class="text-2xl font-bold text-white">🏆</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900">Final</h3>
-                    <p class="text-sm text-slate-600 mb-4">Complete & Get Resources</p>
-                    <div class="text-xs text-slate-500" id="finalStatus">Locked</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Current Day Section -->
-        <div id="currentDaySection" class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg mb-8">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4" id="dayTitle">Welcome to JobHunter.ai!</h2>
-                <p class="text-lg text-slate-600" id="dayDescription">You're about to start your copywriting journey</p>
-            </div>
-            
-            <div id="dayContent">
-                <!-- Day content will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Chat Interface -->
-        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg">
-            <div class="flex items-center space-x-4 mb-6">
-                <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-slate-900">Alex - Your Copywriting Mentor</h3>
-                    <p class="text-sm text-slate-600">Senior Copywriter at JobHunter.ai</p>
-                </div>
-            </div>
-            
-            <div id="chat-container" class="space-y-4 max-h-96 overflow-y-auto mb-6">
-                <!-- Chat messages will be inserted here -->
-            </div>
-            
-            <div id="input-area" class="hidden">
-                <div class="flex space-x-4">
-                    <input type="text" id="user-input" placeholder="Type your response..." 
-                           class="flex-1 px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
-                    <button id="send-button" class="px-6 py-3 bg-amber-600 text-white rounded-xl hover:bg-amber-700 transition-colors">
-                        Send
-                    </button>
-                </div>
-            </div>
-            
-            <div id="choices-container" class="hidden">
-                <!-- Choice buttons will be inserted here -->
             </div>
         </div>
     </main>
 
     <script>
-        // Game State
-        let gameState = {
-            currentDay: 0,
-            currentScene: 'intro',
-            playerName: '',
-            completedDays: [],
-            insights: [],
-            userChoices: {},
-            experience: 0
-        };
+        let currentDay = 0;
+        let experience = 0;
+        let completedQuestions = 0;
+        const totalQuestions = 6;
+        let playerName = '';
 
-        // Initialize the game
         document.addEventListener('DOMContentLoaded', function() {
             // Check access control
             if (window.AccessControl) {
@@ -256,635 +541,155 @@
                 });
             }
             
-            initializeGame();
+            initializeSimulator();
         });
 
-        function initializeGame() {
-            // Set up day card click handlers
-            document.getElementById('day1Card').addEventListener('click', () => startDay(1));
-            document.getElementById('day2Card').addEventListener('click', () => startDay(2));
-            document.getElementById('day3Card').addEventListener('click', () => startDay(3));
-            document.getElementById('finalCard').addEventListener('click', () => startDay('final'));
-            
-            // Start with intro
-            showIntro();
-        }
-
-        function startDay(dayNumber) {
-            if (dayNumber === 1) {
-                startDay1();
-            } else if (dayNumber === 2) {
-                if (gameState.completedDays.includes(1)) {
-                    startDay2();
-                }
-            } else if (dayNumber === 3) {
-                if (gameState.completedDays.includes(2)) {
-                    startDay3();
-                }
-            } else if (dayNumber === 'final') {
-                if (gameState.completedDays.includes(3)) {
-                    showFinal();
-                }
-            }
-        }
-
-        function showIntro() {
-            document.getElementById('dayTitle').textContent = 'Welcome to JobHunter.ai!';
-            document.getElementById('dayDescription').textContent = 'You\'re about to start your copywriting journey';
-            document.getElementById('dayContent').innerHTML = `
-                <div class="text-center">
-                    <p class="text-lg text-slate-600 mb-6">Click on Day 1 to begin your copywriting simulation.</p>
-                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
-                        <h3 class="text-lg font-semibold text-amber-800 mb-2">What you'll learn:</h3>
-                        <ul class="text-amber-700 space-y-1">
-                            <li>• How to understand your audience</li>
-                            <li>• Creating compelling copy concepts</li>
-                            <li>• Testing and presenting your work</li>
-                        </ul>
-                    </div>
-                </div>
-            `;
-            
-            // Clear chat and show welcome message
-            clearChat();
-            setTimeout(() => {
-                addMessage('alex', "Welcome to JobHunter.ai! I'm Alex, your copywriting mentor.");
-                setTimeout(() => {
-                    addMessage('alex', "Click on Day 1 to start your copywriting journey. We'll work together to create compelling campaigns that connect with your audience.");
-                }, 2000);
-            }, 1000);
-        }
-
-        function startIntro() {
-            addMessage('alex', "Hey there! Welcome to JobHunter.ai — and congrats on joining us as our new Copywriter.");
-            setTimeout(() => {
-                addMessage('alex', "Before we start, tell me your name — I want the team to know who's joining.");
-                showInput();
-            }, 2000);
-        }
-
-        function addMessage(sender, message, isHtml = false) {
-            const chatContainer = document.getElementById('chat-container');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message';
-            
-            if (sender === 'alex') {
-                messageDiv.className += ' alex-chat p-4 rounded-2xl';
-                messageDiv.innerHTML = `
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-slate-900 mb-1">Alex</p>
-                            <div class="text-slate-700">${isHtml ? message : message.replace(/\n/g, '<br>')}</div>
-                        </div>
-                    </div>
-                `;
-            } else if (sender === 'user') {
-                messageDiv.className += ' bg-slate-100 p-4 rounded-2xl ml-8';
-                messageDiv.innerHTML = `
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-br from-slate-500 to-slate-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-semibold text-sm">You</span>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-slate-900 mb-1">You</p>
-                            <div class="text-slate-700">${message}</div>
-                        </div>
-                    </div>
-                `;
-            } else if (sender === 'email') {
-                messageDiv.className += ' email-card p-4 rounded-2xl';
-                messageDiv.innerHTML = `
-                    <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-slate-900 mb-1">Email from Mike</p>
-                            <div class="text-slate-700">${isHtml ? message : message.replace(/\n/g, '<br>')}</div>
-                        </div>
-                    </div>
-                `;
-            } else if (sender === 'event') {
-                messageDiv.className += ' bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 p-4 rounded-2xl text-center';
-                messageDiv.innerHTML = `
-                    <div class="flex items-center justify-center space-x-2">
-                        <div class="text-amber-600 font-semibold text-lg">${message}</div>
-                    </div>
-                `;
-            }
-            
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function showInput() {
-            document.getElementById('input-area').classList.remove('hidden');
-            document.getElementById('user-input').focus();
-            
-            document.getElementById('send-button').addEventListener('click', handleUserInput);
-            document.getElementById('user-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    handleUserInput();
-                }
-            });
-        }
-
-        function showChoices(choices, callback) {
-            const choicesContainer = document.getElementById('choices-container');
-            choicesContainer.innerHTML = '';
-            choicesContainer.classList.remove('hidden');
-            
-            choices.forEach((choice, index) => {
-                const button = document.createElement('button');
-                button.className = 'choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all mb-3';
-                button.innerHTML = `
-                    <div class="font-medium text-slate-900">${choice.text}</div>
-                    ${choice.feedback ? `<div class="text-sm text-slate-600 mt-1 hidden feedback">${choice.feedback}</div>` : ''}
-                `;
+        function initializeSimulator() {
+            // Add click handler for start button
+            document.getElementById('startButton').addEventListener('click', function() {
+                const nameInput = document.getElementById('playerName');
+                const name = nameInput.value.trim();
                 
-                button.addEventListener('click', () => {
-                    // Показываем feedback для выбранного варианта
-                    const feedback = button.querySelector('.feedback');
-                    if (feedback) {
-                        feedback.classList.remove('hidden');
-                    }
-                    
-                    // Скрываем все кнопки через небольшую задержку
-                    setTimeout(() => {
-                        choicesContainer.classList.add('hidden');
-                        addMessage('user', choice.text);
-                        
-                        // Показываем feedback от Alex
-                        if (choice.feedback) {
-                            setTimeout(() => {
-                                addMessage('alex', choice.feedback);
-                            }, 1000);
-                        }
-                        
-                        if (callback) callback(choice);
-                    }, 500);
+                if (!name) {
+                    nameInput.focus();
+                    return;
+                }
+                
+                playerName = name;
+                document.getElementById('playerNameDisplay').textContent = name;
+                
+                // Hide intro and show day 1
+                document.getElementById('introBlock').classList.add('hidden');
+                document.getElementById('day1Block').classList.remove('locked');
+                document.getElementById('day1Block').classList.add('show');
+                
+                currentDay = 1;
+                updateProgress();
+            });
+            
+            // Add click handlers to all choice buttons
+            document.querySelectorAll('.choice-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    handleChoice(this);
                 });
-                
-                choicesContainer.appendChild(button);
             });
-        }
-
-        function handleUserInput() {
-            const input = document.getElementById('user-input');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            addMessage('user', message);
-            input.value = '';
-            document.getElementById('input-area').classList.add('hidden');
-            
-            // Handle different game states
-            if (gameState.currentScene === 'intro') {
-                handleIntroResponse(message);
-            }
-            // Add more handlers as needed
-        }
-
-        function handleIntroResponse(name) {
-            gameState.playerName = name;
-            
-            setTimeout(() => {
-                addMessage('alex', `Nice to meet you, ${name}. You'll be helping us launch Smart Profile — a feature that turns raw user info into a confident, recruiter-ready profile in minutes.`);
-                setTimeout(() => {
-                    addMessage('alex', "Ready to start your first day?");
-                    showChoices([
-                        { text: "Let's go!", feedback: "Great attitude!" }
-                    ], () => {
-                        // Continue with Day 1 content directly
-                        setTimeout(() => {
-                            addMessage('alex', "Welcome to Day 1! Today we'll understand the problem, the audience, and define one clear message.");
-                            setTimeout(() => {
-                                addMessage('alex', "Let's start with the team kickoff meeting.");
-                                setTimeout(() => {
-                                    showSlackMessage();
-                                }, 2000);
-                            }, 2000);
-                        }, 1000);
-                    });
-                }, 2000);
-            }, 1000);
-        }
-
-        function startDay1() {
-            gameState.currentDay = 1;
-            gameState.currentScene = 'day1-brief';
-            
-            // Update UI
-            document.getElementById('dayTitle').textContent = 'Day 1 - Brief, Audience & Insight';
-            document.getElementById('dayDescription').textContent = 'Understand the problem, the audience, and define one clear message';
-            document.getElementById('dayContent').innerHTML = `
-                <div class="text-center">
-                    <p class="text-lg text-slate-600 mb-6">Today you'll work with the team to understand the Smart Profile campaign brief.</p>
-                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
-                        <h3 class="text-lg font-semibold text-amber-800 mb-2">Today's goals:</h3>
-                        <ul class="text-amber-700 space-y-1">
-                            <li>• Read the creative brief</li>
-                            <li>• Understand your audience</li>
-                            <li>• Define your core message</li>
-                        </ul>
-                    </div>
-                </div>
-            `;
             
             updateProgress();
-            clearChat();
+        }
+
+        function handleChoice(button) {
+            // Remove selected class from all buttons in the same question
+            const questionContainer = button.closest('.mb-6');
+            questionContainer.querySelectorAll('.choice-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
             
-            // Start the intro if player name is not set
-            if (!gameState.playerName) {
-                startIntro();
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            
+            // Show feedback
+            const feedback = button.dataset.feedback;
+            if (feedback) {
+                showFeedback(button, feedback);
+            }
+            
+            // Mark question as completed
+            completedQuestions++;
+            
+            // Check if we can unlock next day
+            if (completedQuestions === 3) {
+                unlockDay(2);
+                showInsight('day1Insight');
+            } else if (completedQuestions === 5) {
+                unlockDay(3);
+                showInsight('day2Insight');
+            } else if (completedQuestions === 6) {
+                unlockDay('completion');
+                showInsight('day3Insight');
+                showCompletion();
+            }
+            
+            updateProgress();
+        }
+
+        function showFeedback(button, feedback) {
+            // Create feedback element
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'feedback mt-2 p-3 rounded-lg text-sm';
+            
+            if (feedback.startsWith('✅') || feedback.startsWith('💎')) {
+                feedbackDiv.className += ' bg-green-50 text-green-700 border border-green-200';
+            } else if (feedback.startsWith('⚠️')) {
+                feedbackDiv.className += ' bg-yellow-50 text-yellow-700 border border-yellow-200';
             } else {
-                // Continue with Day 1 content
-                setTimeout(() => {
-                    addMessage('alex', "Welcome to Day 1! Today we'll understand the problem, the audience, and define one clear message.");
-                    setTimeout(() => {
-                        addMessage('alex', "Let's start with the team kickoff meeting.");
-                        setTimeout(() => {
-                            showSlackMessage();
-                        }, 2000);
-                    }, 2000);
-                }, 1000);
+                feedbackDiv.className += ' bg-red-50 text-red-700 border border-red-200';
+            }
+            
+            feedbackDiv.textContent = feedback;
+            
+            // Insert after button
+            button.parentNode.insertBefore(feedbackDiv, button.nextSibling);
+            
+            // Show feedback with animation
+            setTimeout(() => {
+                feedbackDiv.classList.add('show');
+            }, 100);
+        }
+
+        function showInsight(insightId) {
+            const insight = document.getElementById(insightId);
+            if (insight) {
+                insight.classList.remove('hidden');
+                insight.classList.add('show');
             }
         }
 
-        function showSlackMessage() {
-            addMessage('event', "📱 Slack #team-launch");
-            setTimeout(() => {
-                addMessage('alex', "Mike (Product Manager): Hey team, today's the kickoff for our Smart Profile campaign. We need a message that makes people feel safe and excited to create their profile fast. " + gameState.playerName + ", you'll lead the copy direction. Start by reading the brief I just sent.");
-                setTimeout(() => {
-                    addMessage('alex', "Remember, " + gameState.playerName + " — great copy starts with empathy. Don't rush to write; understand what users fear and hope for first.");
-                    setTimeout(() => {
-                        showEmail();
-                    }, 4000);
-                }, 4000);
-            }, 3000);
-        }
-
-        function showEmail() {
-            const emailContent = `
-                <div class="border-b border-slate-200 pb-4 mb-4">
-                    <h4 class="font-semibold text-slate-900">Creative Brief: Smart Profile</h4>
-                    <p class="text-sm text-slate-600">From: Mike (Product Manager)</p>
-                    <p class="text-sm text-slate-600">Subject: Brief — Smart Profile Launch Copy</p>
-                </div>
-                <div class="space-y-3 text-sm">
-                    <p><strong>Goal:</strong> increase completed profiles by 15% in 2 weeks</p>
-                    <p><strong>Audience:</strong> career switchers 25–35 y/o, anxious about "how to describe themselves"</p>
-                    <p><strong>Tone:</strong> supportive, human, confident</p>
-                    <p><strong>Tagline limit:</strong> 7 words</p>
-                    <p><strong>Avoid:</strong> "AI writes for you" — users need ownership</p>
-                </div>
-            `;
+        function unlockDay(dayNumber) {
+            let blockId;
+            if (dayNumber === 2) {
+                blockId = 'day2Block';
+                currentDay = 2;
+            } else if (dayNumber === 3) {
+                blockId = 'day3Block';
+                currentDay = 3;
+            } else if (dayNumber === 'completion') {
+                blockId = 'completionBlock';
+                currentDay = 4;
+            }
             
-            addMessage('email', emailContent, true);
-            setTimeout(() => {
-                addMessage('alex', "☕ Coffee Break with Alex");
-                setTimeout(() => {
-                    addMessage('alex', "What emotion do you want your audience to feel after reading your message?");
-                    showChoices([
-                        { 
-                            text: "Inspired — 'They can reinvent themselves.'", 
-                            feedback: "✅ Inspiration works when it's grounded in truth." 
-                        },
-                        { 
-                            text: "Safe — 'They can trust the process.'", 
-                            feedback: "✅ Strong psychological insight; trust is key." 
-                        },
-                        { 
-                            text: "Curious — 'They want to try the tool.'", 
-                            feedback: "⚠️ Curiosity helps clicks, but we want depth." 
-                        }
-                    ], (choice) => {
-                        gameState.userChoices.emotion = choice.text;
-                        setTimeout(() => {
-                            showTeamChat();
-                        }, 3000);
+            if (blockId) {
+                const block = document.getElementById(blockId);
+                block.classList.remove('locked');
+                block.classList.add('show');
+                
+                // Add click handlers to new buttons
+                block.querySelectorAll('.choice-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        handleChoice(this);
                     });
-                }, 4000);
-            }, 4000);
+                });
+            }
         }
 
-        function showTeamChat() {
-            addMessage('event', "💬 Internal Chat #smart-profile-team");
-            setTimeout(() => {
-                addMessage('alex', "Emma (UX Researcher): Most users said: 'I freeze when I have to describe myself.' The problem isn't laziness — it's fear of being judged.");
-                setTimeout(() => {
-                    addMessage('alex', "Mike: Exactly. Let's position Smart Profile as a mirror that helps you see your best self.");
-                    setTimeout(() => {
-                        addMessage('alex', "Now, " + gameState.playerName + ", write one simple sentence that could open our campaign.");
-                        setTimeout(() => {
-                            addMessage('alex', "Let me show you some options to compare:");
-                            showChoices([
-                                { 
-                                    text: "Be your own career story.", 
-                                    feedback: "✅ Emotional, puts user in charge." 
-                                },
-                                { 
-                                    text: "Meet the profile that finally gets you.", 
-                                    feedback: "✅ Very empathetic — potential winner." 
-                                },
-                                { 
-                                    text: "Create your dream job in 5 minutes.", 
-                                    feedback: "❌ Too transactional — we sell confidence, not speed." 
-                                }
-                            ], (choice) => {
-                                gameState.userChoices.openingLine = choice.text;
-                                setTimeout(() => {
-                                    showAfternoonSync();
-                                }, 3000);
-                            });
-                        }, 2000);
-                        updateCurrentTask("Choose your opening line for the campaign.");
-                    }, 4000);
-                }, 4000);
-            }, 3000);
-        }
-
-
-        function showAfternoonSync() {
-            addMessage('event', "📅 Afternoon Sync");
-            setTimeout(() => {
-                addMessage('alex', "Sarah (HR Lead): Love the direction. We need both emotion and clarity — users should instantly know what Smart Profile does.");
-                setTimeout(() => {
-                    addMessage('alex', "Exactly. Tomorrow we'll build real ad concepts — social, banners, landing page. But first, your reflection.");
-                    setTimeout(() => {
-                        addMessage('alex', "What's today's biggest takeaway?");
-                        showChoices([
-                            { 
-                                text: "A clear message starts from empathy.", 
-                                feedback: "✅ Correct — empathy before execution." 
-                            },
-                            { 
-                                text: "Taglines must always be short.", 
-                                feedback: "❌ Short ≠ meaningful." 
-                            },
-                            { 
-                                text: "Speed is the key factor.", 
-                                feedback: "❌ Trust > speed." 
-                            }
-                        ], (choice) => {
-                            gameState.userChoices.day1Takeaway = choice.text;
-                            endDay1();
-                        });
-                    }, 4000);
-                }, 4000);
-            }, 3000);
-        }
-
-        function endDay1() {
-            addMessage('event', "🌇 End-of-Day Reflection");
-            setTimeout(() => {
-                addMessage('alex', "Nice work today, " + gameState.playerName + ". You didn't just write copy — you uncovered truth. Tomorrow we'll test your message with users.");
-                setTimeout(() => {
-                    addMessage('alex', "Insight of the Day: 💡 Good copy isn't about words — it's about knowing what people need to hear before they believe you.");
-                    addInsight("💡 Good copy isn't about words — it's about knowing what people need to hear before they believe you.");
-                    completeDay(1);
-                    
-                    setTimeout(() => {
-                        addMessage('alex', "Day 1 complete! You can now click on Day 2 to continue your journey.");
-                    }, 3000);
-                }, 4000);
-            }, 3000);
-        }
-
-        function startDay2() {
-            gameState.currentDay = 2;
-            gameState.currentScene = 'day2-concepts';
-            updateCurrentTask("Day 2: Turn insights into real campaign ideas and balance emotion + clarity.");
-            updateDayProgress(2, 0);
-            
-            setTimeout(() => {
-                addMessage('event', "📅 Day 2 - Concepts & Variations");
-                setTimeout(() => {
-                    addMessage('alex', "Morning, " + gameState.playerName + "! Ready for concepts? Yesterday you found the emotional truth. Today we make it tangible.");
-                    setTimeout(() => {
-                        addMessage('alex', "We'll need three directions for Smart Profile: Emotional, Functional, Social. Emma's got data.");
-                        setTimeout(() => {
-                            addMessage('alex', "Which creative direction do we start with?");
-                            showChoices([
-                                { 
-                                    text: "Emotional — 'Rewrite your story.'", 
-                                    feedback: "✅ Emotion = trust." 
-                                },
-                                { 
-                                    text: "Functional — 'Finish your profile in minutes.'", 
-                                    feedback: "⚠️ Usable but cold." 
-                                },
-                                { 
-                                    text: "Social — 'Share who you are with confidence.'", 
-                                    feedback: "✅ Adds community angle — good for social ads." 
-                                }
-                            ], (choice) => {
-                                gameState.userChoices.day2Direction = choice.text;
-                                setTimeout(() => {
-                                    addMessage('alex', "Great choice! Now let's create some headlines. Imagine scrolling LinkedIn and seeing your own ad. What would stop you from scrolling?");
-                                    setTimeout(() => {
-                                        showChoices([
-                                            { 
-                                                text: "See your career through clear eyes.", 
-                                                feedback: "✅ Poetic & empathetic — great for video." 
-                                            },
-                                            { 
-                                                text: "Finally, a profile that gets you.", 
-                                                feedback: "✅ Strong insight — great for landing page." 
-                                            },
-                                            { 
-                                                text: "Turn data into confidence.", 
-                                                feedback: "❌ Too technical." 
-                                            }
-                                        ], (choice) => {
-                                            gameState.userChoices.headline = choice.text;
-                                            endDay2();
-                                        });
-                                    }, 3000);
-                                }, 3000);
-                            });
-                        }, 3000);
-                    }, 3000);
-                }, 3000);
-            }, 2000);
-        }
-
-        function endDay2() {
-            addMessage('event', "🌇 End of Day 2");
-            setTimeout(() => {
-                addMessage('alex', "Excellent work today, " + gameState.playerName + "! You've created compelling concepts that balance emotion with clarity.");
-                setTimeout(() => {
-                    addMessage('alex', "Insight of the Day: 💡 Creativity = empathy + structure — emotion meets strategy.");
-                    addInsight("💡 Creativity = empathy + structure — emotion meets strategy.");
-                    updateDayProgress(2, 100);
-                    updateCurrentTask("Day 2 complete! Ready for Day 3 tomorrow.");
-                    gameState.completedTasks.push('day2');
-                    
-                    // Add button to continue to Day 3
-                    setTimeout(() => {
-                        addMessage('alex', "Ready for Day 3? We'll test your concepts and present them to the team.");
-                        showChoices([
-                            { 
-                                text: "Let's continue to Day 3!", 
-                                feedback: "Perfect! Time to validate and present." 
-                            }
-                        ], () => {
-                            startDay3();
-                        });
-                    }, 3000);
-                }, 4000);
-            }, 3000);
-        }
-
-        function startDay3() {
-            gameState.currentDay = 3;
-            gameState.currentScene = 'day3-test';
-            updateCurrentTask("Day 3: Validate ideas with data and present confidently.");
-            updateDayProgress(3, 0);
-            
-            setTimeout(() => {
-                addMessage('event', "📅 Day 3 - Test & Present");
-                setTimeout(() => {
-                    addMessage('alex', "Morning! Our social ads ran overnight. Let's see the results:");
-                    setTimeout(() => {
-                        addMessage('alex', "• Concept A — CTR 4.2%\n• Concept B — CTR 6.7%");
-                        setTimeout(() => {
-                            addMessage('alex', "Which would you present as lead, " + gameState.playerName + "?");
-                            showChoices([
-                                { 
-                                    text: "A — More emotional resonance.", 
-                                    feedback: "✅ Emotion drives loyalty — balance it with data." 
-                                },
-                                { 
-                                    text: "B — Higher click rate = proof.", 
-                                    feedback: "✅ Data matters — explain why it works." 
-                                },
-                                { 
-                                    text: "Blend both — emotion + clarity.", 
-                                    feedback: "💎 Best answer — you think like a strategist." 
-                                }
-                            ], (choice) => {
-                                gameState.userChoices.presentationChoice = choice.text;
-                                endDay3();
-                            });
-                        }, 3000);
-                    }, 3000);
-                }, 3000);
-            }, 2000);
-        }
-
-        function endDay3() {
-            addMessage('event', "🏁 Simulation Complete");
-            setTimeout(() => {
-                addMessage('alex', "Congratulations, " + gameState.playerName + "! You've completed the Copywriter / Creator simulation.");
-                setTimeout(() => {
-                    addMessage('alex', "Final Insight: 💡 The best copywriters don't chase attention — they earn trust.");
-                    addInsight("💡 The best copywriters don't chase attention — they earn trust.");
-                    updateDayProgress(3, 100);
-                    updateCurrentTask("Simulation complete! You've mastered the art of copywriting.");
-                    gameState.completedTasks.push('day3');
-                    
-                    setTimeout(() => {
-                        addMessage('alex', "What was your real job this week?");
-                        showChoices([
-                            { 
-                                text: "To write beautiful words.", 
-                                feedback: "❌ Words are just tools." 
-                            },
-                            { 
-                                text: "To make people believe in themselves.", 
-                                feedback: "✅ That's the heart of copywriting." 
-                            },
-                            { 
-                                text: "To sell the product at any cost.", 
-                                feedback: "❌ We persuade, not manipulate." 
-                            }
-                        ], (choice) => {
-                            setTimeout(() => {
-                                addMessage('alex', "You did it, " + gameState.playerName + ". You came to write ads and left understanding people.");
-                                setTimeout(() => {
-                                    addMessage('alex', "🎉 Simulation Complete! You've successfully completed all 3 days of the Copywriter / Creator simulation.");
-                                }, 3000);
-                            }, 2000);
-                        });
-                    }, 3000);
-                }, 4000);
-            }, 3000);
+        function showCompletion() {
+            experience += 100;
+            updateProgress();
         }
 
         function updateProgress() {
-            document.getElementById('currentDay').textContent = gameState.currentDay;
-            document.getElementById('currentExperience').textContent = gameState.experience;
+            document.getElementById('currentDay').textContent = currentDay;
+            document.getElementById('experience').textContent = experience;
             
-            const totalDays = 3;
-            const completedDays = gameState.completedDays.length;
-            const progress = (completedDays / totalDays) * 100;
+            const progress = (completedQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
             
-            document.getElementById('dayProgressBar').style.width = progress + '%';
-            document.getElementById('dayProgressText').textContent = `${completedDays}/${totalDays} days completed`;
-        }
-
-        function clearChat() {
-            document.getElementById('chat-container').innerHTML = '';
-            document.getElementById('input-area').classList.add('hidden');
-            document.getElementById('choices-container').classList.add('hidden');
-        }
-
-        function completeDay(dayNumber) {
-            if (!gameState.completedDays.includes(dayNumber)) {
-                gameState.completedDays.push(dayNumber);
-                gameState.experience += 100;
-                
-                // Update day card
-                const dayCard = document.getElementById(`day${dayNumber}Card`);
-                dayCard.classList.remove('task-locked', 'cursor-not-allowed', 'opacity-60');
-                dayCard.classList.add('task-completed');
-                document.getElementById(`day${dayNumber}Status`).textContent = 'Completed';
-                
-                // Unlock next day
-                if (dayNumber < 3) {
-                    const nextDayCard = document.getElementById(`day${dayNumber + 1}Card`);
-                    nextDayCard.classList.remove('task-locked', 'cursor-not-allowed', 'opacity-60');
-                    document.getElementById(`day${dayNumber + 1}Status`).textContent = 'Ready to start';
-                } else {
-                    // Unlock final
-                    const finalCard = document.getElementById('finalCard');
-                    finalCard.classList.remove('task-locked', 'cursor-not-allowed', 'opacity-60');
-                    document.getElementById('finalStatus').textContent = 'Ready to complete';
-                }
-                
-                updateProgress();
+            if (currentDay === 0) {
+                document.getElementById('progressText').textContent = 'Welcome!';
+            } else if (currentDay === 4) {
+                document.getElementById('progressText').textContent = 'Complete!';
+            } else {
+                document.getElementById('progressText').textContent = `Day ${currentDay} of 3`;
             }
-        }
-
-        function updateDayProgress(day, percentage) {
-            document.getElementById(`day${day}-progress`).style.width = percentage + '%';
-            
-            // Update overall progress
-            const totalTasks = 3;
-            const completedDays = gameState.completedTasks.length;
-            const currentDayProgress = percentage / 100;
-            const overallProgress = (completedDays + currentDayProgress) / totalTasks;
-            
-            document.getElementById('overall-progress').style.width = (overallProgress * 100) + '%';
-            document.getElementById('progress-percentage').textContent = Math.round(overallProgress * 100) + '%';
-        }
-
-        function addInsight(insight) {
-            gameState.insights.push(insight);
-            const insightsContainer = document.getElementById('insights-container');
-            const insightDiv = document.createElement('div');
-            insightDiv.className = 'text-sm text-slate-600';
-            insightDiv.textContent = insight;
-            insightsContainer.appendChild(insightDiv);
         }
     </script>
 </body>
