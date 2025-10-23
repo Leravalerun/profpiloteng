@@ -628,14 +628,6 @@
         </div>
       </div>
 
-      <!-- Crypto Options -->
-      <div class="card">
-        <h3 style="margin-bottom: 1rem; font-weight: 600;">Choose Cryptocurrency</h3>
-        <div class="crypto-options" id="crypto-options">
-          <!-- Crypto options will be populated by JavaScript -->
-        </div>
-      </div>
-
         <!-- Email Collection -->
         <div class="card" id="email-collection">
           <h3 style="margin-bottom: 1rem; font-weight: 600;">📧 Get Access to Your Simulator</h3>
@@ -653,6 +645,14 @@
             </button>
           </form>
         </div>
+
+      <!-- Crypto Options -->
+      <div class="card hidden" id="crypto-options-container">
+        <h3 style="margin-bottom: 1rem; font-weight: 600;">Choose Cryptocurrency</h3>
+        <div class="crypto-options" id="crypto-options">
+          <!-- Crypto options will be populated by JavaScript -->
+        </div>
+      </div>
 
         <!-- Payment Details -->
         <div class="card payment-details hidden" id="payment-details">
@@ -982,7 +982,7 @@
 
     function showEmailFormForFreeAccess() {
       // Hide crypto options and show email form
-      document.getElementById('crypto-options').parentElement.classList.add('hidden');
+      document.getElementById('crypto-options-container').classList.add('hidden');
       document.getElementById('email-collection').classList.remove('hidden');
       
       // Update the form title and description for free access
@@ -1076,7 +1076,7 @@
         } else {
           // Regular payment - show crypto options
           document.getElementById('email-collection').classList.add('hidden');
-          document.getElementById('crypto-options').parentElement.classList.remove('hidden');
+          document.getElementById('crypto-options-container').classList.remove('hidden');
           
           // Create payment record
           createPaymentRecord();

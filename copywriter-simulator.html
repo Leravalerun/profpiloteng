@@ -5,518 +5,434 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copywriter / Creator Simulator - ProfPilot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Access Control -->
     <script src="access-control.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
         .content-block {
-            transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(20px);
+            transition: all 0.5s ease;
         }
-        
         .content-block.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
         .content-block.locked {
             opacity: 0.3;
             pointer-events: none;
         }
-        
         .choice-button {
             transition: all 0.2s ease;
         }
-        
         .choice-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
         .choice-button.selected {
-            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
-            color: white;
             border-color: #f59e0b;
+            background-color: #fef3c7;
         }
-        
         .feedback {
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
-        
         .feedback.show {
             opacity: 1;
+            transform: translateY(0);
+        }
+        .shadow-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
     <!-- Header -->
     <header class="bg-white shadow-sm border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-900">Copywriter / Creator Simulator</h1>
-                        <p class="text-sm text-slate-600">JobHunter.ai Campaign</p>
-                    </div>
+                    <img src="logo-64.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" width="32" height="32" />
+                    <span class="text-xl font-bold text-slate-900">ProfPilot</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="text-right">
-                        <div class="text-sm text-slate-600">Day <span id="currentDay">1</span></div>
-                        <div class="text-xs text-slate-500">Experience: <span id="experience">0</span></div>
+                    <div class="text-sm text-slate-600">
+                        <span id="progressText">Welcome!</span>
+                    </div>
+                    <div class="w-32 bg-slate-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-amber-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Progress Bar -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-slate-700">Progress</span>
-                <span class="text-sm text-slate-500" id="progressText">Day 1 of 3</span>
-            </div>
-            <div class="w-full bg-slate-200 rounded-full h-2">
-                <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all duration-500" id="progressBar" style="width: 33%"></div>
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Intro Block -->
+        <div class="content-block show" id="introBlock">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-slate-900 mb-4">Copywriter / Creator Simulator</h1>
+                    <p class="text-lg text-slate-600 mb-6">Try being a real copywriter for 3 days</p>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="mb-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (AI mentor)</span>
+                    </div>
+                    <div class="space-y-4 text-slate-700">
+                        <p>Welcome to <strong>JobHunter.ai</strong>.</p>
+                        <p>We help people find jobs that <em>feel right</em>, not just pay right.</p>
+                        <p>You're joining as our new <strong>Copywriter / Creator</strong> — the one who finds words that make people believe in themselves again.</p>
+                        <p>Before we start — what's your name?</p>
+                    </div>
+                </div>
+
+                <!-- Name Input -->
+                <div class="mb-6">
+                    <label for="playerName" class="block text-sm font-medium text-slate-700 mb-2">Your name</label>
+                    <input type="text" id="playerName" placeholder="Enter your name" 
+                        class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-lg">
+                </div>
+
+                <button id="startButton" class="w-full bg-amber-600 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-amber-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
+                    Start Your Journey
+                </button>
             </div>
         </div>
 
-        <!-- Content Blocks -->
-        <div class="space-y-6">
-            <!-- Intro Block -->
-            <div class="content-block show" id="introBlock">
-                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
-                    <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-900">Welcome to JobHunter.ai</h2>
-                            <p class="text-slate-600">You're about to start your copywriting journey</p>
-                        </div>
+        <!-- Day 1 Block -->
+        <div class="content-block locked" id="day1Block">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                        <span class="text-white font-bold text-lg">1</span>
                     </div>
-
-                    <!-- Product Description -->
-                    <div class="mb-6 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-4">🎯 About Smart Profile</h3>
-                        <div class="space-y-3 text-blue-700">
-                            <p><strong>What it is:</strong> A feature that helps job seekers create compelling, recruiter-ready profiles in minutes instead of hours.</p>
-                            <p><strong>How it works:</strong> Users input basic info about their experience, and Smart Profile generates a professional summary, highlights key skills, and suggests improvements.</p>
-                            <p><strong>Target users:</strong> Career switchers (25-35) who struggle with self-description and feel overwhelmed by profile creation.</p>
-                            <p><strong>Current problem:</strong> Only 23% of users complete their profiles, leading to missed opportunities.</p>
-                        </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Day 1 - Fear of the Blank Page</h2>
+                        <p class="text-slate-600">Learn to write from empathy, not ego</p>
                     </div>
+                </div>
 
-                    <!-- Alex's Welcome -->
-                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
+                <!-- Scene 1 -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">M</span>
                         </div>
-                        <p class="text-slate-700">"Welcome to JobHunter.ai — and congrats on joining us as our new Copywriter. You'll be working on our Smart Profile campaign to help more people create confident, compelling profiles. Before we start, tell me your name so the team can welcome you properly."</p>
+                        <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
                     </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Morning! We're launching <em>Smart Profile</em> — the feature that helps users describe themselves.</p>
+                        <p>But our tagline, <em>'Your AI Career Helper'</em>, feels robotic.</p>
+                        <p>People give up halfway. They need comfort, not commands.</p>
+                        <p><span id="playerNameDisplay1">[Your Name]</span>, can you write something that feels human?</p>
+                    </div>
+                </div>
 
-                    <!-- Name Input -->
-                    <div class="mb-6">
-                        <label for="playerName" class="block text-sm font-medium text-slate-700 mb-2">Your name</label>
-                        <input type="text" id="playerName" placeholder="Enter your name" 
-                               class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
-                        <button id="startButton" class="mt-4 w-full bg-amber-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-amber-700 transition-colors">
-                            Let's start!
+                <!-- Scene 2 -->
+                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (Coffee Break)</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Let's be honest — writing is scary.</p>
+                        <p>Not because of grammar. Because you might sound stupid.</p>
+                        <p>That's what our users feel too.</p>
+                        <p>Good copy doesn't push people. It whispers: <em>Hey, it's okay to start.</em></p>
+                    </div>
+                </div>
+
+                <!-- Interactive Task -->
+                <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Interactive Task</h3>
+                    <p class="text-slate-700 mb-4">Write one short line that would make someone feel safe enough to start.</p>
+                    <textarea id="userLine" placeholder="Type your line here..." 
+                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 mb-4"></textarea>
+                    <button id="submitLine" class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors">
+                        Submit
+                    </button>
+                    <div id="lineFeedback" class="mt-3 hidden"></div>
+                </div>
+
+                <!-- Mini Choice -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Pick one direction that fits our product best:</h3>
+                    <div class="space-y-3">
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="empathetic and clear">
+                            <div class="font-medium text-slate-900">"Meet the profile that gets you."</div>
+                        </button>
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="warm and safe, great for social">
+                            <div class="font-medium text-slate-900">"It's okay to start small."</div>
+                        </button>
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="motivational but too abstract for first-time users">
+                            <div class="font-medium text-slate-900">"Be your own career story."</div>
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Day 1 Block -->
-            <div class="content-block locked" id="day1Block">
-                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
-                    <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
-                            <span class="text-white font-bold text-lg">1</span>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-900">Day 1 - Brief, Audience & Insight</h2>
-                            <p class="text-slate-600">Understand the problem, the audience, and define one clear message</p>
-                        </div>
-                    </div>
-
-                    <!-- Team Kickoff -->
-                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
-                        </div>
-                        <p class="text-slate-700">"Hey team, today's the kickoff for our Smart Profile campaign. We need a message that makes people feel safe and excited to create their profile fast. <span id="playerNameDisplay">[Your Name]</span>, you'll lead the copy direction. Our goal is to increase profile completion rates from 23% to 40% in the next 2 weeks."</p>
-                    </div>
-
-                    <!-- Email Brief -->
-                    <div class="mb-6 p-6 bg-blue-50 border border-blue-200 rounded-xl">
-                        <div class="flex items-center mb-4">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <div class="font-semibold text-slate-900">📧 From: Mike (PM)</div>
-                                <div class="text-sm text-slate-600">Subject: Creative Brief — Smart Profile</div>
-                            </div>
-                        </div>
-                        <div class="bg-white p-4 rounded-lg text-sm">
-                            <p><strong>Goal:</strong> +15% completed profiles in 2 weeks.</p>
-                            <p><strong>Audience:</strong> career switchers 25–35, anxious about describing themselves.</p>
-                            <p><strong>Tone:</strong> supportive, human, confident.</p>
-                            <p><strong>Tagline limit:</strong> 7 words.</p>
-                            <p><strong>Avoid:</strong> 'AI writes for you' — users need ownership.</p>
-                        </div>
-                    </div>
-
-                    <!-- Coffee Break -->
-                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
-                                <span class="text-white text-lg">☕</span>
-                            </div>
-                            <span class="font-semibold text-slate-900">Coffee Break with Alex</span>
-                        </div>
-                        <p class="text-slate-700">"Great copy starts with empathy. What do we want people to feel after reading our message?"</p>
-                    </div>
-
-                    <!-- Question 1: Core Emotion -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Pick the core emotion to evoke.</h3>
-                        <p class="text-sm text-slate-600 mb-4">Emotion is the feeling your words should consistently trigger.</p>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Works if grounded in real support (don't overpromise).">
-                                <div class="font-medium text-slate-900">Inspired — they can reinvent themselves.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Strong for anxious users; trust increases completion.">
-                                <div class="font-medium text-slate-900">Safe — they can trust the process.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="⚠️ Fine for clicks, but we need depth and confidence.">
-                                <div class="font-medium text-slate-900">Curious — they want to try the tool.</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Smart Profile Example -->
-                    <div class="mb-6 p-6 bg-slate-50 border border-slate-200 rounded-xl">
-                        <h3 class="text-lg font-semibold text-slate-800 mb-4">📱 Smart Profile Example</h3>
-                        <div class="bg-white p-4 rounded-lg border border-slate-200">
-                            <div class="space-y-3">
-                                <div class="border-l-4 border-blue-500 pl-4">
-                                    <p class="text-sm text-slate-600">User input:</p>
-                                    <p class="text-slate-800">"I'm a marketing manager with 5 years experience, worked at startups, good at campaigns"</p>
-                                </div>
-                                <div class="border-l-4 border-green-500 pl-4">
-                                    <p class="text-sm text-slate-600">Smart Profile output:</p>
-                                    <p class="text-slate-800">"Results-driven Marketing Manager with 5+ years of experience scaling growth campaigns at high-growth startups. Proven track record of increasing user engagement by 40% through data-driven strategies and creative problem-solving."</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Emma's Research -->
-                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Emma (UX Researcher)</span>
-                        </div>
-                        <p class="text-slate-700">"Interviews show users freeze at 'Describe yourself'. It's fear of judgment, not laziness. They worry about sounding too boastful or not impressive enough. Let's position Smart Profile as a mirror that helps you see your best self — not AI writing for you, but helping you find the right words."</p>
-                    </div>
-
-                    <!-- Task: Write One-liner -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Write 1-line opener</h3>
-                        <p class="text-sm text-slate-600 mb-4">Keep it human and clear (tagline ≤ 7 words if used as a tag).</p>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotional, puts user in charge.">
-                                <div class="font-medium text-slate-900">Be your own career story.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="💎 Empathetic, highly relevant to fear of being misunderstood.">
-                                <div class="font-medium text-slate-900">Meet the profile that finally gets you.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Too transactional — we sell confidence, not speed.">
-                                <div class="font-medium text-slate-900">Create your dream job in 5 minutes.</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Reflection -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">What's today's biggest takeaway?</h3>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Correct — empathy before execution.">
-                                <div class="font-medium text-slate-900">A clear message starts from empathy.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Short ≠ meaningful; clarity first.">
-                                <div class="font-medium text-slate-900">Taglines must always be short.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Trust > speed for anxious users.">
-                                <div class="font-medium text-slate-900">Speed is the key factor.</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Key Insight -->
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day1Insight">
-                        <h4 class="font-semibold text-green-800 mb-2">💡 Key Insight</h4>
-                        <p class="text-green-700">"Good copy isn't about words — it's about knowing what people need to hear before they believe you."</p>
-                    </div>
+                <!-- Reflection -->
+                <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day1Insight">
+                    <h4 class="font-semibold text-green-800 mb-2">Reflection</h4>
+                    <p class="text-green-700">"Today wasn't about writing. It was about understanding fear. Your first tool as a copywriter is empathy."</p>
+                    <p class="text-green-600 text-sm mt-2">Skill unlocked: Writing with empathy</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Day 2 Block -->
-            <div class="content-block locked" id="day2Block">
-                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
-                    <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
-                            <span class="text-white font-bold text-lg">2</span>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-900">Day 2 - Concepts & Variations</h2>
-                            <p class="text-slate-600">Turn insights into real campaign ideas and balance emotion + clarity</p>
-                        </div>
+        <!-- Day 2 Block -->
+        <div class="content-block locked" id="day2Block">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                        <span class="text-white font-bold text-lg">2</span>
                     </div>
-
-                    <!-- Creative Workshop -->
-                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
-                        </div>
-                        <p class="text-slate-700">"Morning! Ready for concepts? Yesterday you found the emotional truth. Today we make it tangible. We'll need three directions for Smart Profile: Emotional, Functional, Social."</p>
-                    </div>
-
-                    <!-- Miro Board Session -->
-                    <div class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">📱 Miro Board Session</span>
-                        </div>
-                        <p class="text-slate-700">"Let's map out our concepts on the Miro board. I've set up three columns: Emotional, Functional, and Social. Each direction needs a headline, sub-line, and key message."</p>
-                    </div>
-
-                    <!-- Emma's Data -->
-                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Emma (Data Analyst)</span>
-                        </div>
-                        <p class="text-slate-700">"I've got some insights from our user research. People who complete profiles are 3x more likely to get interviews. The main drop-off happens at the 'About Me' section."</p>
-                    </div>
-
-                    <!-- Question 2 -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Which creative direction do we start with?</h3>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotion = trust.">
-                                <div class="font-medium text-slate-900">Emotional — "Rewrite your story."</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="⚠️ Usable but cold.">
-                                <div class="font-medium text-slate-900">Functional — "Finish your profile in minutes."</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Adds community angle — good for social ads.">
-                                <div class="font-medium text-slate-900">Social — "Share who you are with confidence."</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Question 3 -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Now let's create some headlines. What would stop you from scrolling?</h3>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Poetic & empathetic — great for video.">
-                                <div class="font-medium text-slate-900">"See your career through clear eyes."</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Strong insight — great for landing page.">
-                                <div class="font-medium text-slate-900">"Finally, a profile that gets you."</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Too technical.">
-                                <div class="font-medium text-slate-900">"Turn data into confidence."</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Key Insight -->
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day2Insight">
-                        <h4 class="font-semibold text-green-800 mb-2">💡 Key Insight</h4>
-                        <p class="text-green-700">"Creativity = empathy + structure — emotion meets strategy."</p>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Day 2 - Finding the Voice</h2>
+                        <p class="text-slate-600">Discover what "tone" means and how to sound human</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Day 3 Block -->
-            <div class="content-block locked" id="day3Block">
-                <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
-                    <div class="flex items-center mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
-                            <span class="text-white font-bold text-lg">3</span>
+                <!-- Scene 1 -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">S</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Sarah (HR)</span>
+                    </div>
+                    <p class="text-slate-700">"We want users to feel that JobHunter.ai is <em>on their side</em>. Less corporate. More like a caring coach."</p>
+                </div>
+
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma (UX)</span>
+                    </div>
+                    <p class="text-slate-700">So, <span id="playerNameDisplay2">[Your Name]</span>, imagine you're that coach. How would you talk to a nervous friend?</p>
+                </div>
+
+                <!-- Interactive Task -->
+                <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">The Friend Test</h3>
+                    <p class="text-slate-700 mb-4">"Rewrite this sentence in two styles:"</p>
+                    <p class="text-slate-600 mb-4 italic">Base: "Create your profile today."</p>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">(a) As a strict teacher</label>
+                            <textarea id="teacherStyle" placeholder="Type your version..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"></textarea>
                         </div>
                         <div>
-                            <h2 class="text-2xl font-bold text-slate-900">Day 3 - Test & Present</h2>
-                            <p class="text-slate-600">Validate ideas with data and present confidently</p>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">(b) As your best friend cheering you on</label>
+                            <textarea id="friendStyle" placeholder="Type your version..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"></textarea>
                         </div>
                     </div>
+                    <button id="submitStyles" class="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors">
+                        Submit Both
+                    </button>
+                    <div id="styleFeedback" class="mt-3 hidden"></div>
+                </div>
 
-                    <!-- A/B Test Results -->
-                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Emma (Data Analyst)</span>
+                <!-- Coffee Break -->
+                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">A</span>
                         </div>
-                        <p class="text-slate-700">"Our social ads ran overnight. Here are the results: • Concept A — CTR 4.2% • Concept B — CTR 6.7%"</p>
+                        <span class="font-semibold text-slate-900">Alex (Coffee Break)</span>
                     </div>
+                    <p class="text-slate-700">"Most beginners think copywriting = writing pretty words. But tone is invisible design — it shapes how people feel about you before they even read the message."</p>
+                </div>
 
-                    <!-- Team Debrief -->
-                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Mike (Product Manager)</span>
-                        </div>
-                        <p class="text-slate-700">"Great work on the concepts! Now let's present our findings to the team. We need to show why our approach works and how it aligns with our business goals."</p>
-                    </div>
-
-                    <!-- Presentation Prep -->
-                    <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                        <div class="flex items-center mb-3">
-                            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </div>
-                            <span class="font-semibold text-slate-900">Alex (Your Mentor)</span>
-                        </div>
-                        <p class="text-slate-700">"Remember, the best presentations tell a story. Start with the problem, show your solution, and end with the results. Make it about the user, not the product."</p>
-                    </div>
-
-                    <!-- Question 4 -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Which would you present as lead?</h3>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Emotion drives loyalty — balance it with data.">
-                                <div class="font-medium text-slate-900">A — More emotional resonance.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ Data matters — explain why it works.">
-                                <div class="font-medium text-slate-900">B — Higher click rate = proof.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="💎 Best answer — you think like a strategist.">
-                                <div class="font-medium text-slate-900">Blend both — emotion + clarity.</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Final Question -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-4">What was your real job this week?</h3>
-                        <div class="space-y-3">
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ Words are just tools.">
-                                <div class="font-medium text-slate-900">To write beautiful words.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="✅ That's the heart of copywriting.">
-                                <div class="font-medium text-slate-900">To make people believe in themselves.</div>
-                            </button>
-                            <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="❌ We persuade, not manipulate.">
-                                <div class="font-medium text-slate-900">To sell the product at any cost.</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Key Insight -->
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day3Insight">
-                        <h4 class="font-semibold text-green-800 mb-2">💡 Final Insight</h4>
-                        <p class="text-green-700">"The best copywriters don't chase attention — they earn trust."</p>
+                <!-- Micro Quiz -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Which of these lines feels more like our brand?</h3>
+                    <div class="space-y-3">
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="cold and robotic">
+                            <div class="font-medium text-slate-900">"AI-powered profile creation in minutes."</div>
+                        </button>
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="human and kind">
+                            <div class="font-medium text-slate-900">"We'll help you find the words."</div>
+                        </button>
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-amber-500 transition-all" data-feedback="functional, not emotional">
+                            <div class="font-medium text-slate-900">"Get results faster with smart automation."</div>
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Completion Block -->
-            <div class="content-block locked" id="completionBlock">
-                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-card p-8 border border-amber-200">
-                    <div class="text-center">
-                        <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+                <!-- Reflection -->
+                <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day2Insight">
+                    <h4 class="font-semibold text-green-800 mb-2">Reflection</h4>
+                    <p class="text-green-700">"Tone of voice is empathy in motion. It's not what you say — it's how people feel reading it."</p>
+                    <p class="text-green-600 text-sm mt-2">Skill unlocked: Tone & empathy consistency</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 Block -->
+        <div class="content-block locked" id="day3Block">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4">
+                        <span class="text-white font-bold text-lg">3</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Day 3 - Story & Confidence</h2>
+                        <p class="text-slate-600">Connect message + emotion + trust and test your results</p>
+                    </div>
+                </div>
+
+                <!-- A/B Test Results -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">M</span>
                         </div>
-                        <h2 class="text-3xl font-bold text-slate-900 mb-4">🎉 Simulation Complete!</h2>
-                        <p class="text-xl text-slate-600 mb-6">You've successfully completed the Copywriter / Creator simulation.</p>
-                        <p class="text-lg text-slate-700 mb-8">You came to write ads and left understanding people.</p>
-                        
-                        <div class="bg-white rounded-xl p-6 mb-6">
-                            <h3 class="text-lg font-semibold text-slate-900 mb-4">What you've learned:</h3>
-                            <ul class="text-slate-600 space-y-2 text-left">
-                                <li>• How to find emotional truth in your audience</li>
-                                <li>• Creating compelling copy concepts that balance emotion and clarity</li>
-                                <li>• Testing and presenting your work with confidence</li>
-                                <li>• The real job of a copywriter: making people believe in themselves</li>
+                        <span class="font-semibold text-slate-900">Mike (A/B Test Results)</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-slate-200 mb-3">
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>Version A — "See your career through clear eyes."</span>
+                                <span class="font-semibold">4.2% CTR</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Version B — "Meet the profile that gets you."</span>
+                                <span class="font-semibold text-green-600">6.7% CTR</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-slate-700">"We're choosing B. But why do you think it worked?"</p>
+                </div>
+
+                <!-- User Input -->
+                <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <textarea id="abTestReasoning" placeholder="Type your reasoning here..." 
+                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 mb-3"></textarea>
+                    <button id="submitReasoning" class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors">
+                        Submit
+                    </button>
+                    <div id="reasoningFeedback" class="mt-3 hidden"></div>
+                </div>
+
+                <!-- Coffee Break -->
+                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (Coffee Break)</span>
+                    </div>
+                    <p class="text-slate-700">"Copywriting is emotional engineering. You rearrange words until someone finally says, <em>'Yeah… that's exactly how I feel.'</em>"</p>
+                </div>
+
+                <!-- Final Presentation -->
+                <div class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Final Presentation Task</h3>
+                    <p class="text-slate-700 mb-4">"Summarize your story in three lines:"</p>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">What users fear →</label>
+                            <input type="text" id="userFear" placeholder="Type here..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">What we promise →</label>
+                            <input type="text" id="ourPromise" placeholder="Type here..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">One tagline →</label>
+                            <input type="text" id="finalTagline" placeholder="Type here..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                        </div>
+                    </div>
+                    <button id="submitFinal" class="mt-4 bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors">
+                        Submit Story
+                    </button>
+                    <div id="finalFeedback" class="mt-3 hidden"></div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day3Insight">
+                    <h4 class="font-semibold text-green-800 mb-2">Final Reflection</h4>
+                    <p class="text-green-700">"Three days ago, you didn't know where to start. Now you know that words can change how people see themselves. That's what real copywriters do."</p>
+                    <p class="text-green-600 text-sm mt-2">Skill unlocked: Storytelling through empathy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Block -->
+        <div class="content-block locked" id="completionBlock">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Congratulations!</h2>
+                    <p class="text-lg text-slate-600">You've completed the Copywriter / Creator simulation</p>
+                </div>
+
+                <!-- What You've Learned -->
+                <div class="bg-slate-50 rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">What you've learned:</h3>
+                    <ul class="text-slate-600 space-y-2">
+                        <li>• How to find emotional truth in your audience</li>
+                        <li>• Creating compelling copy that balances emotion and clarity</li>
+                        <li>• Testing and presenting your work with confidence</li>
+                        <li>• The real job of a copywriter: making people believe in themselves</li>
+                    </ul>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-4">If you loved this — here's how to keep building your craft</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-blue-700 mb-2">Learn</h4>
+                            <ul class="text-blue-600 text-sm space-y-1">
+                                <li>• "Hey, Whipple, Squeeze This" — Luke Sullivan</li>
+                                <li>• "Made to Stick" — Chip & Dan Heath</li>
+                                <li>• "Ogilvy on Advertising" — David Ogilvy</li>
                             </ul>
                         </div>
-
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href="/copywriter.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
-                                Learn More
-                            </a>
-                            <a href="/simulator-selection.html" class="inline-block rounded-xl bg-amber-600 text-white px-6 py-3 font-medium hover:bg-amber-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow">
-                                Try Another Simulator
-                            </a>
+                        <div>
+                            <h4 class="font-medium text-blue-700 mb-2">Practice (pick 1 per week)</h4>
+                            <ul class="text-blue-600 text-sm space-y-1">
+                                <li>• Rewrite one product page you love</li>
+                                <li>• Create a fake ad for your favorite café</li>
+                                <li>• Ask three friends which line they'd click — and why</li>
+                            </ul>
                         </div>
                     </div>
+                </div>
+
+                <!-- Final Message -->
+                <div class="text-center mb-6">
+                    <p class="text-slate-700 italic">"The best copywriters don't sell things. They help people recognize themselves."</p>
+                    <p class="text-slate-600 text-sm mt-2">— Alex</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/copywriter.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
+                        Learn More
+                    </a>
+                    <a href="/simulator-selection.html" class="inline-block rounded-xl bg-amber-600 text-white px-6 py-3 font-medium hover:bg-amber-700 transition-colors duration-200 text-center shadow-lg hover:shadow-xl">
+                        Try Another Simulator
+                    </a>
                 </div>
             </div>
         </div>
@@ -526,7 +442,7 @@
         let currentDay = 0;
         let experience = 0;
         let completedQuestions = 0;
-        const totalQuestions = 6;
+        const totalQuestions = 4;
         let playerName = '';
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -556,7 +472,8 @@
                 }
                 
                 playerName = name;
-                document.getElementById('playerNameDisplay').textContent = name;
+                document.getElementById('playerNameDisplay1').textContent = name;
+                document.getElementById('playerNameDisplay2').textContent = name;
                 
                 // Hide intro and show day 1
                 document.getElementById('introBlock').classList.add('hidden');
@@ -573,8 +490,64 @@
                     handleChoice(this);
                 });
             });
+
+            // Add handlers for interactive tasks
+            setupInteractiveTasks();
             
             updateProgress();
+        }
+
+        function setupInteractiveTasks() {
+            // Day 1 - User line submission
+            document.getElementById('submitLine').addEventListener('click', function() {
+                const userLine = document.getElementById('userLine').value.trim();
+                if (userLine) {
+                    const feedback = document.getElementById('lineFeedback');
+                    feedback.innerHTML = '<div class="p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg">"Nice. Now ask yourself — does it sound like pressure or permission?"</div>';
+                    feedback.classList.remove('hidden');
+                    completedQuestions++;
+                    checkProgress();
+                }
+            });
+
+            // Day 2 - Style submission
+            document.getElementById('submitStyles').addEventListener('click', function() {
+                const teacherStyle = document.getElementById('teacherStyle').value.trim();
+                const friendStyle = document.getElementById('friendStyle').value.trim();
+                if (teacherStyle && friendStyle) {
+                    const feedback = document.getElementById('styleFeedback');
+                    feedback.innerHTML = '<div class="p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg">"See it? Tone changes everything. The second version <em>invites</em>, not orders."</div>';
+                    feedback.classList.remove('hidden');
+                    completedQuestions++;
+                    checkProgress();
+                }
+            });
+
+            // Day 3 - A/B test reasoning
+            document.getElementById('submitReasoning').addEventListener('click', function() {
+                const reasoning = document.getElementById('abTestReasoning').value.trim();
+                if (reasoning) {
+                    const feedback = document.getElementById('reasoningFeedback');
+                    feedback.innerHTML = '<div class="p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg">"Exactly. It spoke to their fear, not their wallet."</div>';
+                    feedback.classList.remove('hidden');
+                    completedQuestions++;
+                    checkProgress();
+                }
+            });
+
+            // Day 3 - Final presentation
+            document.getElementById('submitFinal').addEventListener('click', function() {
+                const fear = document.getElementById('userFear').value.trim();
+                const promise = document.getElementById('ourPromise').value.trim();
+                const tagline = document.getElementById('finalTagline').value.trim();
+                if (fear && promise && tagline) {
+                    const feedback = document.getElementById('finalFeedback');
+                    feedback.innerHTML = '<div class="p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg">"You just built a story. Not an ad."</div>';
+                    feedback.classList.remove('hidden');
+                    completedQuestions++;
+                    checkProgress();
+                }
+            });
         }
 
         function handleChoice(button) {
@@ -595,12 +568,14 @@
             
             // Mark question as completed
             completedQuestions++;
-            
-            // Check if we can unlock next day
-            if (completedQuestions === 3) {
+            checkProgress();
+        }
+
+        function checkProgress() {
+            if (completedQuestions === 2) {
                 unlockDay(2);
                 showInsight('day1Insight');
-            } else if (completedQuestions === 5) {
+            } else if (completedQuestions === 4) {
                 unlockDay(3);
                 showInsight('day2Insight');
             } else if (completedQuestions === 6) {
@@ -613,13 +588,19 @@
         }
 
         function showFeedback(button, feedback) {
+            // Check if feedback already exists for this button
+            const existingFeedback = button.parentNode.querySelector('.feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+            
             // Create feedback element
             const feedbackDiv = document.createElement('div');
             feedbackDiv.className = 'feedback mt-2 p-3 rounded-lg text-sm';
             
-            if (feedback.startsWith('✅') || feedback.startsWith('💎')) {
+            if (feedback.includes('empathetic') || feedback.includes('human') || feedback.includes('warm')) {
                 feedbackDiv.className += ' bg-green-50 text-green-700 border border-green-200';
-            } else if (feedback.startsWith('⚠️')) {
+            } else if (feedback.includes('functional') || feedback.includes('motivational')) {
                 feedbackDiv.className += ' bg-yellow-50 text-yellow-700 border border-yellow-200';
             } else {
                 feedbackDiv.className += ' bg-red-50 text-red-700 border border-red-200';
