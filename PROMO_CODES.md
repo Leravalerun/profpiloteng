@@ -11,6 +11,14 @@ ProfPilot supports promo codes that can provide discounts or free access to care
 - **Description**: Free access granted!
 - **Status**: Active
 - **Usage**: Unlimited
+- **Restrictions**: None (works for all simulators)
+
+### `lawyerfree`
+- **Discount**: 100% (Free access)
+- **Description**: Free access to Lawyer Simulator!
+- **Status**: Active
+- **Usage**: Unlimited
+- **Restrictions**: Only works for Lawyer Simulator
 
 ## 🛠️ Technical Implementation
 
@@ -22,6 +30,11 @@ const PROMO_CODES = {
   'checkppff': {
     discount: 100, // 100% discount (free)
     description: 'Free access granted!'
+  },
+  'lawyerfree': {
+    discount: 100, // 100% discount (free)
+    description: 'Free access to Lawyer Simulator!',
+    simulator: 'lawyer' // Only works for lawyer simulator
   }
 };
 ```
@@ -30,6 +43,10 @@ const PROMO_CODES = {
 - **Percentage**: `discount: 50` (50% off)
 - **Fixed Amount**: `discount: 15` (15% off)
 - **Free Access**: `discount: 100` (100% off)
+
+### Simulator Restrictions
+- **Global**: No `simulator` property (works for all simulators)
+- **Specific**: `simulator: 'lawyer'` (only works for specified simulator)
 
 ### Files Updated
 - `checkout.html` - Main checkout page with promo field
@@ -105,11 +122,13 @@ Use `test-promo.html` to test promo functionality:
 - Expected behavior documentation
 
 ### Test Cases
-1. **Valid Promo Code**: `checkppff` should work
-2. **Invalid Promo Code**: Should show error message
-3. **Empty Promo Code**: Should show validation error
-4. **Free Access Flow**: Should hide payment methods
-5. **Price Updates**: Should show correct pricing
+1. **Valid Global Promo Code**: `checkppff` should work for all simulators
+2. **Valid Specific Promo Code**: `lawyerfree` should work only for lawyer simulator
+3. **Invalid Promo Code**: Should show error message
+4. **Empty Promo Code**: Should show validation error
+5. **Wrong Simulator**: `lawyerfree` should show error for non-lawyer simulators
+6. **Free Access Flow**: Should hide payment methods
+7. **Price Updates**: Should show correct pricing
 
 ## 🔧 Adding New Promo Codes
 

@@ -293,6 +293,11 @@
       'checkppff': {
         discount: 100, // 100% discount (free)
         description: 'Free access granted!'
+      },
+      'lawyerfree': {
+        discount: 100, // 100% discount (free)
+        description: 'Free access to Lawyer Simulator!',
+        simulator: 'lawyer' // Only works for lawyer simulator
       }
     };
 
@@ -349,6 +354,13 @@
       
       if (PROMO_CODES[promoCode]) {
         const promo = PROMO_CODES[promoCode];
+        
+        // Check if promo code is restricted to specific simulator
+        if (promo.simulator && promo.simulator !== simulatorKey) {
+          showPromoMessage(`This promo code is only valid for ${promo.simulator} simulator`, 'error');
+          return;
+        }
+        
         promoApplied = true;
         currentPromoCode = promoCode;
         
