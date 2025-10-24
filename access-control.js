@@ -334,21 +334,23 @@ window.AccessControl = AccessControl;
 document.addEventListener('DOMContentLoaded', async function() {
   // Проверяем, находимся ли мы на странице симулятора
   const currentPath = window.location.pathname;
-  const simulatorPages = ['/ux-sim-simple.html', '/lawyer-simulator.html', '/copywriter-simulator.html', '/psychologist-simulator.html', '/ux-sim.html'];
+  const simulatorPages = ['/ux-sim-simple.html', '/lawyer-simulator.html', '/copywriter-simulator.html', '/psychologist-simulator.html', '/brand-marketer-simulator.html', '/ux-sim.html'];
   
   if (simulatorPages.includes(currentPath)) {
     const accessControl = new window.AccessControl();
     await accessControl.initialize();
     
-    // Определяем симулятор по URL
-    let simulator = 'ux-designer';
-    if (currentPath.includes('lawyer')) {
-      simulator = 'lawyer';
-    } else if (currentPath.includes('copywriter')) {
-      simulator = 'copywriter';
-    } else if (currentPath.includes('psychologist')) {
-      simulator = 'psychologist';
-    }
+        // Определяем симулятор по URL
+        let simulator = 'ux-designer';
+        if (currentPath.includes('lawyer')) {
+          simulator = 'lawyer';
+        } else if (currentPath.includes('copywriter')) {
+          simulator = 'copywriter';
+        } else if (currentPath.includes('psychologist')) {
+          simulator = 'psychologist';
+        } else if (currentPath.includes('brand-marketer')) {
+          simulator = 'brand-marketer';
+        }
     
     // Получаем email пользователя
     const userEmail = accessControl.getUserEmail();

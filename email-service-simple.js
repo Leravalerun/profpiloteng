@@ -132,28 +132,30 @@ class SimpleEmailService {
   }
 
   // Get simulator display name
-  getSimulatorName(simulatorKey) {
-    const names = {
-      'ux-designer': 'UX Designer Simulator',
-      'lawyer': 'Corporate Lawyer Simulator',
-      'corporate-lawyer': 'Corporate Lawyer Simulator',
-      'copywriter': 'Copywriter / Creator Simulator',
-      'psychologist': 'Psychologist Simulator'
-    };
-    return names[simulatorKey] || 'Career Simulator';
-  }
+      getSimulatorName(simulatorKey) {
+        const names = {
+          'ux-designer': 'UX Designer Simulator',
+          'lawyer': 'Corporate Lawyer Simulator',
+          'corporate-lawyer': 'Corporate Lawyer Simulator',
+          'copywriter': 'Copywriter / Creator Simulator',
+          'psychologist': 'Psychologist Simulator',
+          'brand-marketer': 'Brand Marketer Simulator'
+        };
+        return names[simulatorKey] || 'Career Simulator';
+      }
 
   // Get simulator URL
-  getSimulatorUrl(simulatorKey) {
-    const urls = {
-      'ux-designer': '/ux-sim-simple.html',
-      'lawyer': '/lawyer-simulator.html',
-      'corporate-lawyer': '/lawyer-simulator.html',
-      'copywriter': '/copywriter-simulator.html',
-      'psychologist': '/psychologist-simulator.html'
-    };
-    return `${window.location.origin}${urls[simulatorKey] || '/dashboard.html'}`;
-  }
+      getSimulatorUrl(simulatorKey) {
+        const urls = {
+          'ux-designer': '/ux-sim-simple.html',
+          'lawyer': '/lawyer-simulator.html',
+          'corporate-lawyer': '/lawyer-simulator.html',
+          'copywriter': '/copywriter-simulator.html',
+          'psychologist': '/psychologist-simulator.html',
+          'brand-marketer': '/brand-marketer-simulator.html'
+        };
+        return `${window.location.origin}${urls[simulatorKey] || '/dashboard.html'}`;
+      }
 
   // Send welcome email for new users
   async sendWelcomeEmail(userData) {
