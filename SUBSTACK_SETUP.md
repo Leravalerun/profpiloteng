@@ -85,7 +85,7 @@ Write your first newsletter post:
 
 ### Option 1: Simple Link
 ```html
-<a href="https://profpilot.substack.com" 
+<a href="https://piloturcareer.substack.com" 
    class="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
   Subscribe on Substack
 </a>
