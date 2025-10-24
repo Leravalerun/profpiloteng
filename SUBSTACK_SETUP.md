@@ -12,7 +12,7 @@ We've integrated Substack for free email newsletters instead of paid email servi
 ### 2. Substack Widget Code
 ```html
 <iframe 
-  src="https://profpilot.substack.com/embed" 
+  src="https://piloturcareer.substack.com/embed" 
   width="100%" 
   height="200" 
   style="border:1px solid #EEE; background:white;" 
@@ -28,7 +28,7 @@ We've integrated Substack for free email newsletters instead of paid email servi
 1. Go to [substack.com](https://substack.com)
 2. Sign up with your email
 3. Create a new publication called "ProfPilot"
-4. Choose the URL: `profpilot.substack.com`
+4. Choose the URL: `piloturcareer.substack.com`
 
 ### 2. Configure Publication
 - **Name**: ProfPilot
@@ -94,7 +94,7 @@ Write your first newsletter post:
 ### Option 2: Custom Form (Advanced)
 If you want more control, you can create a custom form that redirects to Substack:
 ```html
-<form action="https://profpilot.substack.com/subscribe" method="post" target="_blank">
+<form action="https://piloturcareer.substack.com/subscribe" method="post" target="_blank">
   <input type="email" name="email" placeholder="Enter your email" required>
   <button type="submit">Subscribe</button>
 </form>
