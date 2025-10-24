@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Blog - ProfPilot</title>
+  <meta name="description" content="Career insights, job search tips, and professional development articles from ProfPilot. Learn how to navigate career changes and find your ideal role.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#00d4aa',
+              600: '#00a896',
+              700: '#007a6b',
+              800: '#065f56',
+              900: '#064e3b'
+            },
+            accent: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(0, 212, 170, 0.3)',
+            'brand-glow': '0 0 30px rgba(0, 212, 170, 0.2)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4aa 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-pattern {
+      background-image: radial-gradient(circle at 25% 25%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+    }
+    .card-hover:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <a href="/index.html" class="flex items-center">
+            <img src="logo-64.png" alt="ProfPilot" class="h-8 w-8 mr-3">
+            <span class="text-2xl font-bold text-slate-900">ProfPilot</span>
+          </a>
+        </div>
+        <nav class="hidden md:flex space-x-8">
+          <a href="/index.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">Home</a>
+          <a href="/simulator-selection.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">Simulators</a>
+          <a href="/blog.html" class="text-brand-600 font-semibold">Blog</a>
+          <a href="/about.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">About</a>
+        </nav>
+        <div class="md:hidden">
+          <button class="text-slate-600 hover:text-slate-900">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-pattern py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+        Career <span class="gradient-text">insights</span> & tips
+      </h1>
+      <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+        Expert advice on career changes, job searching, and professional development. 
+        Learn from real experiences and discover your next career move.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#latest-posts" class="bg-brand-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
+          Read Latest Posts
+        </a>
+        <a href="/simulator-selection.html" class="border border-brand-600 text-brand-600 px-8 py-3 rounded-xl font-semibold hover:bg-brand-50 transition-colors">
+          Try Career Simulators
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Post -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-white rounded-3xl shadow-card p-8 md:p-12 border border-slate-100">
+        <div class="flex items-center mb-6">
+          <span class="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium">Featured</span>
+          <span class="text-slate-500 text-sm ml-4">October 2025</span>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+          How to test-drive a new career before making the switch
+        </h2>
+        <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+          Making a career change is one of the biggest decisions you'll make. But what if you could 
+          experience a new role before committing? Learn how career simulations can help you make 
+          informed decisions and avoid costly mistakes.
+        </p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-brand-500 rounded-full flex items-center justify-center mr-4">
+              <span class="text-white font-bold">PP</span>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-900">ProfPilot Team</p>
+              <p class="text-sm text-slate-500">Career Experts</p>
+            </div>
+          </div>
+          <a href="/blog/how-to-test-drive-career.html" class="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
+            Read Full Article
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Categories -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-slate-900 text-center mb-12">Explore by topic</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Career change</h3>
+          <p class="text-slate-600 mb-6">Tips and strategies for successfully transitioning to a new career path.</p>
+          <a href="/blog/category/career-change.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+            View Articles →
+          </a>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-accent-500 to-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Job search</h3>
+          <p class="text-slate-600 mb-6">Modern job search strategies, resume tips, and interview preparation.</p>
+          <a href="/blog/category/job-search.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+            View Articles →
+          </a>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Professional growth</h3>
+          <p class="text-slate-600 mb-6">Skills development, networking, and advancing in your current role.</p>
+          <a href="/blog/category/professional-growth.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+            View Articles →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Posts -->
+  <section id="latest-posts" class="py-16 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-slate-900 text-center mb-12">Latest articles</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Article 1 -->
+        <article class="bg-white rounded-2xl shadow-card p-6 border border-slate-100 card-hover">
+          <div class="flex items-center mb-4">
+            <span class="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium">Career Change</span>
+            <span class="text-slate-500 text-sm ml-4">Oct 15, 2025</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">
+            <a href="/blog/5-signs-you-need-career-change.html" class="hover:text-brand-600 transition-colors">
+              5 Signs You Need a Career Change (And How to Start)
+            </a>
+          </h3>
+          <p class="text-slate-600 mb-4">
+            Feeling stuck in your current role? Learn to recognize the warning signs that it's time 
+            for a career change and discover practical steps to make the transition.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">5 min read</span>
+            <a href="/blog/5-signs-you-need-career-change.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="bg-white rounded-2xl shadow-card p-6 border border-slate-100 card-hover">
+          <div class="flex items-center mb-4">
+            <span class="bg-accent-100 text-accent-700 px-3 py-1 rounded-full text-sm font-medium">Job Search</span>
+            <span class="text-slate-500 text-sm ml-4">Oct 12, 2025</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">
+            <a href="/blog/remote-work-job-search-tips.html" class="hover:text-brand-600 transition-colors">
+              Remote Work Job Search: What Employers Really Want
+            </a>
+          </h3>
+          <p class="text-slate-600 mb-4">
+            The remote work landscape has changed. Discover what skills and qualities employers 
+            are looking for in remote candidates and how to stand out.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">7 min read</span>
+            <a href="/blog/remote-work-job-search-tips.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="bg-white rounded-2xl shadow-card p-6 border border-slate-100 card-hover">
+          <div class="flex items-center mb-4">
+            <span class="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium">Professional Growth</span>
+            <span class="text-slate-500 text-sm ml-4">Oct 10, 2025</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">
+            <a href="/blog/ux-designer-career-path.html" class="hover:text-brand-600 transition-colors">
+              From Zero to UX Designer: A Complete Career Path Guide
+            </a>
+          </h3>
+          <p class="text-slate-600 mb-4">
+            Interested in UX design? Learn about the skills you need, the career progression, 
+            and how to break into this growing field without a design background.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">10 min read</span>
+            <a href="/blog/ux-designer-career-path.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="bg-white rounded-2xl shadow-card p-6 border border-slate-100 card-hover">
+          <div class="flex items-center mb-4">
+            <span class="bg-accent-100 text-accent-700 px-3 py-1 rounded-full text-sm font-medium">Job Search</span>
+            <span class="text-slate-500 text-sm ml-4">Oct 8, 2025</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">
+            <a href="/blog/ai-resume-tips-2024.html" class="hover:text-brand-600 transition-colors">
+              AI-Proof Your Resume: Tips for 2024 and Beyond
+            </a>
+          </h3>
+          <p class="text-slate-600 mb-4">
+            With AI screening more resumes than ever, learn how to optimize your resume 
+            to pass both human and AI reviewers while maintaining authenticity.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">6 min read</span>
+            <a href="/blog/ai-resume-tips-2024.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="bg-white rounded-2xl shadow-card p-6 border border-slate-100 card-hover">
+          <div class="flex items-center mb-4">
+            <span class="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium">Career Change</span>
+            <span class="text-slate-500 text-sm ml-4">Oct 5, 2025</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">
+            <a href="/blog/career-change-midlife.html" class="hover:text-brand-600 transition-colors">
+              Career Change at 40+: It's Never Too Late to Start Over
+            </a>
+          </h3>
+          <p class="text-slate-600 mb-4">
+            Thinking about changing careers in your 40s or 50s? Discover why midlife career 
+            changes can be your best decision and how to navigate the transition successfully.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">8 min read</span>
+            <a href="/blog/career-change-midlife.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 6 -->
+        <article class="bg-white rounded-2xl shadow-card p-6 border border-slate-100 card-hover">
+          <div class="flex items-center mb-4">
+            <span class="bg-accent-100 text-accent-700 px-3 py-1 rounded-full text-sm font-medium">Professional Growth</span>
+            <span class="text-slate-500 text-sm ml-4">Oct 3, 2025</span>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-3">
+            <a href="/blog/soft-skills-remote-work.html" class="hover:text-brand-600 transition-colors">
+              The Soft Skills That Matter Most in Remote Work
+            </a>
+          </h3>
+          <p class="text-slate-600 mb-4">
+            Technical skills get you hired, but soft skills get you promoted. Learn which 
+            interpersonal skills are most valuable in today's remote work environment.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-500">5 min read</span>
+            <a href="/blog/soft-skills-remote-work.html" class="text-brand-600 font-semibold hover:text-brand-700 transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-brand-50 to-accent-50">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-slate-900 mb-6">Stay Updated</h2>
+      <p class="text-lg text-slate-600 mb-8">
+        Get the latest career insights, job search tips, and exclusive content delivered to your inbox.
+      </p>
+      <form class="max-w-md mx-auto flex gap-4">
+        <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
+        <button type="submit" class="bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
+          Subscribe
+        </button>
+      </form>
+      <p class="text-sm text-slate-500 mt-4">No spam, unsubscribe at any time.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center mb-4">
+            <img src="logo-64.png" alt="ProfPilot" class="h-8 w-8 mr-3">
+            <span class="text-xl font-bold">ProfPilot</span>
+          </div>
+          <p class="text-slate-400 mb-4">
+            Test-drive careers before you commit. Experience real work scenarios and make informed career decisions.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-4">Simulators</h3>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="/ux.html" class="hover:text-white transition-colors">UX Designer</a></li>
+            <li><a href="/lawyer.html" class="hover:text-white transition-colors">Corporate Lawyer</a></li>
+            <li><a href="/copywriter.html" class="hover:text-white transition-colors">Copywriter</a></li>
+            <li><a href="/psychologist.html" class="hover:text-white transition-colors">Psychologist</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-4">Resources</h3>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="/blog.html" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="/blog/category/career-change.html" class="hover:text-white transition-colors">Career Change</a></li>
+            <li><a href="/blog/category/job-search.html" class="hover:text-white transition-colors">Job Search</a></li>
+            <li><a href="/blog/category/professional-growth.html" class="hover:text-white transition-colors">Professional Growth</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-4">Company</h3>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="/about.html" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="/contact.html" class="hover:text-white transition-colors">Contact</a></li>
+            <li><a href="/terms.html" class="hover:text-white transition-colors">Terms</a></li>
+            <li><a href="/policy.html" class="hover:text-white transition-colors">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
+        <p>&copy; 2025 ProfPilot. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
