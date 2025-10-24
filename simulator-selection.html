@@ -15,6 +15,18 @@
         extend: {
           colors: {
             brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#00d4aa',
+              600: '#00a896',
+              700: '#007a6b',
+              800: '#065f56',
+              900: '#064e3b'
+            },
+            accent: {
               50: '#eff6ff',
               100: '#dbeafe',
               200: '#bfdbfe',
@@ -29,7 +41,8 @@
           },
           boxShadow: {
             soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
-            glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+            glow: '0 0 20px rgba(0, 212, 170, 0.3)',
+            'brand-glow': '0 0 30px rgba(0, 212, 170, 0.2)',
             card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
           }
         }
@@ -93,7 +106,7 @@
       </div>
 
       <!-- Simulator Cards -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         
         <!-- UX Designer Card -->
         <div class="bg-white rounded-3xl shadow-card p-8 card-hover border border-slate-100 flex flex-col group">
@@ -289,7 +302,7 @@
                   <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span class="text-sm text-slate-600">AI supervisor guidance</span>
+                  <span class="text-sm text-slate-600">Expert supervisor guidance</span>
                 </div>
               </div>
 
@@ -350,6 +363,58 @@
                   Learn more
                 </a>
                 <a href="/checkout.html?role=brand-marketer" class="inline-block rounded-xl bg-brand-600 text-white px-6 py-3 font-medium hover:bg-brand-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow" aria-label="Start Brand Marketer simulator for $29">
+                  Start for $29
+                </a>
+              </div>
+            </div>
+
+            <!-- QA Automation Engineer Card -->
+            <div class="bg-white rounded-3xl shadow-card p-8 card-hover border border-slate-100 flex flex-col group">
+              <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              
+              <h3 class="text-2xl font-bold text-slate-900 mb-4">QA Automation Engineer Simulator</h3>
+              
+              <p class="text-slate-600 flex-grow leading-relaxed mb-6">
+                Debug broken features, write test logic, and learn how QA fits into the heartbeat of a tech team — fast, focused, and essential.
+              </p>
+
+              <!-- Features -->
+              <div class="mb-6 space-y-3">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span class="text-sm text-slate-600">3-day QA experience</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span class="text-sm text-slate-600">Real bug scenarios</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span class="text-sm text-slate-600">Interactive debugging</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span class="text-sm text-slate-600">Automation tutorial</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-3">
+                <a href="/qa-engineer.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
+                  Learn more
+                </a>
+                <a href="/checkout.html?role=qa-engineer" class="inline-block rounded-xl bg-brand-600 text-white px-6 py-3 font-medium hover:bg-brand-700 transition-colors duration-200 text-center shadow-soft hover:shadow-glow" aria-label="Start QA Automation Engineer simulator for $29">
                   Start for $29
                 </a>
               </div>

@@ -37,6 +37,18 @@
         extend: {
           colors: {
             brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#00d4aa',
+              600: '#00a896',
+              700: '#007a6b',
+              800: '#065f56',
+              900: '#064e3b'
+            },
+            accent: {
               50: '#eff6ff',
               100: '#dbeafe',
               200: '#bfdbfe',
@@ -51,7 +63,8 @@
           },
           boxShadow: {
             soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
-            glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+            glow: '0 0 20px rgba(0, 212, 170, 0.3)',
+            'brand-glow': '0 0 30px rgba(0, 212, 170, 0.2)',
             card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
           },
           animation: {
@@ -90,14 +103,14 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
     }
     .gradient-text {
-      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, #00d4aa 0%, #3b82f6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .hero-pattern {
-      background-image: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 75% 75%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+      background-image: radial-gradient(circle at 25% 25%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
     }
     .floating {
       animation: floating 3s ease-in-out infinite;
@@ -213,7 +226,7 @@
         <p class="text-lg text-slate-600 max-w-2xl mx-auto">Experience real work scenarios and get hands-on practice in your chosen field</p>
       </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         
         <!-- UX Designer card -->
         <div class="bg-white rounded-3xl shadow-card p-8 card-hover border border-slate-100 flex flex-col group">
@@ -334,6 +347,31 @@
                   </svg>
                 </a>
                 <a href="/simulator-selection.html" class="group relative inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-brand-600 to-brand-700 text-white px-6 py-4 font-bold hover:from-brand-700 hover:to-brand-800 transition-all duration-300 text-center shadow-lg hover:shadow-xl hover:scale-105 transform" aria-label="Start Brand Marketer simulator for $29">
+                  <span class="relative z-10">Start for $29</span>
+                  <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-700 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                </a>
+              </div>
+            </div>
+
+            <!-- QA Automation Engineer card -->
+            <div class="bg-white rounded-3xl shadow-card p-8 card-hover border border-slate-100 flex flex-col group">
+              <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-900 mb-4">QA Automation Engineer</h3>
+              <p class="text-slate-600 flex-grow leading-relaxed">
+                Debug broken features, write test logic, and learn how QA fits into the heartbeat of a tech team — fast, focused, and essential.
+              </p>
+              <div class="mt-8 flex flex-col gap-3">
+                <a href="/qa-engineer.html" class="group relative inline-flex items-center justify-center rounded-2xl border-2 border-slate-200 px-6 py-4 font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-all duration-300 text-center">
+                  <span class="relative z-10">Learn more</span>
+                  <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <a href="/simulator-selection.html" class="group relative inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-brand-600 to-brand-700 text-white px-6 py-4 font-bold hover:from-brand-700 hover:to-brand-800 transition-all duration-300 text-center shadow-lg hover:shadow-xl hover:scale-105 transform" aria-label="Start QA Automation Engineer simulator for $29">
                   <span class="relative z-10">Start for $29</span>
                   <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-700 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </a>

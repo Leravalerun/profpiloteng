@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Marketer Simulator - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="access-control.js"></script>
+    <style>
+        .brand-gradient {
+            background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%);
+        }
+        .brand-text {
+            background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(34, 197, 94, 0.15);
+        }
+        .unlock-animation {
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .feedback {
+            background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            border-left: 4px solid #22c55e;
+        }
+        .choice-button {
+            transition: all 0.3s ease;
+        }
+        .choice-button:hover {
+            transform: translateX(8px);
+            background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%);
+            color: white;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #22c55e 0%, #0ea5e9 100%);
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="logo-64.png" alt="ProfPilot" class="h-8 w-8 rounded-xl">
+                    <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+                </div>
+                <div class="text-sm text-slate-600">
+                    Brand Marketer Simulator
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 py-2">
+            <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+                <span>Progress</span>
+                <span id="progress-text">0/4 days completed</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+                <div id="progress-bar" class="progress-bar h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <!-- Intro Block -->
+        <div id="intro-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 brand-gradient rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10m-10 0a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-900 mb-4">
+                    💼 BRAND MANAGER SIMULATION
+                </h1>
+                <p class="text-lg text-slate-600 mb-6">4 days inside a startup rebrand</p>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-6 mb-6">
+                <h2 class="text-xl font-semibold text-slate-900 mb-4">🎬 INTRO — Welcome to JobHunter.ai</h2>
+                <p class="text-slate-700 mb-4">
+                    Slack notification pops up. A cursor blinks. You're staring at a welcome message.
+                </p>
+                
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                    <p class="text-slate-800 font-medium">
+                        <strong>Alex (mentor):</strong><br>
+                        "Hey there — welcome aboard!<br>
+                        You've joined JobHunter.ai, a startup helping people find work that feels right, not just pays well.<br><br>
+                        Before we start — what's your name?"
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <label for="player-name" class="block text-sm font-medium text-slate-700 mb-2">Your name:</label>
+                    <input type="text" id="player-name" placeholder="Enter your name" 
+                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+
+                <button id="start-simulator" class="w-full brand-gradient text-white py-3 px-6 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                    Start Simulation
+                </button>
+            </div>
+        </div>
+
+        <!-- Day 1 Block -->
+        <div id="day1-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">1</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900">🌅 DAY 1 — The Diagnosis</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <p class="text-slate-700 mb-4">
+                        <strong>Scene:</strong> Slack chaos.<br>
+                        You scroll through three channels at once: #product, #design, #growth.<br>
+                        Everyone's shouting in GIFs and bullet points.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Mike (Product Manager):</strong><br>
+                                "The brand doesn't reflect the new strategy."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-orange-50 border-l-4 border-orange-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Sarah (HR):</strong><br>
+                                "We're still using our old corporate tone."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Emma (UX Research):</strong><br>
+                                "People think we're an HR SaaS. They don't feel seen."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Task 1 — Find the root emotion</h3>
+                    <p class="text-slate-700 mb-4">
+                        You open a creative board full of sticky notes.<br>
+                        A pattern appears: cold, confusing, impersonal, no warmth.
+                    </p>
+                    
+                    <!-- Interactive Miro Board -->
+                    <div class="bg-white rounded-xl p-6 border-2 border-slate-200 mb-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-semibold text-slate-800">Creative Workshop Board</h4>
+                            <div class="flex gap-2">
+                                <button class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Live collaboration</button>
+                                <button class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">Edit</button>
+                                <button class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Share</button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4">
+                            <!-- Column 1: Current Brand Issues -->
+                            <div class="space-y-3">
+                                <h5 class="text-sm font-semibold text-red-600 bg-red-50 px-3 py-1 rounded-full text-center">Current Brand Issues</h5>
+                                <div class="bg-red-100 p-3 rounded-lg text-sm">
+                                    <strong>Cold</strong><br>
+                                    <span class="text-red-700">No personality</span>
+                                </div>
+                                <div class="bg-orange-100 p-3 rounded-lg text-sm">
+                                    <strong>Confusing</strong><br>
+                                    <span class="text-orange-700">Mixed messages</span>
+                                </div>
+                                <div class="bg-yellow-100 p-3 rounded-lg text-sm">
+                                    <strong>Impersonal</strong><br>
+                                    <span class="text-yellow-700">Corporate tone</span>
+                                </div>
+                                <div class="bg-pink-100 p-3 rounded-lg text-sm">
+                                    <strong>No warmth</strong><br>
+                                    <span class="text-pink-700">Feels like a system</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Column 2: User Emotions -->
+                            <div class="space-y-3">
+                                <h5 class="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full text-center">User Emotions</h5>
+                                <div class="bg-blue-100 p-3 rounded-lg text-sm">
+                                    <strong>Anxious</strong><br>
+                                    <span class="text-blue-700">Job search stress</span>
+                                </div>
+                                <div class="bg-indigo-100 p-3 rounded-lg text-sm">
+                                    <strong>Unseen</strong><br>
+                                    <span class="text-indigo-700">Not understood</span>
+                                </div>
+                                <div class="bg-purple-100 p-3 rounded-lg text-sm">
+                                    <strong>Overwhelmed</strong><br>
+                                    <span class="text-purple-700">Too many options</span>
+                                </div>
+                                <div class="bg-cyan-100 p-3 rounded-lg text-sm">
+                                    <strong>Hopeless</strong><br>
+                                    <span class="text-cyan-700">Lost in the process</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Column 3: What We Need -->
+                            <div class="space-y-3">
+                                <h5 class="text-sm font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full text-center">What We Need</h5>
+                                <div class="bg-green-100 p-3 rounded-lg text-sm">
+                                    <strong>Warmth</strong><br>
+                                    <span class="text-green-700">Human connection</span>
+                                </div>
+                                <div class="bg-emerald-100 p-3 rounded-lg text-sm">
+                                    <strong>Clarity</strong><br>
+                                    <span class="text-emerald-700">Simple guidance</span>
+                                </div>
+                                <div class="bg-teal-100 p-3 rounded-lg text-sm">
+                                    <strong>Empathy</strong><br>
+                                    <span class="text-teal-700">We understand you</span>
+                                </div>
+                                <div class="bg-lime-100 p-3 rounded-lg text-sm">
+                                    <strong>Hope</strong><br>
+                                    <span class="text-lime-700">You can do this</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="font-medium text-slate-800 mb-3">What's the core emotional gap?</p>
+                        <div class="space-y-3">
+                            <button class="choice-button w-full text-left p-4 border border-slate-300 rounded-xl hover:border-green-500" data-choice="system">
+                                💬 We sound like a system, not a guide.
+                            </button>
+                            <button class="choice-button w-full text-left p-4 border border-slate-300 rounded-xl hover:border-green-500" data-choice="explain">
+                                ⚙️ We over-explain and under-feel.
+                            </button>
+                            <button class="choice-button w-full text-left p-4 border border-slate-300 rounded-xl hover:border-green-500" data-choice="features">
+                                🎭 We talk about features, not feelings.
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="day1-feedback" class="feedback rounded-xl p-6 hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">Alex's Feedback:</h4>
+                    <p class="text-slate-700 mb-4">
+                        All true, but the root is 🎭 — we've forgotten the human emotion.
+                    </p>
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                        <p class="text-slate-800">
+                            <strong>Alex:</strong><br>
+                            "Exactly, <span id="day1-name"></span>. Brands fail when they forget who they make feel better."
+                        </p>
+                    </div>
+                    <div class="mt-4 p-3 bg-green-100 rounded-lg">
+                        <p class="text-green-800 font-medium">✅ Unlocked: Emotional diagnosis.</p>
+                    </div>
+                </div>
+
+                <div id="day1-reflection" class="bg-slate-50 rounded-xl p-6 hidden">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">☕ Coffee Break</h3>
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                        <p class="text-slate-800">
+                            <strong>Alex:</strong><br>
+                            "You can't fix what you don't feel.<br><br>
+                            Tomorrow, don't write yet. Just listen to how people describe us — it's the quickest audit you'll ever do."
+                        </p>
+                    </div>
+                    <div class="bg-slate-100 rounded-lg p-4">
+                        <p class="text-slate-700 italic">
+                            "Branding starts with empathy, not moodboards."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 Block -->
+        <div id="day2-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">2</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900">🌤 DAY 2 — The Narrative</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <p class="text-slate-700 mb-4">
+                        <strong>Scene:</strong> Creative Room, morning light.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Mike:</strong><br>
+                                "We need a line that says what we are now.<br>
+                                Not 'AI for HR'. Something people feel."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Emma:</strong><br>
+                                "Users say they want guidance, not automation."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>You:</strong><br>
+                                "Then maybe we stop calling ourselves a product.<br>
+                                We're a coach."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Task 2 — Write the new brand essence line</h3>
+                    <p class="text-slate-700 mb-4">
+                        Write a line that captures what JobHunter.ai really is:
+                    </p>
+                    
+                    <div class="mb-4">
+                        <textarea id="brand-essence" placeholder="Write your brand essence line here..." 
+                                  class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent h-20 resize-none"></textarea>
+                    </div>
+                    
+                    <button id="submit-essence" class="brand-gradient text-white py-2 px-6 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                        Submit Brand Essence
+                    </button>
+                </div>
+
+                <div id="day2-feedback" class="feedback rounded-xl p-6 hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">Team Reaction:</h4>
+                    <p class="text-slate-700 mb-4">
+                        "JobHunter.ai — helps you find the job that fits you, not the other way around."
+                    </p>
+                    <div class="flex gap-2 mb-4">
+                        <span class="text-2xl">❤️</span>
+                        <span class="text-2xl">👏</span>
+                        <span class="text-2xl">🔁</span>
+                    </div>
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                        <p class="text-slate-800">
+                            <strong>Alex:</strong><br>
+                            "See that? That's alignment.<br>
+                            You didn't create a tagline — you created permission."
+                        </p>
+                    </div>
+                    <div class="mt-4 p-3 bg-green-100 rounded-lg">
+                        <p class="text-green-800 font-medium">✅ Unlocked: Narrative clarity.</p>
+                    </div>
+                </div>
+
+                <div id="day2-reflection" class="bg-slate-50 rounded-xl p-6 hidden">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">☕ Coffee Break</h3>
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                        <p class="text-slate-800">
+                            <strong>Alex:</strong><br>
+                            "Most people think branding is about creativity.<br>
+                            It's actually about courage — to say something simple and true."
+                        </p>
+                    </div>
+                    <div class="bg-slate-100 rounded-lg p-4">
+                        <p class="text-slate-700 italic">
+                            "The simpler the line, the longer it lasts."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 Block -->
+        <div id="day3-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">3</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900">🌇 DAY 3 — Alignment</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <p class="text-slate-700 mb-4">
+                        <strong>Scene:</strong> Design call.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-pink-50 border-l-4 border-pink-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Dasha (Designer):</strong><br>
+                                "You want 'warm and human', but the logo's geometric. Should I redo it?"
+                            </p>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Mike:</strong><br>
+                                "We can't afford a rebrand, just messaging."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>You:</strong><br>
+                                "Brand consistency starts with tone, not color."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Task 3 — Set the tone guide</h3>
+                    <p class="text-slate-700 mb-4">
+                        Pick your tone direction for the brand:
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <button class="choice-button w-full text-left p-4 border border-slate-300 rounded-xl hover:border-green-500" data-choice="human">
+                            💡 Human & calm
+                        </button>
+                        <button class="choice-button w-full text-left p-4 border border-slate-300 rounded-xl hover:border-green-500" data-choice="smart">
+                            ⚙️ Smart & efficient
+                        </button>
+                        <button class="choice-button w-full text-left p-4 border border-slate-300 rounded-xl hover:border-green-500" data-choice="optimistic">
+                            ❤️ Optimistic & caring
+                        </button>
+                    </div>
+                </div>
+
+                <div id="day3-feedback" class="feedback rounded-xl p-6 hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">Alex's Analysis:</h4>
+                    <div id="tone-feedback-content"></div>
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
+                        <p class="text-slate-800">
+                            <strong>Alex:</strong><br>
+                            "Perfect, <span id="day3-name"></span>. You're shaping not just words, but behavior."
+                        </p>
+                    </div>
+                    <div class="mt-4 p-3 bg-green-100 rounded-lg">
+                        <p class="text-green-800 font-medium">✅ Unlocked: Tone of voice.</p>
+                    </div>
+                </div>
+
+                <div id="day3-reflection" class="bg-slate-50 rounded-xl p-6 hidden">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Quick sync with CEO</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>CEO:</strong><br>
+                                "So basically… we're now an emotional brand?"
+                            </p>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>You:</strong><br>
+                                "Not emotional. Empathic. We make people feel safe trying again."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>CEO:</strong><br>
+                                "...yeah, that's better. Carry on."
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-100 rounded-lg p-4 mt-4">
+                        <p class="text-slate-700 italic">
+                            "Branding is 20% creativity, 80% translation."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 4 Block -->
+        <div id="day4-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">4</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900">🌃 DAY 4 — The Pitch & The Quiet After</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <p class="text-slate-700 mb-4">
+                        <strong>Scene:</strong> Zoom meeting — final presentation.
+                    </p>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                        <p class="text-slate-800">
+                            <strong>Mike:</strong><br>
+                            "Alright <span id="day4-name"></span>, you've got the floor."
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white border-2 border-slate-200 rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-slate-900 mb-4">Your Brand Presentation:</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                                <span class="text-slate-700">What changed → from B2B to B2C.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                                <span class="text-slate-700">What people feel → unseen, anxious.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                                <span class="text-slate-700">What we promise → "We see you."</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                                <span class="text-slate-700">How we sound → calm, clear, human.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border-2 border-green-200">
+                            <p class="text-center text-xl font-bold brand-text">
+                                "Meet the job that gets you."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Team Reaction:</h3>
+                    <div class="text-center mb-4">
+                        <div class="flex justify-center gap-2 text-3xl">
+                            <span>👏</span>
+                            <span>👏</span>
+                            <span>👏</span>
+                            <span>👏</span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                        <p class="text-slate-800">
+                            <strong>Sarah:</strong><br>
+                            "That's not just copy. That's who we are."
+                        </p>
+                    </div>
+                    
+                    <div class="bg-green-50 border-l-4 border-green-400 p-4 mt-4">
+                        <p class="text-slate-800">
+                            <strong>Alex:</strong><br>
+                            "Exactly. You didn't invent a brand. You found it."
+                        </p>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-green-100 rounded-lg">
+                        <p class="text-green-800 font-medium">✅ Unlocked: Brand identity.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Late-night office. Coffee gone cold.</h3>
+                    <p class="text-slate-700 mb-4">
+                        You sit back, laptop still glowing.<br>
+                        A Slack DM pops up.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Alex:</strong><br>
+                                "How are you feeling?"
+                            </p>
+                        </div>
+                        
+                        <div class="bg-purple-50 border-l-4 border-purple-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>You:</strong><br>
+                                "Tired. But proud."
+                            </p>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <p class="text-slate-800">
+                                <strong>Alex:</strong><br>
+                                "Good. That's what it feels like when a story finally fits."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Afterword Block -->
+        <div id="afterword-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">🏁 AFTERWORD</h2>
+                <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+                    You just spent 4 days inside a brand transformation.<br>
+                    You felt confusion, alignment, pressure, and pride.<br>
+                    That's what brand management really is:<br>
+                    turning noise into narrative — and making people feel something again.
+                </p>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">🎓 Learn More & Keep Building</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-slate-800 mb-3">📚 Books that shaped modern brand thinking</h4>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li>• "Building a StoryBrand" — Donald Miller</li>
+                                <li>• "Start With Why" — Simon Sinek</li>
+                                <li>• "This Is Marketing" — Seth Godin</li>
+                                <li>• "Brand Thinking and Other Noble Pursuits" — Debbie Millman</li>
+                                <li>• "Alchemy" — Rory Sutherland</li>
+                                <li>• "The Brand Gap" — Marty Neumeier</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-semibold text-slate-800 mb-3">🎓 Courses & Certificates</h4>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li>• London Business School: Brand Management</li>
+                                <li>• Google Digital Garage: Brand Building</li>
+                                <li>• Domestika: Brand Strategy & Creative Direction</li>
+                                <li>• Marty Neumeier's Level C: Certified Brand Specialist</li>
+                                <li>• Udemy: Brand Strategy Masterclass</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h4 class="font-semibold text-slate-800 mb-3">🎧 Watch, Listen & Learn from Practitioners</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li>• The Futur (YouTube) — real strategy breakdowns by Chris Do</li>
+                        <li>• Brand Master Podcast — frameworks & positioning tools</li>
+                        <li>• How I Built This (NPR) — how founders create emotional resonance</li>
+                        <li>• Debbie Millman's Design Matters — human stories behind famous brands</li>
+                        <li>• Think with Google — brand storytelling case studies</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h4 class="font-semibold text-slate-800 mb-3">💼 Try it Yourself</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li>• Rewrite your favorite brand's tagline in 3 tones (playful, calm, bold)</li>
+                        <li>• Interview a friend: "What's one brand that feels like a person — why?"</li>
+                        <li>• Create a mini "brand doc" for yourself: values, tone, promise, enemy</li>
+                        <li>• Make a visual moodboard that matches your emotional message</li>
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-xl">
+                    <p class="text-slate-800">
+                        <strong>Alex:</strong><br>
+                        "A brand is never built.<br>
+                        It's remembered — through every choice, tone, and truth you keep repeating."
+                    </p>
+                </div>
+
+                <div class="text-center space-y-4">
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/copywriter-simulator.html" class="brand-gradient text-white py-3 px-8 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            Continue with Copywriter Simulation
+                        </a>
+                        <a href="/simulator-selection.html" class="border-2 border-slate-300 text-slate-700 py-3 px-8 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
+                            Explore All Professions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let playerName = '';
+        let currentDay = 0;
+        let completedQuestions = 0;
+        let totalQuestions = 4;
+
+        // Initialize the simulator
+        document.addEventListener('DOMContentLoaded', function() {
+            const startButton = document.getElementById('start-simulator');
+            const nameInput = document.getElementById('player-name');
+
+            startButton.addEventListener('click', function() {
+                const name = nameInput.value.trim();
+                if (name) {
+                    playerName = name;
+                    startSimulation();
+                } else {
+                    alert('Please enter your name to continue.');
+                }
+            });
+
+            // Add choice button listeners
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('choice-button')) {
+                    handleChoice(e.target);
+                }
+            });
+
+            // Add essence submission listener
+            document.getElementById('submit-essence').addEventListener('click', function() {
+                const essence = document.getElementById('brand-essence').value.trim();
+                if (essence) {
+                    showDay2Feedback();
+                } else {
+                    alert('Please write your brand essence line.');
+                }
+            });
+        });
+
+        function startSimulation() {
+            // Hide intro and show day 1
+            document.getElementById('intro-block').classList.add('hidden');
+            document.getElementById('day1-block').classList.remove('hidden');
+            document.getElementById('day1-block').classList.add('unlock-animation');
+            
+            currentDay = 1;
+            updateProgress();
+        }
+
+        function handleChoice(button) {
+            const choice = button.dataset.choice;
+            const day = getCurrentDayFromButton(button);
+            
+            // Disable all choice buttons in this section
+            const section = button.closest('.bg-green-50, .bg-slate-50');
+            const buttons = section.querySelectorAll('.choice-button');
+            buttons.forEach(btn => btn.disabled = true);
+            
+            // Show feedback
+            setTimeout(() => {
+                showFeedback(day, choice);
+            }, 500);
+        }
+
+        function getCurrentDayFromButton(button) {
+            if (button.closest('#day1-block')) return 1;
+            if (button.closest('#day2-block')) return 2;
+            if (button.closest('#day3-block')) return 3;
+            return 1;
+        }
+
+        function showFeedback(day, choice) {
+            if (day === 1) {
+                showDay1Feedback();
+            } else if (day === 3) {
+                showDay3Feedback(choice);
+            }
+        }
+
+        function showDay1Feedback() {
+            document.getElementById('day1-feedback').classList.remove('hidden');
+            document.getElementById('day1-name').textContent = playerName;
+            
+            setTimeout(() => {
+                document.getElementById('day1-reflection').classList.remove('hidden');
+                completedQuestions++;
+                updateProgress();
+                unlockDay(2);
+            }, 2000);
+        }
+
+        function showDay2Feedback() {
+            document.getElementById('day2-feedback').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('day2-reflection').classList.remove('hidden');
+                completedQuestions++;
+                updateProgress();
+                unlockDay(3);
+            }, 2000);
+        }
+
+        function showDay3Feedback(choice) {
+            const feedbackContent = document.getElementById('tone-feedback-content');
+            let feedback = '';
+            
+            if (choice === 'human') {
+                feedback = '<p class="text-slate-700 mb-4">Human & calm → ✅ fits B2C emotion.</p>';
+            } else if (choice === 'smart') {
+                feedback = '<p class="text-slate-700 mb-4">Smart & efficient → ⚠️ too close to old B2B tone.</p>';
+            } else if (choice === 'optimistic') {
+                feedback = '<p class="text-slate-700 mb-4">Optimistic & caring → 💎 good for campaign layer, not base voice.</p>';
+            }
+            
+            feedbackContent.innerHTML = feedback;
+            document.getElementById('day3-feedback').classList.remove('hidden');
+            document.getElementById('day3-name').textContent = playerName;
+            
+            setTimeout(() => {
+                document.getElementById('day3-reflection').classList.remove('hidden');
+                completedQuestions++;
+                updateProgress();
+                unlockDay(4);
+            }, 2000);
+        }
+
+        function unlockDay(day) {
+            setTimeout(() => {
+                const dayBlock = document.getElementById(`day${day}-block`);
+                if (dayBlock) {
+                    dayBlock.classList.remove('hidden');
+                    dayBlock.classList.add('unlock-animation');
+                    currentDay = day;
+                }
+                
+                if (day === 4) {
+                    // Show final day content
+                    document.getElementById('day4-name').textContent = playerName;
+                    
+                    setTimeout(() => {
+                        completedQuestions++;
+                        updateProgress();
+                        showAfterword();
+                    }, 3000);
+                }
+            }, 1000);
+        }
+
+        function showAfterword() {
+            setTimeout(() => {
+                document.getElementById('afterword-block').classList.remove('hidden');
+                document.getElementById('afterword-block').classList.add('unlock-animation');
+            }, 2000);
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            const percentage = (completedQuestions / totalQuestions) * 100;
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = `${completedQuestions}/${totalQuestions} days completed`;
+        }
+    </script>
+</body>
+</html>
