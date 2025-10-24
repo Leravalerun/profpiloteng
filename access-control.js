@@ -334,7 +334,7 @@ window.AccessControl = AccessControl;
 document.addEventListener('DOMContentLoaded', async function() {
   // Проверяем, находимся ли мы на странице симулятора
   const currentPath = window.location.pathname;
-  const simulatorPages = ['/ux-sim-simple.html', '/lawyer-simulator.html', '/copywriter-simulator.html', '/ux-sim.html'];
+  const simulatorPages = ['/ux-sim-simple.html', '/lawyer-simulator.html', '/copywriter-simulator.html', '/psychologist-simulator.html', '/ux-sim.html'];
   
   if (simulatorPages.includes(currentPath)) {
     const accessControl = new window.AccessControl();
@@ -344,6 +344,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     let simulator = 'ux-designer';
     if (currentPath.includes('lawyer')) {
       simulator = 'lawyer';
+    } else if (currentPath.includes('copywriter')) {
+      simulator = 'copywriter';
+    } else if (currentPath.includes('psychologist')) {
+      simulator = 'psychologist';
     }
     
     // Получаем email пользователя

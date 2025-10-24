@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Psychologist Simulator - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h1 class="text-2xl font-bold text-slate-900 mb-6">🧠 Test Psychologist Simulator</h1>
+            
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-slate-900 mb-3">Grant test access to Psychologist Simulator:</h2>
+                
+                <div class="space-y-4">
+                    <button id="grant-access" class="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors">
+                        Grant Test Access
+                    </button>
+                    
+                    <button id="open-simulator" class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                        Open Psychologist Simulator
+                    </button>
+                    
+                    <button id="clear-access" class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+                        Clear Test Access
+                    </button>
+                </div>
+            </div>
+            
+            <div id="results" class="space-y-2">
+                <!-- Результаты тестов -->
+            </div>
+            
+            <div class="mt-6 p-4 bg-slate-100 rounded-lg">
+                <h3 class="font-semibold text-slate-900 mb-2">Status:</h3>
+                <div id="status" class="text-slate-600">
+                    Click "Grant Test Access" to enable testing
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const resultsDiv = document.getElementById('results');
+        const statusDiv = document.getElementById('status');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            const colors = {
+                success: 'text-green-600 bg-green-50 border-green-200',
+                error: 'text-red-600 bg-red-50 border-red-200',
+                info: 'text-blue-600 bg-blue-50 border-blue-200'
+            };
+            
+            div.className = `p-3 rounded-lg border ${colors[type]}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+        }
+        
+        function updateStatus() {
+            const testData = localStorage.getItem('testPaymentData');
+            if (testData) {
+                const data = JSON.parse(testData);
+                if (data.simulator === 'psychologist' && data.accessGranted) {
+                    statusDiv.innerHTML = '✅ <strong>Test access granted</strong> - You can now access the Psychologist Simulator';
+                    statusDiv.className = 'text-green-600';
+                } else {
+                    statusDiv.innerHTML = '❌ <strong>No test access</strong> - Click "Grant Test Access" first';
+                    statusDiv.className = 'text-red-600';
+                }
+            } else {
+                statusDiv.innerHTML = '❌ <strong>No test access</strong> - Click "Grant Test Access" first';
+                statusDiv.className = 'text-red-600';
+            }
+        }
+        
+        document.getElementById('grant-access').addEventListener('click', function() {
+            const testData = {
+                simulator: 'psychologist',
+                email: 'test@example.com',
+                paymentId: 'test_psychologist_123',
+                accessGranted: true,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('testPaymentData', JSON.stringify(testData));
+            addResult('✅ Test access granted for Psychologist Simulator', 'success');
+            updateStatus();
+        });
+        
+        document.getElementById('open-simulator').addEventListener('click', function() {
+            window.open('/psychologist-simulator.html', '_blank');
+        });
+        
+        document.getElementById('clear-access').addEventListener('click', function() {
+            localStorage.removeItem('testPaymentData');
+            addResult('🗑️ Test access cleared', 'info');
+            updateStatus();
+        });
+        
+        // Update status on page load
+        updateStatus();
+    </script>
+</body>
+</html>

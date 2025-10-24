@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ProfPilot — Psychologist Simulator Overview</title>
+  <meta name="description" content="Psychologist simulator overview: who it's for, what you'll do, and what you get. Start a 3-day simulator for $29." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { 
+            brand: { 
+              50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1',800:'#075985',900:'#0c4a6e' 
+            },
+            purple: {
+              50:'#faf5ff',100:'#f3e8ff',200:'#e9d5ff',300:'#d8b4fe',400:'#c084fc',500:'#a855f7',600:'#9333ea',700:'#7c3aed',800:'#6b21a8',900:'#581c87'
+            }
+          },
+          boxShadow: { 
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(168, 85, 247, 0.3)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            'purple-glow': '0 0 30px rgba(168, 85, 247, 0.2)'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'bounce-gentle': 'bounceGentle 2s infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' }
+            },
+            bounceGentle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7 0%, #0ea5e9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #faf5ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+      position: relative;
+    }
+    .hero-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(168, 85, 247, 0.15);
+    }
+    .psychology-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .session-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-left: 4px solid #a855f7;
+    }
+    .mind-icon {
+      background: linear-gradient(135deg, #a855f7 0%, #0ea5e9 100%);
+    }
+    .breathing-animation {
+      animation: pulse-slow 4s ease-in-out infinite;
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center space-x-3">
+          <img src="logo-64.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" width="32" height="32" />
+          <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+        </div>
+        <nav class="hidden md:flex space-x-8">
+          <a href="/" class="text-slate-600 hover:text-slate-900 transition-colors">All Roles</a>
+          <a href="/simulator-selection.html" class="text-slate-600 hover:text-slate-900 transition-colors">Simulators</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-gradient py-20 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <!-- Floating Mind Icon -->
+      <div class="floating mb-8">
+        <div class="w-20 h-20 mind-icon rounded-full flex items-center justify-center mx-auto shadow-purple-glow">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <h1 class="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+        Test-drive the role of <br>
+        <span class="gradient-text">psychologist</span>
+      </h1>
+      
+      <div class="text-2xl font-light text-slate-700 mb-8 max-w-3xl mx-auto">
+        feel the profession, don't study it
+      </div>
+      
+      <div class="psychology-card rounded-3xl p-8 mb-8 max-w-4xl mx-auto">
+        <p class="text-lg text-slate-600 mb-4 leading-relaxed">
+          A calm, story-driven experience that lets you feel what real therapy work is like — sitting across from a client, choosing when to speak, and exploring human thoughts and emotions through CBT-style reflection.
+        </p>
+        <p class="text-base text-slate-500 italic">
+          No diagnoses, no heavy theory — just presence, listening, and insight.
+        </p>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        <a href="/checkout.html?role=psychologist" class="group relative bg-gradient-to-r from-purple-600 to-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-glow transform hover:scale-105">
+          <span class="relative z-10">Start Simulator — $29</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        </a>
+        <a href="/simulator-selection.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to all roles
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- What you'll experience -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">What you'll experience</h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Get a realistic, emotional glimpse into a therapist's work — from the first hello to the quiet moment of change.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What you'll do -->
+  <section class="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-slate-900 mb-6">What you'll do inside</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          Three days of immersive therapy sessions with real choices and emotional depth.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="session-card rounded-3xl p-8 card-hover relative overflow-hidden">
+          <div class="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center">
+            <span class="text-lg font-bold text-purple-600">1</span>
+          </div>
+          <div class="mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Day 1: Meet your first client</h3>
+            <p class="text-slate-600 leading-relaxed">
+              Face silence, and practice staying curious. Learn the art of presence and active listening.
+            </p>
+          </div>
+        </div>
+        
+        <div class="session-card rounded-3xl p-8 card-hover relative overflow-hidden">
+          <div class="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center">
+            <span class="text-lg font-bold text-blue-600">2</span>
+          </div>
+          <div class="mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Day 2: Learn how thoughts shape emotions</h3>
+            <p class="text-slate-600 leading-relaxed">
+              Through gentle testing and dialogue, explore the connection between thoughts and feelings.
+            </p>
+          </div>
+        </div>
+        
+        <div class="session-card rounded-3xl p-8 card-hover relative overflow-hidden">
+          <div class="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
+            <span class="text-lg font-bold text-indigo-600">3</span>
+          </div>
+          <div class="mb-6">
+            <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Day 3: Reframe deep beliefs</h3>
+            <p class="text-slate-600 leading-relaxed">
+              Hold space, work with core beliefs, and close the case in supervision with your mentor.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-slate-900 mb-6">Who it's for</h2>
+        <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          Perfect for anyone curious about the human mind and therapeutic work.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="psychology-card rounded-3xl p-8 card-hover">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-3">Psychology enthusiasts</h3>
+              <p class="text-slate-600 leading-relaxed">
+                People curious about psychology and how therapy feels from the inside
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="psychology-card rounded-3xl p-8 card-hover">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-3">Career-switchers</h3>
+              <p class="text-slate-600 leading-relaxed">
+                Testing if mental-health work is their path
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="psychology-card rounded-3xl p-8 card-hover">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-3">Coaches & leaders</h3>
+              <p class="text-slate-600 leading-relaxed">
+                Coaches, HRs, and leaders wanting deeper emotional awareness
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="psychology-card rounded-3xl p-8 card-hover">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4.828 7l2.586 2.586a2 2 0 002.828 0L12 7H4.828zM4.828 17l2.586-2.586a2 2 0 012.828 0L12 17H4.828z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-3">Natural listeners</h3>
+              <p class="text-slate-600 leading-relaxed">
+                Anyone who's ever thought "I like listening — maybe that's my calling"
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What you'll get -->
+  <section class="py-16 bg-slate-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">💬 Why it's awesome</h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Experience the depth and nuance of therapeutic work through immersive storytelling.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-2xl p-8 shadow-card">
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">🎭 Immersive sessions</h3>
+          <p class="text-slate-600">
+            6 immersive sessions across 3 days (fictional but realistic)
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-8 shadow-card">
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">💭 Interactive dialogues</h3>
+          <p class="text-slate-600">
+            Interactive dialogues and emotional choices that shape the experience
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-8 shadow-card">
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">☕ Supervision breaks</h3>
+          <p class="text-slate-600">
+            Coffee-break reflections with your AI supervisor, Alex
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-8 shadow-card">
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">🎬 Cinematic narrative</h3>
+          <p class="text-slate-600">
+            A cinematic narrative with sound, pauses, and internal monologue
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-8 shadow-card md:col-span-2">
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">📋 Final debrief</h3>
+          <p class="text-slate-600">
+            A final debrief on what you actually practiced — empathy, presence, and curiosity
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulator Details -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">Simulator Details</h2>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-slate-50 rounded-2xl p-8 text-center">
+          <div class="text-3xl mb-4">⏱️</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Time needed</h3>
+          <p class="text-slate-600">
+            3 sessions × 45–60 minutes. You can pause anytime.
+          </p>
+        </div>
+        
+        <div class="bg-slate-50 rounded-2xl p-8 text-center">
+          <div class="text-3xl mb-4">📚</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Level</h3>
+          <p class="text-slate-600">
+            Beginner-friendly. No psychology background required.
+          </p>
+        </div>
+        
+        <div class="bg-slate-50 rounded-2xl p-8 text-center">
+          <div class="text-3xl mb-4">🎯</div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Includes</h3>
+          <p class="text-slate-600">
+            Interactive choices, emotional feedback, reflection prompts, and a quiet soundtrack for immersion.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 hero-gradient relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <!-- Breathing Animation Circle -->
+      <div class="breathing-animation w-32 h-32 bg-gradient-to-br from-purple-200 to-blue-200 rounded-full mx-auto mb-8 opacity-20"></div>
+      
+      <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-8">Ready to feel the profession?</h2>
+      <p class="text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+        Experience what it's like to sit across from a client, hold space for their emotions, and guide them toward insight.
+      </p>
+      
+      <div class="psychology-card rounded-3xl p-8 mb-8 max-w-2xl mx-auto">
+        <p class="text-lg text-slate-600 italic">
+          "The best way to understand therapy is to experience it from the therapist's perspective."
+        </p>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        <a href="/checkout.html?role=psychologist" class="group relative bg-gradient-to-r from-purple-600 to-blue-600 text-white px-12 py-6 rounded-2xl font-bold text-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-glow transform hover:scale-105">
+          <span class="relative z-10">Start Simulator — $29</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        </a>
+        <a href="/simulator-selection.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back to all roles
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coming Soon Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">Coming Soon</h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          More professions to explore and experience.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <div class="bg-slate-50 rounded-xl p-6 text-center">
+          <div class="text-2xl mb-3">🎯</div>
+          <h3 class="font-semibold text-slate-900 mb-2">Brand Marketer</h3>
+          <p class="text-sm text-slate-600 mb-4">Stories that stick</p>
+          <button onclick="openComingSoonModal()" class="text-sm text-brand-600 hover:text-brand-700 font-medium">
+            Notify me when ready
+          </button>
+        </div>
+        
+        <div class="bg-slate-50 rounded-xl p-6 text-center">
+          <div class="text-2xl mb-3">🔧</div>
+          <h3 class="font-semibold text-slate-900 mb-2">QA Automation Engineer</h3>
+          <p class="text-sm text-slate-600 mb-4">Quality through code</p>
+          <button onclick="openComingSoonModal()" class="text-sm text-brand-600 hover:text-brand-700 font-medium">
+            Notify me when ready
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coming Soon Modal -->
+  <div id="comingSoonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full">
+      <h3 class="text-xl font-semibold text-slate-900 mb-4">Get notified when ready</h3>
+      <p class="text-slate-600 mb-6">We'll email you when this profession becomes available.</p>
+      <form id="comingSoonForm" class="space-y-4">
+        <input type="email" placeholder="Your email address" required 
+               class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent">
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 bg-brand-600 text-white py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
+            Notify me
+          </button>
+          <button type="button" onclick="closeComingSoonModal()" class="px-6 py-3 border border-slate-300 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center space-x-3 mb-6 md:mb-0">
+          <img src="logo-64.png" alt="ProfPilot logo" class="h-10 w-10 rounded-xl object-contain" width="40" height="40" loading="lazy" />
+          <div>
+            <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+            <p class="text-sm text-slate-500">Try a job in 3 days</p>
+          </div>
+        </div>
+        <div class="flex space-x-8">
+          <a href="/policy.html" class="text-slate-400 hover:text-white transition-colors">Privacy Policy</a>
+          <a href="/terms.html" class="text-slate-400 hover:text-white transition-colors">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function openComingSoonModal() {
+      document.getElementById('comingSoonModal').classList.remove('hidden');
+    }
+
+    function closeComingSoonModal() {
+      document.getElementById('comingSoonModal').classList.add('hidden');
+    }
+
+    document.getElementById('comingSoonForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      
+      // Simple form submission (you can integrate with your email service)
+      alert('Thank you! We\'ll notify you when this profession is ready.');
+      closeComingSoonModal();
+      this.reset();
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('comingSoonModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeComingSoonModal();
+      }
+    });
+  </script>
+</body>
+</html>

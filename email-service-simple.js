@@ -137,7 +137,8 @@ class SimpleEmailService {
       'ux-designer': 'UX Designer Simulator',
       'lawyer': 'Corporate Lawyer Simulator',
       'corporate-lawyer': 'Corporate Lawyer Simulator',
-      'copywriter': 'Copywriter / Creator Simulator'
+      'copywriter': 'Copywriter / Creator Simulator',
+      'psychologist': 'Psychologist Simulator'
     };
     return names[simulatorKey] || 'Career Simulator';
   }
@@ -148,7 +149,8 @@ class SimpleEmailService {
       'ux-designer': '/ux-sim-simple.html',
       'lawyer': '/lawyer-simulator.html',
       'corporate-lawyer': '/lawyer-simulator.html',
-      'copywriter': '/copywriter-simulator.html'
+      'copywriter': '/copywriter-simulator.html',
+      'psychologist': '/psychologist-simulator.html'
     };
     return `${window.location.origin}${urls[simulatorKey] || '/dashboard.html'}`;
   }

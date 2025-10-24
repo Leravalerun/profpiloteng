@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychologist Simulator - Stage Directions - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="access-control.js"></script>
+    <style>
+        .content-block {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .content-block.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .content-block.locked {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .choice-button {
+            transition: all 0.2s ease;
+        }
+        .choice-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .choice-button.selected {
+            border-color: #8b5cf6;
+            background-color: #f3e8ff;
+        }
+        .feedback {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .shadow-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .cinematic-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .session-room {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .supervision-room {
+            background: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 100%);
+        }
+        .client-dialogue {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        .inner-voice {
+            background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+        }
+        .emotion-tag {
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            border-left: 4px solid #ec4899;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="logo-64.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain" width="32" height="32" />
+                    <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-slate-600">
+                        <span id="progressText">Welcome!</span>
+                    </div>
+                    <div class="w-32 bg-slate-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-purple-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Opening Scene -->
+        <div class="content-block show" id="openingBlock">
+            <div class="cinematic-bg rounded-2xl shadow-card p-8 border border-purple-200 mb-8 text-white">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-4">Psychologist Simulation</h1>
+                    <p class="text-lg opacity-90 mb-6">3 Days — 6 Sessions — You're the therapist now</p>
+                    <p class="text-sm opacity-75 italic">(All stories fictional. Created for reflection only.)</p>
+                </div>
+
+
+                <!-- Opening Scene -->
+                <div class="session-room rounded-xl p-6 mb-6 text-slate-800">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (Supervisor - Voice in headset)</span>
+                    </div>
+                    <div class="space-y-4 text-slate-700">
+                        <p>The cursor blinks. You're in a small online office. Muted tones — warm light, a cup of coffee beside the keyboard.</p>
+                        <p>Your screen says: <strong>New client: Emma (28)</strong></p>
+                        <p>Welcome to your first three days. You'll meet Emma — anxious, tired, smart.</p>
+                        <p>Remember: you're not here to fix her. You're here to understand her logic — and maybe help her see it too.</p>
+                    </div>
+                </div>
+
+                <button id="startButton" class="w-full bg-white text-purple-600 py-4 px-6 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-colors duration-200 shadow-lg hover:shadow-xl">
+                    Begin Your First Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Day 1 Block -->
+        <div class="content-block locked" id="day1Block">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mr-4">
+                        <span class="text-white font-bold text-lg">1</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Day 1 - The First Session</h2>
+                        <p class="text-slate-600">Learning to stay curious, not fix</p>
+                    </div>
+                </div>
+
+
+                <!-- Session Scene -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma (Client)</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>I'm… fine, I guess.</p>
+                        <p>Just tired.</p>
+                        <p>I wake up every day with this voice in my head saying, <em>You're failing again.</em></p>
+                    </div>
+                </div>
+
+
+                <!-- Inner Voice -->
+                <div class="mb-6 p-4 inner-voice rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">💭</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Inner voice (you)</span>
+                    </div>
+                    <p class="text-slate-700 italic">Say something helpful. Anything.</p>
+                    <div class="mt-2 p-2 bg-amber-100 rounded text-sm text-slate-600">
+                        <strong>Alex whispers:</strong> "Don't fix it. Just stay."
+                    </div>
+                </div>
+
+                <!-- Choice -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">What do you say?</h3>
+                    <div class="space-y-3">
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-purple-500 transition-all" data-feedback="She smiles politely, walls stay up">
+                            <div class="font-medium text-slate-900">"You're not failing."</div>
+                        </button>
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-purple-500 transition-all" data-feedback="She exhales, voice softens">
+                            <div class="font-medium text-slate-900">"That sounds like a heavy way to start a day."</div>
+                        </button>
+                        <button class="choice-button w-full p-4 text-left border border-slate-300 rounded-xl hover:border-purple-500 transition-all" data-feedback="She starts talking again">
+                            <div class="font-medium text-slate-900">(Stay quiet and nod slowly)</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Follow-up Dialogue -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>It's stupid. It's just work. Everyone's doing fine except me.</p>
+                    </div>
+                </div>
+
+
+                <!-- Inner Voice: Analysis -->
+                <div class="mb-6 p-4 inner-voice rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">💭</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Inner voice (you)</span>
+                    </div>
+                    <p class="text-slate-700 italic">Maybe that's the distortion Alex talked about — "everyone except me."</p>
+                </div>
+
+                <!-- Your Response -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">Y</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">You</span>
+                    </div>
+                    <p class="text-slate-700">When you say everyone… who exactly comes to mind?</p>
+                </div>
+
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>My manager, mostly.</p>
+                        <p class="text-slate-500 italic">You: "So maybe not everyone — one person. That changes the weight a little, doesn't it?"</p>
+                        <p>Yeah. I guess it does.</p>
+                    </div>
+                </div>
+
+
+                <!-- Coffee Break -->
+                <div class="mb-6 p-6 supervision-room rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (Supervision)</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Good restraint.</p>
+                        <p>You didn't cheer her up — you helped her see her thought clearly.</p>
+                        <p>First session, first rule: don't comfort — clarify.</p>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day1Insight">
+                    <h4 class="font-semibold text-green-800 mb-2">Reflection</h4>
+                    <p class="text-green-700">Today wasn't about fixing. It was about understanding. Your first tool as a therapist is curiosity.</p>
+                    <p class="text-green-600 text-sm mt-2">Skill unlocked: staying curious</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 Block -->
+        <div class="content-block locked" id="day2Block">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mr-4">
+                        <span class="text-white font-bold text-lg">2</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Day 2 - Testing the Thought</h2>
+                        <p class="text-slate-600">Learning to question automatic thoughts</p>
+                    </div>
+                </div>
+
+
+                <!-- Session Scene -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>I wrote my thoughts like you said.</p>
+                        <p>It's brutal reading them.</p>
+                        <p>Half start with 'I should'.</p>
+                    </div>
+                </div>
+
+                <!-- Your Response -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">Y</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">You</span>
+                    </div>
+                    <p class="text-slate-700">Let's pick one.</p>
+                </div>
+
+
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p class="bg-slate-100 p-3 rounded-lg italic">"If I can't stay focused all day, I'm lazy."</p>
+                    </div>
+                </div>
+
+                <!-- Your Response -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">Y</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">You</span>
+                    </div>
+                    <p class="text-slate-700">Let's test that thought like a scientist.</p>
+                    <p class="text-slate-700">What's the evidence for it?</p>
+                </div>
+
+                <!-- Evidence Discussion -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Well… I got distracted yesterday.</p>
+                        <p class="text-slate-500 italic">You: "Evidence against?"</p>
+                        <p>I did finish my report. Just slower.</p>
+                        <p class="text-slate-500 italic">You: "So maybe not lazy — maybe human?"</p>
+                        <p>Maybe just tired.</p>
+                    </div>
+                </div>
+
+
+                <!-- Alex Off-Screen -->
+                <div class="mb-6 p-4 inner-voice rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (off-screen)</span>
+                    </div>
+                    <p class="text-slate-700">That's a thought shift — tiny, invisible, but real.</p>
+                </div>
+
+                <!-- Behavioral Experiment -->
+                <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Later that afternoon</h3>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Emma texts mid-session: "I skipped Slack messages because I panicked."</p>
+                        <p>You type back slowly: "Avoidance gives short relief, but long fear. Can we run an experiment?"</p>
+                        <p>Plan: send one neutral message to the friendliest coworker.</p>
+                        <p>Prediction: <em>They'll ignore me.</em></p>
+                    </div>
+                </div>
+
+
+                <!-- Experiment Result -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>They replied with a smile emoji.</p>
+                        <p>I didn't die.</p>
+                        <p class="text-slate-500 italic">You (smiling): "Congratulations. You just disproved your brain."</p>
+                    </div>
+                </div>
+
+
+                <!-- Supervision -->
+                <div class="mb-6 p-6 supervision-room rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (Supervision)</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Perfect CBT moment — a behavioral experiment.</p>
+                        <p>But more than that — you gave her permission to gather data instead of guilt.</p>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day2Insight">
+                    <h4 class="font-semibold text-green-800 mb-2">Reflection</h4>
+                    <p class="text-green-700">That's a thought shift — tiny, invisible, but real. You helped her become her own scientist.</p>
+                    <p class="text-green-600 text-sm mt-2">Skill unlocked: thought testing & behavioral experiment</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 Block -->
+        <div class="content-block locked" id="day3Block">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100 mb-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mr-4">
+                        <span class="text-white font-bold text-lg">3</span>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Day 3 - Core Belief</h2>
+                        <p class="text-slate-600">Working with deeper patterns</p>
+                    </div>
+                </div>
+
+
+                <!-- Session Scene -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>I realized why I'm so harsh with myself.</p>
+                        <p>If I'm not perfect, I feel worthless.</p>
+                    </div>
+                </div>
+
+
+                <!-- Your Response -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-white font-bold text-sm">Y</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">You</span>
+                    </div>
+                    <p class="text-slate-700">That's a big belief.</p>
+                    <p class="text-slate-700">How long have you lived with it?</p>
+                </div>
+
+                <!-- Core Belief Work -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>Forever.</p>
+                        <p class="text-slate-500 italic">You: "What would a kinder version sound like — one that's still true?"</p>
+                    </div>
+                </div>
+
+
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>If I'm not perfect… I'm still trying.</p>
+                    </div>
+                </div>
+
+
+                <!-- Final Session -->
+                <div class="mb-6 p-6 client-dialogue rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">E</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Emma (Final session)</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>You know, I still have bad days.</p>
+                        <p>But now, when that voice says <em>you're failing</em>, I answer: <em>maybe I'm just tired.</em></p>
+                        <p>It's not peace yet, but it's quiet.</p>
+                        <p class="text-slate-500 italic">You nod. That's enough.</p>
+                    </div>
+                </div>
+
+                <!-- Final Supervision -->
+                <div class="mb-6 p-6 supervision-room rounded-xl">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold">A</span>
+                        </div>
+                        <span class="font-semibold text-slate-900">Alex (Final Supervision)</span>
+                    </div>
+                    <div class="space-y-3 text-slate-700">
+                        <p>You used six CBT moves without naming them.</p>
+                        <p>But the real skill wasn't cognitive — it was compassion.</p>
+                        <p class="text-slate-500 italic">You: "Sometimes I'm afraid I'm only pretending to care."</p>
+                        <p>Everyone starts pretending.</p>
+                        <p>Then one day, you realize — it stopped being an act.</p>
+                    </div>
+                </div>
+
+
+                <!-- Reflection -->
+                <div class="p-4 bg-green-50 border border-green-200 rounded-xl hidden" id="day3Insight">
+                    <h4 class="font-semibold text-green-800 mb-2">Final Reflection</h4>
+                    <p class="text-green-700">Three days ago, you didn't know where to start. Now you know that therapy isn't about fixing — it's about understanding.</p>
+                    <p class="text-green-600 text-sm mt-2">Skill unlocked: core belief reframe & compassion</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Block -->
+        <div class="content-block locked" id="completionBlock">
+            <div class="bg-white rounded-2xl shadow-card p-8 border border-slate-100">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Session Complete</h2>
+                    <p class="text-lg text-slate-600">You've completed the Psychologist simulation</p>
+                </div>
+
+
+                <!-- What You Experienced -->
+                <div class="bg-slate-50 rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">What you just experienced:</h3>
+                    <p class="text-slate-600 mb-4">Three days, six sessions, one supervision — a psychologist's inner world. Every story was fictional, but the emotions were real.</p>
+                    <ul class="text-slate-600 space-y-2">
+                        <li>• How to stay curious instead of fixing</li>
+                        <li>• Testing automatic thoughts like a scientist</li>
+                        <li>• Running behavioral experiments</li>
+                        <li>• Working with core beliefs and self-compassion</li>
+                    </ul>
+                </div>
+
+
+                <!-- Learning Resources -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-4">If you want to explore further</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-medium text-blue-700 mb-2">Essential Books</h4>
+                            <ul class="text-blue-600 text-sm space-y-1">
+                                <li>• "Maybe You Should Talk to Someone" — Lori Gottlieb</li>
+                                <li>• "The Gift of Therapy" — Irvin Yalom</li>
+                                <li>• "The Happiness Trap" — Russ Harris</li>
+                                <li>• "Man's Search for Meaning" — Viktor Frankl</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-blue-700 mb-2">Try This</h4>
+                            <ul class="text-blue-600 text-sm space-y-1">
+                                <li>• Catch one "should" thought today and replace it with "could"</li>
+                                <li>• Listen to a friend for one minute without saying a word</li>
+                                <li>• Ask yourself before sleeping: "What belief drove my day?"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Message -->
+                <div class="text-center mb-6">
+                    <p class="text-slate-700 italic">"Therapy isn't fireworks. It's a quiet shift in tone — and the courage to sit in silence until it happens."</p>
+                    <p class="text-slate-600 text-sm mt-2">— Alex (voice fading)</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/simulator-selection.html" class="inline-block rounded-xl border border-slate-300 px-6 py-3 font-medium hover:bg-slate-100 transition-colors duration-200 text-center">
+                        Try Another Simulator
+                    </a>
+                    <a href="/copywriter-simulator.html" class="inline-block rounded-xl bg-purple-600 text-white px-6 py-3 font-medium hover:bg-purple-700 transition-colors duration-200 text-center shadow-lg hover:shadow-xl">
+                        Try Copywriter Simulator
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentDay = 0;
+        let experience = 0;
+        let completedQuestions = 0;
+        const totalQuestions = 3;
+        let playerName = '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check access control
+            if (window.AccessControl) {
+                const accessControl = new window.AccessControl();
+                accessControl.checkSimulatorAccess('psychologist').then(result => {
+                    if (!result.hasAccess) {
+                        window.location.href = '/checkout.html?role=psychologist';
+                        return;
+                    }
+                });
+            }
+            
+            initializeSimulator();
+        });
+
+        function initializeSimulator() {
+            // Add click handler for start button
+            document.getElementById('startButton').addEventListener('click', function() {
+                // Hide opening and show day 1
+                document.getElementById('openingBlock').classList.add('hidden');
+                document.getElementById('day1Block').classList.remove('locked');
+                document.getElementById('day1Block').classList.add('show');
+                
+                currentDay = 1;
+                updateProgress();
+            });
+            
+            // Add click handlers to all choice buttons
+            document.querySelectorAll('.choice-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    handleChoice(this);
+                });
+            });
+            
+            updateProgress();
+        }
+
+        function handleChoice(button) {
+            // Remove selected class from all buttons in the same question
+            const questionContainer = button.closest('.mb-6');
+            questionContainer.querySelectorAll('.choice-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            
+            // Show feedback
+            const feedback = button.dataset.feedback;
+            if (feedback) {
+                showFeedback(button, feedback);
+            }
+            
+            // Mark question as completed
+            completedQuestions++;
+            checkProgress();
+        }
+
+        function checkProgress() {
+            if (completedQuestions === 1) {
+                unlockDay(2);
+                showInsight('day1Insight');
+            } else if (completedQuestions === 2) {
+                unlockDay(3);
+                showInsight('day2Insight');
+            } else if (completedQuestions === 3) {
+                unlockDay('completion');
+                showInsight('day3Insight');
+                showCompletion();
+            }
+            
+            updateProgress();
+        }
+
+        function showFeedback(button, feedback) {
+            // Check if feedback already exists for this button
+            const existingFeedback = button.parentNode.querySelector('.feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+            
+            // Create feedback element
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'feedback mt-2 p-3 rounded-lg text-sm';
+            
+            if (feedback.includes('exhales') || feedback.includes('starts talking') || feedback.includes('laughs')) {
+                feedbackDiv.className += ' bg-green-50 text-green-700 border border-green-200';
+            } else if (feedback.includes('smiles politely')) {
+                feedbackDiv.className += ' bg-yellow-50 text-yellow-700 border border-yellow-200';
+            } else {
+                feedbackDiv.className += ' bg-red-50 text-red-700 border border-red-200';
+            }
+            
+            feedbackDiv.textContent = feedback;
+            
+            // Insert after button
+            button.parentNode.insertBefore(feedbackDiv, button.nextSibling);
+            
+            // Show feedback with animation
+            setTimeout(() => {
+                feedbackDiv.classList.add('show');
+            }, 100);
+        }
+
+        function showInsight(insightId) {
+            const insight = document.getElementById(insightId);
+            if (insight) {
+                insight.classList.remove('hidden');
+                insight.classList.add('show');
+            }
+        }
+
+        function unlockDay(dayNumber) {
+            let blockId;
+            if (dayNumber === 2) {
+                blockId = 'day2Block';
+                currentDay = 2;
+            } else if (dayNumber === 3) {
+                blockId = 'day3Block';
+                currentDay = 3;
+            } else if (dayNumber === 'completion') {
+                blockId = 'completionBlock';
+                currentDay = 4;
+            }
+            
+            if (blockId) {
+                const block = document.getElementById(blockId);
+                block.classList.remove('locked');
+                block.classList.add('show');
+                
+                // Add click handlers to new buttons
+                block.querySelectorAll('.choice-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        handleChoice(this);
+                    });
+                });
+            }
+        }
+
+        function showCompletion() {
+            experience += 100;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById('currentDay').textContent = currentDay;
+            document.getElementById('experience').textContent = experience;
+            
+            const progress = (completedQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            if (currentDay === 0) {
+                document.getElementById('progressText').textContent = 'Welcome!';
+            } else if (currentDay === 4) {
+                document.getElementById('progressText').textContent = 'Complete!';
+            } else {
+                document.getElementById('progressText').textContent = `Day ${currentDay} of 3`;
+            }
+        }
+    </script>
+</body>
+</html>
