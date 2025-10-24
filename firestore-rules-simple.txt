@@ -1,0 +1,12 @@
+# 🔒 Simple Firestore Rules for Testing
+# ⚠️ WARNING: These rules allow all access - use only for testing!
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow all operations for testing
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

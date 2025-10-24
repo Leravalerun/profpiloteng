@@ -11,6 +11,9 @@ class SimpleEmailService {
     try {
       console.log('📧 Sending payment confirmation email...');
       
+      // Save to Firebase first
+      await this.savePurchaseToFirebase(purchaseData);
+      
       // Create email content
       const emailContent = this.createEmailContent(purchaseData);
       
@@ -25,6 +28,32 @@ class SimpleEmailService {
     } catch (error) {
       console.error('❌ Failed to send email:', error);
       return false;
+    }
+  }
+
+  // Save purchase data to Firebase
+  async savePurchaseToFirebase(purchaseData) {
+    try {
+      if (!window.firebaseDB) {
+        console.warn('⚠️ Firebase not available, skipping database save');
+        return;
+      }
+
+      console.log('💾 Saving purchase to Firebase...');
+      
+      const purchaseRecord = {
+        ...purchaseData,
+        timestamp: new Date().toISOString(),
+        status: 'completed'
+      };
+
+      // Save to Firestore
+      await window.firebaseDB.collection('purchases').add(purchaseRecord);
+      console.log('✅ Purchase saved to Firebase successfully');
+      
+    } catch (error) {
+      console.error('❌ Failed to save to Firebase:', error);
+      // Don't throw error - email should still work even if Firebase fails
     }
   }
 

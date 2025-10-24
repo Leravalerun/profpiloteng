@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Diagnostic Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <h1 class="text-3xl font-bold text-slate-900 mb-8 text-center">🔥 Firebase Diagnostic Tool</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Configuration Check -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-slate-900 mb-4">📋 Configuration Check</h2>
+                <div id="config-status" class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <div id="firebase-sdk" class="w-4 h-4 rounded-full bg-gray-300"></div>
+                        <span>Firebase SDK</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="firebase-config" class="w-4 h-4 rounded-full bg-gray-300"></div>
+                        <span>Firebase Config</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="firebase-init" class="w-4 h-4 rounded-full bg-gray-300"></div>
+                        <span>Firebase Initialization</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Test -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-slate-900 mb-4">🔗 Connection Test</h2>
+                <div id="connection-status" class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <div id="firestore-connection" class="w-4 h-4 rounded-full bg-gray-300"></div>
+                        <span>Firestore Connection</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="firestore-read" class="w-4 h-4 rounded-full bg-gray-300"></div>
+                        <span>Firestore Read</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="firestore-write" class="w-4 h-4 rounded-full bg-gray-300"></div>
+                        <span>Firestore Write</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Results -->
+        <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">📊 Detailed Results</h2>
+            <div id="detailed-results" class="space-y-4">
+                <p class="text-slate-600">Running diagnostics...</p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 text-center">
+            <button id="run-diagnostics" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                🔄 Run Full Diagnostics
+            </button>
+        </div>
+
+        <!-- Configuration Display -->
+        <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-slate-900 mb-4">⚙️ Current Configuration</h2>
+            <pre id="config-display" class="bg-slate-100 p-4 rounded-lg text-sm overflow-x-auto"></pre>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        let diagnostics = {
+            firebaseSDK: false,
+            firebaseConfig: false,
+            firebaseInit: false,
+            firestoreConnection: false,
+            firestoreRead: false,
+            firestoreWrite: false
+        };
+
+        function updateStatus(elementId, status) {
+            const element = document.getElementById(elementId);
+            const colors = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'pending': 'bg-gray-300'
+            };
+            element.className = `w-4 h-4 rounded-full ${colors[status]}`;
+        }
+
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('detailed-results');
+            const colors = {
+                'success': 'text-green-700 bg-green-50',
+                'error': 'text-red-700 bg-red-50',
+                'warning': 'text-yellow-700 bg-yellow-50',
+                'info': 'text-blue-700 bg-blue-50'
+            };
+            
+            const div = document.createElement('div');
+            div.className = `p-3 rounded-lg ${colors[type]}`;
+            div.textContent = message;
+            results.appendChild(div);
+        }
+
+        function clearResults() {
+            document.getElementById('detailed-results').innerHTML = '';
+        }
+
+        async function runDiagnostics() {
+            clearResults();
+            addResult('🔍 Starting Firebase diagnostics...', 'info');
+            
+            // Reset all status indicators
+            Object.keys(diagnostics).forEach(key => {
+                updateStatus(key.replace(/([A-Z])/g, '-$1').toLowerCase(), 'pending');
+            });
+
+            // Test 1: Firebase SDK
+            addResult('Testing Firebase SDK...', 'info');
+            if (typeof firebase !== 'undefined') {
+                diagnostics.firebaseSDK = true;
+                updateStatus('firebase-sdk', 'success');
+                addResult('✅ Firebase SDK loaded successfully', 'success');
+            } else {
+                updateStatus('firebase-sdk', 'error');
+                addResult('❌ Firebase SDK not loaded', 'error');
+                return;
+            }
+
+            // Test 2: Firebase Config
+            addResult('Testing Firebase configuration...', 'info');
+            if (window.firebaseConfig) {
+                diagnostics.firebaseConfig = true;
+                updateStatus('firebase-config', 'success');
+                addResult('✅ Firebase configuration found', 'success');
+                
+                // Display configuration
+                document.getElementById('config-display').textContent = JSON.stringify(window.firebaseConfig, null, 2);
+            } else {
+                updateStatus('firebase-config', 'error');
+                addResult('❌ Firebase configuration not found', 'error');
+                return;
+            }
+
+            // Test 3: Firebase Initialization
+            addResult('Testing Firebase initialization...', 'info');
+            try {
+                firebase.initializeApp(window.firebaseConfig);
+                diagnostics.firebaseInit = true;
+                updateStatus('firebase-init', 'success');
+                addResult('✅ Firebase initialized successfully', 'success');
+            } catch (error) {
+                updateStatus('firebase-init', 'error');
+                addResult(`❌ Firebase initialization failed: ${error.message}`, 'error');
+                return;
+            }
+
+            // Test 4: Firestore Connection
+            addResult('Testing Firestore connection...', 'info');
+            try {
+                const db = firebase.firestore();
+                diagnostics.firestoreConnection = true;
+                updateStatus('firestore-connection', 'success');
+                addResult('✅ Firestore connection established', 'success');
+            } catch (error) {
+                updateStatus('firestore-connection', 'error');
+                addResult(`❌ Firestore connection failed: ${error.message}`, 'error');
+                return;
+            }
+
+            // Test 5: Firestore Read
+            addResult('Testing Firestore read permissions...', 'info');
+            try {
+                const db = firebase.firestore();
+                await db.collection('test').limit(1).get();
+                diagnostics.firestoreRead = true;
+                updateStatus('firestore-read', 'success');
+                addResult('✅ Firestore read test successful', 'success');
+            } catch (error) {
+                updateStatus('firestore-read', 'error');
+                addResult(`❌ Firestore read test failed: ${error.message}`, 'error');
+                
+                if (error.message.includes('Missing or insufficient permissions')) {
+                    addResult('💡 Solution: Update Firestore rules in Firebase Console', 'warning');
+                }
+            }
+
+            // Test 6: Firestore Write
+            addResult('Testing Firestore write permissions...', 'info');
+            try {
+                const db = firebase.firestore();
+                const testData = {
+                    message: 'Diagnostic test',
+                    timestamp: new Date().toISOString()
+                };
+                await db.collection('test').add(testData);
+                diagnostics.firestoreWrite = true;
+                updateStatus('firestore-write', 'success');
+                addResult('✅ Firestore write test successful', 'success');
+            } catch (error) {
+                updateStatus('firestore-write', 'error');
+                addResult(`❌ Firestore write test failed: ${error.message}`, 'error');
+                
+                if (error.message.includes('Missing or insufficient permissions')) {
+                    addResult('💡 Solution: Update Firestore rules in Firebase Console', 'warning');
+                }
+            }
+
+            // Summary
+            const passedTests = Object.values(diagnostics).filter(Boolean).length;
+            const totalTests = Object.keys(diagnostics).length;
+            
+            if (passedTests === totalTests) {
+                addResult(`🎉 All tests passed! (${passedTests}/${totalTests})`, 'success');
+            } else {
+                addResult(`⚠️ Some tests failed (${passedTests}/${totalTests})`, 'warning');
+            }
+        }
+
+        // Run diagnostics on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(runDiagnostics, 1000);
+        });
+
+        // Manual run button
+        document.getElementById('run-diagnostics').addEventListener('click', runDiagnostics);
+    </script>
+</body>
+</html>
