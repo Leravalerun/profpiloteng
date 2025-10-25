@@ -11,9 +11,21 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  try {
-    // Получаем экземпляр Firestore
-    const db = firebase.firestore();
+  // Ждем инициализации Firebase
+  const waitForFirebase = () => {
+    if (firebase.apps.length === 0) {
+      console.log('⏳ Waiting for Firebase initialization...');
+      setTimeout(waitForFirebase, 100);
+      return;
+    }
+    
+    initializeFirestore();
+  };
+
+  const initializeFirestore = () => {
+    try {
+      // Получаем экземпляр Firestore
+      const db = firebase.firestore();
     
     // Настройки для разработки
     if (window.location.hostname === 'localhost' || 
@@ -57,11 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
     //   testFirebaseConnection();
     // }, 1000);
     
-    console.log('✅ Firebase initialization completed');
-    
+      console.log('✅ Firebase initialization completed');
+      
     } catch (error) {
-    console.error('❌ Firebase initialization failed:', error);
-  }
+      console.error('❌ Firebase initialization failed:', error);
+    }
+  };
+
+  // Запускаем ожидание инициализации
+  waitForFirebase();
 });
 
 /**

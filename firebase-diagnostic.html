@@ -128,6 +128,10 @@
 
             // Test 1: Firebase SDK
             addResult('Testing Firebase SDK...', 'info');
+            
+            // Wait a bit for scripts to load
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
             if (typeof firebase !== 'undefined') {
                 diagnostics.firebaseSDK = true;
                 updateStatus('firebase-sdk', 'success');
@@ -135,12 +139,24 @@
             } else {
                 updateStatus('firebase-sdk', 'error');
                 addResult('❌ Firebase SDK not loaded', 'error');
+                addResult('💡 Check if Firebase scripts are properly included', 'warning');
                 return;
             }
 
             // Test 2: Firebase Config
             addResult('Testing Firebase configuration...', 'info');
-            if (window.firebaseConfig) {
+            
+            // Wait for config to load
+            let configLoaded = false;
+            for (let i = 0; i < 10; i++) {
+                if (window.firebaseConfig) {
+                    configLoaded = true;
+                    break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+            
+            if (configLoaded) {
                 diagnostics.firebaseConfig = true;
                 updateStatus('firebase-config', 'success');
                 addResult('✅ Firebase configuration found', 'success');
@@ -150,16 +166,22 @@
             } else {
                 updateStatus('firebase-config', 'error');
                 addResult('❌ Firebase configuration not found', 'error');
+                addResult('💡 Check if firebase-config.js is properly loaded', 'warning');
                 return;
             }
 
             // Test 3: Firebase Initialization
             addResult('Testing Firebase initialization...', 'info');
             try {
-                firebase.initializeApp(window.firebaseConfig);
+                // Проверяем, инициализирован ли Firebase уже
+                if (firebase.apps.length === 0) {
+                    firebase.initializeApp(window.firebaseConfig);
+                    addResult('✅ Firebase initialized successfully', 'success');
+                } else {
+                    addResult('✅ Firebase already initialized', 'success');
+                }
                 diagnostics.firebaseInit = true;
                 updateStatus('firebase-init', 'success');
-                addResult('✅ Firebase initialized successfully', 'success');
             } catch (error) {
                 updateStatus('firebase-init', 'error');
                 addResult(`❌ Firebase initialization failed: ${error.message}`, 'error');

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — ProfPilot</title>
+  <meta name="description" content="Complete your purchase to access ProfPilot career simulators." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#00d4aa',
+              600: '#00a896',
+              700: '#007a6b',
+              800: '#065f56',
+              900: '#064e3b'
+            },
+            accent: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(0, 212, 170, 0.3)',
+            'brand-glow': '0 0 30px rgba(0, 212, 170, 0.2)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow-soft">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div class="flex items-center">
+          <img src="logo-64.png" alt="ProfPilot" class="h-8 w-8 mr-3">
+          <span class="text-2xl font-bold text-slate-900">ProfPilot</span>
+        </div>
+        <nav class="hidden md:flex items-center gap-8 text-slate-700 font-medium">
+          <a href="/simulator-selection.html" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">Simulators</a>
+          <a href="/blog.html" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">Blog</a>
+          <a href="#about" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">About</a>
+          <a href="#pricing" class="hover:text-brand-700 transition-colors duration-200 hover:scale-105">FAQ</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Order Summary -->
+      <div class="bg-white rounded-2xl shadow-card p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Order Summary</h2>
+        
+        <!-- Simulator Info -->
+        <div id="simulator-info" class="mb-6 p-4 bg-slate-50 rounded-xl">
+          <div class="flex items-center gap-3">
+            <div id="simulator-icon" class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl">
+              <!-- Icon will be populated by JavaScript -->
+            </div>
+            <div>
+              <h3 id="simulator-name" class="font-semibold text-slate-900">Loading...</h3>
+              <p class="text-slate-600 text-sm">Career Simulator</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Promo Code -->
+        <div class="mb-6">
+          <label for="promo-code" class="block text-sm font-medium text-slate-700 mb-2">Promo Code (Optional)</label>
+          <div class="flex gap-2">
+            <input type="text" id="promo-code" placeholder="Enter promo code" 
+              class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent">
+            <button id="apply-promo" class="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors">
+              Apply
+            </button>
+          </div>
+          <div id="promo-message" class="mt-2 text-sm hidden"></div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="border-t border-slate-200 pt-6">
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-slate-600">Simulator Access</span>
+              <span id="original-price" class="text-slate-900">$29.00</span>
+            </div>
+            <div id="discount-row" class="flex justify-between text-green-600 hidden">
+              <span>Discount</span>
+              <span id="discount-amount">-$29.00</span>
+            </div>
+            <div class="flex justify-between text-lg font-semibold border-t border-slate-200 pt-3">
+              <span>Total</span>
+              <span id="total-price" class="text-brand-600">$29.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div id="payment-methods" class="mt-8">
+          <h3 class="text-lg font-semibold text-slate-900 mb-4">Payment Method</h3>
+          
+          <!-- Crypto Payment -->
+          <div id="crypto-payment" class="payment-method">
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="font-medium text-slate-900">Cryptocurrency</span>
+              </div>
+              <p class="text-slate-600 text-sm mb-4">Pay with Bitcoin, Ethereum, or other cryptocurrencies</p>
+              
+              <a href="/crypto-checkout-prod.html" id="crypto-checkout-link" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
+                Continue with Crypto
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Free Access Button (hidden by default) -->
+        <div id="free-access" class="hidden">
+          <div class="text-center p-6 bg-green-50 rounded-xl border border-green-200">
+            <div class="text-green-600 text-4xl mb-4">🎉</div>
+            <h3 class="text-lg font-semibold text-green-900 mb-2">Free Access Granted!</h3>
+            <p class="text-green-700 mb-4">Your promo code has been applied successfully.</p>
+            <button id="continue-free" class="w-full bg-green-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+              Continue to Simulator
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="bg-white rounded-2xl shadow-card p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">What You Get</h2>
+        
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900">Full Simulator Access</h3>
+              <p class="text-slate-600 text-sm">Complete access to your chosen career simulator</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900">Expert Guidance</h3>
+              <p class="text-slate-600 text-sm">Learn from industry professionals and mentors</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900">Real-world Scenarios</h3>
+              <p class="text-slate-600 text-sm">Practice with authentic workplace challenges</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-slate-900">Lifetime Access</h3>
+              <p class="text-slate-600 text-sm">Keep your access forever, no recurring fees</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+            <div>
+              <h4 class="font-semibold text-blue-900">Secure Payment</h4>
+              <p class="text-blue-700 text-sm">Your payment information is encrypted and secure</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center mb-4 md:mb-0">
+          <img src="logo-64.png" alt="ProfPilot" class="h-6 w-6 mr-2">
+          <span class="text-slate-600">© 2025 ProfPilot. All rights reserved.</span>
+        </div>
+        <div class="flex gap-6 text-sm text-slate-600">
+          <a href="/policy.html" class="hover:text-slate-900 transition-colors">Privacy Policy</a>
+          <a href="/terms.html" class="hover:text-slate-900 transition-colors">Terms of Service</a>
+          <a href="mailto:careers.inspirante@gmail.com" class="hover:text-slate-900 transition-colors">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Local Storage Service -->
+  <script src="local-storage-service.js"></script>
+
+  <script>
+    // Simulator data
+    const simulators = {
+      'ux-designer': {
+        name: 'UX Designer Simulator',
+        icon: '🎨',
+        color: 'bg-purple-500',
+        price: 29.00
+      },
+      'lawyer': {
+        name: 'Corporate Lawyer Simulator',
+        icon: '⚖️',
+        color: 'bg-blue-500',
+        price: 29.00
+      },
+      'copywriter': {
+        name: 'Copywriter / Creator Simulator',
+        icon: '✍️',
+        color: 'bg-green-500',
+        price: 29.00
+      },
+      'psychologist': {
+        name: 'Psychologist Simulator',
+        icon: '🧠',
+        color: 'bg-purple-500',
+        price: 29.00
+      },
+      'brand-marketer': {
+        name: 'Brand Marketer Simulator',
+        icon: '📈',
+        color: 'bg-orange-500',
+        price: 29.00
+      },
+      'qa-engineer': {
+        name: 'QA Automation Engineer Simulator',
+        icon: '🔧',
+        color: 'bg-amber',
+        price: 29.00
+      }
+    };
+
+    // Promo code configuration
+    const PROMO_CODES = {
+      'checkppff': {
+        discount: 100, // 100% discount (free)
+        description: 'Free access granted!'
+      },
+      'lawyerfree': {
+        discount: 100, // 100% discount (free)
+        description: 'Free access to Lawyer Simulator!',
+        simulator: 'lawyer' // Only works for lawyer simulator
+      }
+    };
+
+    // Global variables for pricing
+    let originalPrice = 29.00;
+    let currentPrice = 29.00;
+    let promoApplied = false;
+    let currentPromoCode = null;
+    let simulatorKey = 'ux-designer';
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get simulator from URL
+      simulatorKey = getSimulatorFromURL();
+      
+      // Update simulator info
+      updateSimulatorInfo();
+      
+      // Update crypto checkout link
+      const cryptoLink = document.getElementById('crypto-checkout-link');
+      if (cryptoLink) {
+        cryptoLink.href = `/crypto-checkout-prod.html?role=${simulatorKey}`;
+      }
+      
+      // Setup promo code functionality
+      setupPromoCodeHandlers();
+    });
+
+    // Get simulator from URL
+    function getSimulatorFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const role = urlParams.get('role');
+      return role || 'ux-designer';
+    }
+
+    // Update simulator info
+    function updateSimulatorInfo() {
+      const simulator = simulators[simulatorKey];
+      if (!simulator) return;
+
+      // Update simulator name
+      document.getElementById('simulator-name').textContent = simulator.name;
+      
+      // Update simulator icon
+      const iconElement = document.getElementById('simulator-icon');
+      iconElement.textContent = simulator.icon;
+      iconElement.className = `w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl ${simulator.color}`;
+    }
+
+    // Setup promo code handlers
+    function setupPromoCodeHandlers() {
+      const applyButton = document.getElementById('apply-promo');
+      const promoInput = document.getElementById('promo-code');
+      
+      applyButton.addEventListener('click', applyPromoCode);
+      
+      promoInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          applyPromoCode();
+        }
+      });
+    }
+
+    // Apply promo code
+    function applyPromoCode() {
+      const promoCode = document.getElementById('promo-code').value.trim().toLowerCase();
+      const promoMessage = document.getElementById('promo-message');
+      
+      if (!promoCode) {
+        showPromoMessage('Please enter a promo code', 'error');
+        return;
+      }
+      
+      if (PROMO_CODES[promoCode]) {
+        const promo = PROMO_CODES[promoCode];
+        
+        // Check if promo code is restricted to specific simulator
+        if (promo.simulator && promo.simulator !== simulatorKey) {
+          showPromoMessage(`This promo code is only valid for ${promo.simulator} simulator`, 'error');
+          return;
+        }
+        
+        promoApplied = true;
+        currentPromoCode = promoCode;
+        
+        // Calculate new price
+        if (promo.discount === 100) {
+          currentPrice = 0;
+        } else {
+          currentPrice = originalPrice * (1 - promo.discount / 100);
+        }
+        
+        // Update UI
+        updatePricing();
+        showPromoMessage(promo.description, 'success');
+        
+        // Disable promo input and button
+        promoInput.disabled = true;
+        document.getElementById('apply-promo').disabled = true;
+        
+        // Show free access button if 100% discount
+        if (promo.discount === 100) {
+          showFreeAccessButton();
+        }
+        
+      } else {
+        showPromoMessage('Invalid promo code', 'error');
+      }
+    }
+
+    // Show promo message
+    function showPromoMessage(message, type) {
+      const promoMessage = document.getElementById('promo-message');
+      promoMessage.textContent = message;
+      promoMessage.className = `mt-2 text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+      promoMessage.classList.remove('hidden');
+    }
+
+    // Update pricing display
+    function updatePricing() {
+      const originalPriceElement = document.getElementById('original-price');
+      const totalPriceElement = document.getElementById('total-price');
+      const discountRow = document.getElementById('discount-row');
+      const discountAmount = document.getElementById('discount-amount');
+      
+      originalPriceElement.textContent = `$${originalPrice.toFixed(2)}`;
+      totalPriceElement.textContent = `$${currentPrice.toFixed(2)}`;
+      
+      if (currentPrice < originalPrice) {
+        const discount = originalPrice - currentPrice;
+        discountAmount.textContent = `-$${discount.toFixed(2)}`;
+        discountRow.classList.remove('hidden');
+        
+        if (currentPrice === 0) {
+          totalPriceElement.className = 'text-green-600';
+        } else {
+          totalPriceElement.className = 'text-brand-600';
+        }
+      } else {
+        discountRow.classList.add('hidden');
+        totalPriceElement.className = 'text-brand-600';
+      }
+    }
+
+    // Show free access button
+    function showFreeAccessButton() {
+      document.getElementById('payment-methods').classList.add('hidden');
+      document.getElementById('free-access').classList.remove('hidden');
+      
+      // Add event listener to continue button
+      document.getElementById('continue-free').addEventListener('click', function() {
+        handleFreeAccess(simulatorKey);
+      });
+    }
+
+    // Handle free access
+    function handleFreeAccess(simulatorKey) {
+      // Show success state
+      document.getElementById('success-state').classList.remove('hidden');
+
+      console.log('🎉 Free access granted for:', simulatorKey);
+
+      // Save purchase to localStorage
+      const purchaseData = {
+        simulator: simulatorKey,
+        amount: 0,
+        currency: 'USD',
+        paymentMethod: 'promo',
+        promoCode: currentPromoCode,
+        userEmail: 'free@profpilot.co' // Default email for free access
+      };
+
+      // Save to localStorage
+      const purchase = window.localStorageService.savePurchase(purchaseData);
+      
+      if (purchase) {
+        // Send email notification
+        window.localStorageService.sendEmailNotification(purchase);
+      }
+
+      // Redirect to simulator after showing email notification
+      setTimeout(() => {
+        if (simulatorKey === 'ux-designer') {
+          window.location.href = '/ux-sim-simple.html';
+        } else if (simulatorKey === 'lawyer') {
+          window.location.href = '/lawyer-simulator.html';
+        } else if (simulatorKey === 'copywriter') {
+          window.location.href = '/copywriter-simulator.html';
+        } else if (simulatorKey === 'psychologist') {
+          window.location.href = '/psychologist-simulator.html';
+        } else if (simulatorKey === 'brand-marketer') {
+          window.location.href = '/brand-marketer-simulator.html';
+        } else {
+          window.location.href = '/dashboard.html';
+        }
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
