@@ -236,7 +236,7 @@
                 </div>
 
                 <!-- Reflection -->
-                <div class="bg-slate-50 rounded-xl p-6">
+                <div class="bg-slate-50 rounded-xl p-6" id="reflection-1">
                     <h3 class="font-semibold text-slate-900 mb-3">🤔 End of Day Reflection</h3>
                     <p class="text-slate-700 mb-4">How do you feel about your first day? What challenges do you anticipate?</p>
                     
@@ -273,7 +273,7 @@
                     <h3 class="font-semibold text-slate-900 mb-3">☕ 9:00 AM - Daily Standup</h3>
                     <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500">
                         <p class="text-slate-800 mb-2"><strong>You:</strong> "I've set up Appium and created a basic test framework. I'm ready to start automating the login flow."</p>
-                        <p class="text-slate-800 mb-2"><strong>Sarah:</strong> "Great! The dev team just pushed a new build. Perfect timing to test the latest changes."</p>
+                        <p class="text-slate-800 mb-2"><strong>Sarah:</strong> "Great work, [PLAYER_NAME]! The dev team just pushed a new build. Perfect timing to test the latest changes."</p>
                         <p class="text-slate-800"><strong>Mike:</strong> "We've added biometric login. Make sure to test both fingerprint and face recognition on different devices."</p>
                     </div>
                 </div>
@@ -282,7 +282,7 @@
                 <div class="bg-slate-50 rounded-xl p-6">
                     <h3 class="font-semibold text-slate-900 mb-3">💻 10:00 AM - Writing Your First Test</h3>
                     <div class="bg-white rounded-lg p-4">
-                        <p class="text-slate-800 mb-4"><strong>Alex:</strong> "Let's start with the login flow. Here's the test case we need to automate:"</p>
+                        <p class="text-slate-800 mb-4"><strong>Alex:</strong> "Let's start with the login flow, [PLAYER_NAME]. Here's the test case we need to automate:"</p>
                         
                         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
                             <h4 class="font-semibold text-gray-900 mb-2">📝 Test Case: Valid Login</h4>
@@ -405,7 +405,7 @@
                 <div class="bg-slate-50 rounded-xl p-6">
                     <h3 class="font-semibold text-slate-900 mb-3">🚀 9:00 AM - Pre-Launch Meeting</h3>
                     <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500">
-                        <p class="text-slate-800 mb-2"><strong>Sarah:</strong> "We're 3 days away from launch. Our automated test suite has grown to 50+ test cases. Great work!"</p>
+                        <p class="text-slate-800 mb-2"><strong>Sarah:</strong> "We're 3 days away from launch. Our automated test suite has grown to 50+ test cases. Great work, [PLAYER_NAME]!"</p>
                         <p class="text-slate-800 mb-2"><strong>Mike:</strong> "The dev team is confident, but we need to run a full regression test on the final build."</p>
                         <p class="text-slate-800"><strong>CEO:</strong> "This app will serve 100,000+ users on day one. Quality is non-negotiable. What's our test coverage?"</p>
                     </div>
@@ -415,7 +415,7 @@
                 <div class="bg-slate-50 rounded-xl p-6">
                     <h3 class="font-semibold text-slate-900 mb-3">📊 10:00 AM - Test Coverage Analysis</h3>
                     <div class="bg-white rounded-lg p-4">
-                        <p class="text-slate-800 mb-4"><strong>You:</strong> "Here's our current test coverage report:"</p>
+                        <p class="text-slate-800 mb-4"><strong>You:</strong> "Here's our current test coverage report, [PLAYER_NAME]:"</p>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div class="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -521,7 +521,7 @@
                 </h2>
                 
                 <p class="text-xl text-slate-600 mb-8">
-                    You've successfully completed the QA Automation Engineer simulation!
+                    Congratulations, [PLAYER_NAME]! You've successfully completed the QA Automation Engineer simulation!
                 </p>
 
                 <div class="bg-orange-50 border border-orange-200 rounded-xl p-6 mb-8">
@@ -668,6 +668,7 @@
             
             // Store player name globally
             window.playerName = playerName;
+            console.log('Player name set:', playerName);
             
             document.getElementById('intro-block').classList.add('hidden');
             document.getElementById('day1-block').classList.remove('hidden');
@@ -676,11 +677,21 @@
             
             // Update dialogues with player name
             updateDialoguesWithName();
+            console.log('Dialogues updated with name:', playerName);
         }
 
         function handleChoice(button) {
             const choice = button.dataset.choice;
             const questionNumber = getQuestionNumber(button);
+            
+            // Add hints based on question
+            if (questionNumber === 1) {
+                addHint('question-1', 'Consider: Which tool works best for both iOS and Android? Which one is most commonly used in the industry?');
+            } else if (questionNumber === 2) {
+                addHint('question-2', 'Think about the testing pyramid: What type of tests should you build first for maximum efficiency?');
+            } else if (questionNumber === 3) {
+                addHint('question-3', 'Consider: How can you catch bugs before they reach users? What\'s the fastest way to get feedback?');
+            }
             
             // Show feedback
             showFeedback(choice, questionNumber);
@@ -772,12 +783,18 @@
 
         function updateDialoguesWithName() {
             const playerName = window.playerName || 'there';
+            console.log('Updating dialogues with name:', playerName);
             
-            // Update dialogues throughout the simulator
-            const dialogues = document.querySelectorAll('[data-dialogue]');
-            dialogues.forEach(dialogue => {
-                dialogue.innerHTML = dialogue.innerHTML.replace(/\[PLAYER_NAME\]/g, playerName);
+            // Update all text content that contains [PLAYER_NAME]
+            const allElements = document.querySelectorAll('*');
+            let updatedCount = 0;
+            allElements.forEach(element => {
+                if (element.innerHTML && element.innerHTML.includes('[PLAYER_NAME]')) {
+                    element.innerHTML = element.innerHTML.replace(/\[PLAYER_NAME\]/g, playerName);
+                    updatedCount++;
+                }
             });
+            console.log('Updated', updatedCount, 'elements with player name');
         }
 
         function addHint(elementId, hintText) {
