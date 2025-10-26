@@ -163,10 +163,10 @@
 
             <div class="space-y-6">
                 <!-- Morning Meeting -->
-                <div class="bg-slate-50 rounded-xl p-6">
+                <div class="bg-slate-50 rounded-xl p-6" id="morning-meeting">
                     <h3 class="font-semibold text-slate-900 mb-3">🌅 9:00 AM - Team Standup</h3>
                     <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500">
-                        <p class="text-slate-800 mb-2"><strong>Sarah (QA Lead):</strong> "Welcome to the team! We're launching our mobile banking app in 2 weeks. We need comprehensive test coverage for all critical user flows."</p>
+                        <p class="text-slate-800 mb-2"><strong>Sarah (QA Lead):</strong> "Welcome to the team, [PLAYER_NAME]! We're launching our mobile banking app in 2 weeks. We need comprehensive test coverage for all critical user flows."</p>
                         <p class="text-slate-800 mb-2"><strong>Mike (Dev Lead):</strong> "The app has login, account balance, transfers, and bill payments. We've been doing manual testing, but we need automation to scale."</p>
                         <p class="text-slate-800"><strong>You:</strong> "I'm excited to help build a robust testing framework. What's the current test coverage?"</p>
                     </div>
@@ -192,7 +192,7 @@
                 </div>
 
                 <!-- Question 1 -->
-                <div class="bg-slate-50 rounded-xl p-6">
+                <div class="bg-slate-50 rounded-xl p-6" id="question-1">
                     <h3 class="font-semibold text-slate-900 mb-3">❓ Question 1: Testing Strategy</h3>
                     <p class="text-slate-700 mb-4">The team is debating between different mobile testing approaches. What would you recommend?</p>
                     
@@ -767,6 +767,36 @@
             } else if (currentDay === 4) {
                 progressText.textContent = 'Simulation Complete!';
                 progressBar.style.width = '100%';
+            }
+        }
+
+        function updateDialoguesWithName() {
+            const playerName = window.playerName || 'there';
+            
+            // Update dialogues throughout the simulator
+            const dialogues = document.querySelectorAll('[data-dialogue]');
+            dialogues.forEach(dialogue => {
+                dialogue.innerHTML = dialogue.innerHTML.replace(/\[PLAYER_NAME\]/g, playerName);
+            });
+        }
+
+        function addHint(elementId, hintText) {
+            const element = document.getElementById(elementId);
+            if (element && !element.querySelector('.hint')) {
+                const hintDiv = document.createElement('div');
+                hintDiv.className = 'hint bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3';
+                hintDiv.innerHTML = `
+                    <div class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h4 class="font-semibold text-blue-900 mb-1">💡 Hint</h4>
+                            <p class="text-blue-800 text-sm">${hintText}</p>
+                        </div>
+                    </div>
+                `;
+                element.appendChild(hintDiv);
             }
         }
     </script>
