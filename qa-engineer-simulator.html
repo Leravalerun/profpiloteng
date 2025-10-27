@@ -214,6 +214,57 @@
                     <h4 class="font-semibold text-slate-900 mb-2">💡 Expert Feedback</h4>
                     <div id="feedback-content-1"></div>
                 </div>
+                
+                <!-- Appium Information Block -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
+                    <h3 class="font-semibold text-blue-900 mb-3">📚 What is Appium?</h3>
+                    <div class="text-blue-800 text-sm space-y-3">
+                        <p><strong>Appium</strong> is an open-source test automation framework for mobile applications. Here's what makes it special:</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold mb-2">✅ Advantages:</h4>
+                                <ul class="space-y-1">
+                                    <li>• Works with both iOS and Android</li>
+                                    <li>• Supports multiple programming languages</li>
+                                    <li>• No need to modify your app</li>
+                                    <li>• Large community and documentation</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2">🎯 Perfect for:</h4>
+                                <ul class="space-y-1">
+                                    <li>• Cross-platform mobile apps</li>
+                                    <li>• Native, hybrid, and web apps</li>
+                                    <li>• Teams with mixed skill levels</li>
+                                    <li>• Rapid test development</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-100 rounded-lg p-3 mt-3">
+                            <p class="text-blue-900"><strong>💡 Pro Tip:</strong> Appium uses the same WebDriver protocol as Selenium, so if you know Selenium, you're already halfway there!</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4 class="font-semibold mb-2">🔄 How it compares to other tools:</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-white rounded-lg p-3 border border-blue-200">
+                                    <h5 class="font-semibold text-blue-900 mb-1">Appium</h5>
+                                    <p class="text-blue-800">Cross-platform, easy to learn, good for startups</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-3 border border-gray-200">
+                                    <h5 class="font-semibold text-gray-900 mb-1">Native Tools</h5>
+                                    <p class="text-gray-800">Best performance, but requires separate iOS/Android code</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-3 border border-gray-200">
+                                    <h5 class="font-semibold text-gray-900 mb-1">Selenium Grid</h5>
+                                    <p class="text-gray-800">Great for web, limited mobile app support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Afternoon Task -->
                 <div class="bg-slate-50 rounded-xl p-6">
@@ -229,6 +280,35 @@
                                 <li>• Create a basic test for the login flow</li>
                                 <li>• Document your setup process</li>
                             </ul>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-green-400 mb-2">💻 Example Appium Test Code:</h4>
+                            <pre class="text-green-400 text-xs overflow-x-auto"><code>from appium import webdriver
+
+# Set up capabilities
+capabilities = {
+    'platformName': 'Android',
+    'deviceName': 'Pixel_4',
+    'appPackage': 'com.bankapp',
+    'appActivity': '.MainActivity'
+}
+
+# Initialize driver
+driver = webdriver.Remote('http://localhost:4723', capabilities)
+
+# Test login flow
+username_field = driver.find_element('id', 'username')
+password_field = driver.find_element('id', 'password')
+login_button = driver.find_element('id', 'login')
+
+username_field.send_keys('testuser')
+password_field.send_keys('password123')
+login_button.click()
+
+# Verify success
+assert driver.find_element('id', 'dashboard').is_displayed()
+driver.quit()</code></pre>
                         </div>
 
                         <p class="text-slate-800"><strong>Sarah:</strong> "Take your time with the setup. A solid foundation will save us hours later. Let me know if you run into any issues!"</p>
@@ -717,21 +797,49 @@
 
         function getQuestionNumber(button) {
             const block = button.closest('[id$="-block"]');
-            if (block.id.includes('day1')) return 1;
+            if (block.id.includes('day1')) {
+                // Check if it's reflection
+                if (button.closest('#reflection-1')) {
+                    return 'reflection-1';
+                }
+                return 1;
+            }
             if (block.id.includes('day2')) return 2;
             if (block.id.includes('day3')) return 3;
             return 1;
         }
 
         function getRequiredQuestionsForDay(day) {
-            if (day === 1) return 1; // Need 1 question to unlock day 2
+            if (day === 1) return 2; // Need 1 question + 1 reflection to unlock day 2
             if (day === 2) return 3; // Need 3 questions to unlock day 3
             if (day === 3) return 4; // Need 4 questions to unlock completion
             return 0;
         }
 
         function showFeedback(choice, questionNumber) {
-            const feedback = feedbackContent[choice];
+            let feedback;
+            
+            // Handle reflection feedback
+            if (questionNumber === 'reflection-1') {
+                const reflectionFeedback = {
+                    'confident': {
+                        title: 'Great mindset!',
+                        content: 'Confidence is key in QA automation. Having a clear plan will help you tackle complex testing scenarios effectively.'
+                    },
+                    'overwhelmed': {
+                        title: 'That\'s normal!',
+                        content: 'QA automation can feel overwhelming at first, but excitement is a great motivator. Take it one step at a time.'
+                    },
+                    'focused': {
+                        title: 'Perfect approach!',
+                        content: 'Being focused and knowing your priorities is exactly what you need for successful test automation.'
+                    }
+                };
+                feedback = reflectionFeedback[choice];
+            } else {
+                feedback = feedbackContent[choice];
+            }
+            
             if (!feedback) return;
             
             const feedbackElement = document.getElementById(`feedback-${questionNumber}`);
