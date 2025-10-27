@@ -11,7 +11,10 @@ class SimpleEmailService {
     try {
       console.log('📧 Sending payment confirmation email...');
       
-      // Save to Firebase first
+      // Save to localStorage for simple access control
+      this.savePurchaseToLocalStorage(purchaseData);
+      
+      // Save to Firebase (if available)
       await this.savePurchaseToFirebase(purchaseData);
       
       // Create email content
@@ -27,6 +30,35 @@ class SimpleEmailService {
       return true;
     } catch (error) {
       console.error('❌ Failed to send email:', error);
+      return false;
+    }
+  }
+
+  // Save purchase data to localStorage (for simple access control)
+  savePurchaseToLocalStorage(purchaseData) {
+    try {
+      console.log('💾 Saving purchase to localStorage...');
+      
+      // Prepare access data in the correct format
+      const accessData = {
+        simulator: purchaseData.simulator || purchaseData.simulatorKey,
+        userEmail: purchaseData.userEmail || purchaseData.email,
+        status: 'confirmed', // Always confirmed after payment
+        createdAt: purchaseData.timestamp || new Date().toISOString(),
+        paymentId: purchaseData.cryptoTransactionId || purchaseData.paymentId,
+        id: purchaseData.cryptoTransactionId || purchaseData.paymentId,
+        cryptoTransactionId: purchaseData.cryptoTransactionId,
+        amount: purchaseData.amount || 29.00,
+        currency: purchaseData.currency || 'USD'
+      };
+
+      // Save to localStorage
+      localStorage.setItem('paymentData', JSON.stringify(accessData));
+      console.log('✅ Access granted and saved to localStorage:', accessData);
+      
+      return true;
+    } catch (error) {
+      console.error('❌ Failed to save to localStorage:', error);
       return false;
     }
   }
