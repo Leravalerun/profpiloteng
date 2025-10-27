@@ -1352,6 +1352,119 @@
         console.log('✅ Payment confirmed, showing continue button');
       }
     }
+
+    // Handle "Confirm Payment" button
+    document.getElementById('confirm-payment-btn').addEventListener('click', async function() {
+      const txHash = document.getElementById('tx-hash-input').value.trim();
+      
+      if (!txHash) {
+        alert('Please enter your transaction hash');
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const simulator = urlParams.get('role') || 'ux-designer';
+
+      // Get explorer URL based on selected crypto
+      let explorerUrl = '';
+      if (selectedCrypto) {
+        const crypto = CRYPTO_CONFIG.currencies[selectedCrypto];
+        if (crypto.network.includes('TRC20')) {
+          explorerUrl = `https://tronscan.org/#/transaction/${txHash}`;
+        } else if (crypto.network.includes('BSC')) {
+          explorerUrl = `https://bscscan.com/tx/${txHash}`;
+        } else if (crypto.network.includes('POLYGON')) {
+          explorerUrl = `https://polygonscan.com/tx/${txHash}`;
+        } else if (crypto.network.includes('ETH')) {
+          explorerUrl = `https://etherscan.io/tx/${txHash}`;
+        }
+      }
+
+      // Save payment data to localStorage with confirmed status
+      const paymentData = {
+        simulator: simulator,
+        userEmail: userEmail,
+        txHash: txHash,
+        status: 'confirmed', // ✅ Access granted immediately
+        createdAt: new Date().toISOString(),
+        paymentId: 'payment_' + Date.now(),
+        amount: currentPrice,
+        currency: 'USD',
+        cryptoType: selectedCrypto,
+        explorerUrl: explorerUrl
+      };
+
+      localStorage.setItem('paymentData', JSON.stringify(paymentData));
+      console.log('✅ Payment data saved to localStorage:', paymentData);
+
+      // Send verification email to admin
+      await sendVerificationEmail(userEmail, simulator, txHash, explorerUrl);
+
+      // Show success message
+      showPaymentStatus('success', 'Payment Confirmed!', 'Redirecting to simulator...');
+      
+      // Redirect to simulator after 2 seconds
+      setTimeout(() => {
+        redirectToSimulator(simulator);
+      }, 2000);
+    });
+
+    // Send verification email
+    async function sendVerificationEmail(email, simulator, txHash, explorerUrl) {
+      const simulatorName = getSimulatorName(simulator);
+      
+      const emailData = {
+        to: 'careers.inspirante@gmail.com',
+        subject: `Payment Verification Required - ${simulatorName}`,
+        body: `
+Email: ${email}
+Simulator: ${simulatorName}
+TX Hash: ${txHash}
+Check: ${explorerUrl}
+Time: ${new Date().toISOString()}
+        `
+      };
+
+      try {
+        // Send via FormSubmit (or your email service)
+        await fetch('https://formsubmit.co/ajax/careers.inspirante@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(emailData)
+        });
+        console.log('✅ Verification email sent');
+      } catch (error) {
+        console.error('❌ Failed to send email:', error);
+      }
+    }
+
+    // Get simulator name
+    function getSimulatorName(simulator) {
+      const names = {
+        'ux-designer': 'UX Designer',
+        'lawyer': 'Lawyer',
+        'copywriter': 'Copywriter / Creator',
+        'psychologist': 'Psychologist',
+        'brand-marketer': 'Brand Marketer',
+        'qa-engineer': 'QA Automation Engineer'
+      };
+      return names[simulator] || simulator;
+    }
+
+    // Redirect to simulator
+    function redirectToSimulator(simulator) {
+      const urls = {
+        'ux-designer': '/ux-sim-simple.html',
+        'lawyer': '/lawyer-simulator.html',
+        'copywriter': '/copywriter-simulator.html',
+        'psychologist': '/psychologist-simulator.html',
+        'brand-marketer': '/brand-marketer-simulator.html',
+        'qa-engineer': '/qa-engineer-simulator.html'
+      };
+      
+      const url = urls[simulator] || '/dashboard.html';
+      window.location.href = url;
+    }
   </script>
 </body>
 </html>

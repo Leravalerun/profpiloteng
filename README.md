@@ -74,9 +74,11 @@ Our platform addresses a critical gap in career education: **only about 27% of c
 - **Responsive Design** - Works on all devices
 
 ### **Backend & Services**
-- **Firebase** - Authentication and user management
-- **Firestore** - Progress tracking and data persistence
-- **FormSubmit** - Contact forms and suggestions
+- **localStorage** - Payment data and access control (primary)
+- **Simple Access Control** - Client-side access management
+- **Payment Verification** - Manual verification with email notifications
+- **FormSubmit** - Contact forms and email notifications
+- **Google Analytics** - Usage tracking and insights
 - **No build tools** - Pure browser-based solution
 
 ### **Design System**
