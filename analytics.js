@@ -5,7 +5,7 @@
     'use strict';
     
     // Replace 'G-XXXXXXXXXX' with your actual Google Analytics 4 Measurement ID
-    const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+    const GA_MEASUREMENT_ID = 'G-XSY9VSWFB5';
     
     // Don't track on localhost (development)
     const isDevelopment = window.location.hostname === 'localhost' || 
