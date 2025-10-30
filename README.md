@@ -36,16 +36,33 @@ Our platform addresses a critical gap in career education: **only about 27% of c
 - **Real scenarios**: $85M acquisition deal, FDA compliance, crisis management
 - **Price**: $29
 
-### 🔮 **Coming Soon**
-- Software Developer
-- Data Scientist / Analyst
-- AI / ML Specialist
-- Cybersecurity Specialist
-- Digital Marketing Specialist
-- Healthcare Professional
-- Cloud Engineer
-- Project Manager
-- And many more...
+#### ✍️ **Copywriter / Creator Simulator**
+- **Duration**: 3 days (30-45 minutes per day)
+- **What you'll do**: Write copy, understand brand voice, create compelling content
+- **Skills learned**: Copywriting, tone & voice, emotional connection, user empathy
+- **Real scenarios**: Job search platform messaging, user engagement campaigns
+- **Price**: $29
+
+#### 🧠 **Psychologist Simulator**
+- **Duration**: 3 days (25-35 minutes per day)
+- **What you'll do**: Conduct therapy sessions, practice CBT techniques, provide support
+- **Skills learned**: Active listening, empathy, therapeutic approaches, emotional intelligence
+- **Real scenarios**: Client counseling, cognitive behavioral therapy, supervision sessions
+- **Price**: $29
+
+#### 🎯 **Brand Marketer Simulator**
+- **Duration**: 4 days (30-45 minutes per day)
+- **What you'll do**: Develop brand positioning, create campaigns, align team strategy
+- **Skills learned**: Brand strategy, customer journey mapping, narrative building, team alignment
+- **Real scenarios**: Rebranding campaign, customer insight analysis, stakeholder presentations
+- **Price**: $29
+
+#### 🔧 **QA Automation Engineer Simulator**
+- **Duration**: 3 days (25-40 minutes per day)
+- **What you'll do**: Set up test automation, write test cases, debug issues
+- **Skills learned**: Appium, mobile testing, test frameworks, CI/CD integration
+- **Real scenarios**: Mobile banking app testing, cross-platform automation
+- **Price**: $29
 
 ## 🚀 Key Features
 
