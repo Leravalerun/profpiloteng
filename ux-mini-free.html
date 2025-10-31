@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free UX Mini Simulator — Try UX Design in 15 Minutes | ProfPilot</title>
+    <meta name="description" content="Experience a free 15-minute UX design simulation. Try your first UX task, get instant feedback, and see if UX design is for you before committing to the full course.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#00d4aa',
+                            600: '#00a896',
+                            700: '#007a6b',
+                            800: '#065f56',
+                            900: '#064e3b'
+                        },
+                        accent: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4aa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <a href="/index.html" class="flex items-center">
+                        <img src="/logo-64.png" alt="ProfPilot" class="h-8 w-8 mr-3">
+                        <span class="text-2xl font-bold text-slate-900">ProfPilot</span>
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">Free</span>
+                    <a href="/ux.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">View Full Simulator</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 rounded-full bg-green-100 text-green-700 px-4 py-2 text-sm font-medium mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Free Mini Experience — No Payment Required
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+                Try <span class="gradient-text">UX Design</span> in 15 Minutes
+            </h1>
+            <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+                Experience your first UX task for free. Analyze a real problem, make a decision, and get instant feedback. 
+                See what UX work feels like before committing to the full 3-day simulator.
+            </p>
+        </div>
+    </section>
+
+    <!-- Mini Simulator -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div id="simulator-container">
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-slate-100 fade-in">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent-500 to-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Welcome to Your First UX Task</h2>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                        You're working at JobHunter.ai, a job search platform. Users are dropping off at the "About Me" field 
+                        in the profile creation flow. Your mission: figure out why and propose a quick fix.
+                    </p>
+                </div>
+                
+                <div class="bg-slate-50 rounded-xl p-6 mb-8">
+                    <h3 class="font-semibold text-slate-900 mb-3">What you'll do:</h3>
+                    <ul class="space-y-2 text-slate-700">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Read the problem brief and analytics</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Choose the best hypothesis about the drop-off</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Pick a practical UX solution</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Get instant feedback from your mentor Alex</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <button onclick="startSimulator()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+                    Start Free Mini Experience →
+                </button>
+                <p class="text-center text-sm text-slate-500 mt-4">Takes about 15 minutes • No signup required</p>
+            </div>
+
+            <!-- Task 1: Problem Brief -->
+            <div id="task-1" class="hidden bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-slate-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center">
+                        <span class="text-accent-700 font-bold">1</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900">The Problem</h2>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">JH</span>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900">JobHunter.ai</h3>
+                            <p class="text-sm text-slate-600">Job search platform</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-700 mb-4 leading-relaxed">
+                        <strong>The Issue:</strong> 38% of users who start creating a profile drop off at the "About Me" field. 
+                        This is the highest drop-off point in the entire onboarding flow. If users don't complete their profile, 
+                        they can't get personalized job recommendations.
+                    </p>
+
+                    <div class="bg-white rounded-lg p-4 mb-4 border-l-4 border-red-500">
+                        <p class="text-sm text-slate-600 mb-2"><strong>Analytics Data:</strong></p>
+                        <ul class="text-sm text-slate-700 space-y-1">
+                            <li>• 62% of users reach the "About Me" field</li>
+                            <li>• Only 38% complete it</li>
+                            <li>• Average time spent on field: 2.3 minutes</li>
+                            <li>• Most users click "Skip" or leave the page</li>
+                        </ul>
+                    </div>
+
+                    <p class="text-sm text-slate-600 italic">
+                        Your task: Think about why users might be dropping off. What could be causing this?
+                    </p>
+                </div>
+
+                <button onclick="showTask2()" class="w-full bg-accent-600 hover:bg-accent-700 text-white font-semibold px-8 py-3 rounded-xl transition-colors">
+                    Continue to Analysis →
+                </button>
+            </div>
+
+            <!-- Task 2: Hypothesis Selection -->
+            <div id="task-2" class="hidden bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-slate-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center">
+                        <span class="text-accent-700 font-bold">2</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900">What's Your Hypothesis?</h2>
+                </div>
+
+                <p class="text-slate-700 mb-6">
+                    Based on the data, what do you think is the most likely reason users are dropping off at "About Me"?
+                </p>
+
+                <div id="hypothesis-options" class="space-y-4 mb-6">
+                    <button onclick="selectHypothesis('A')" class="w-full text-left bg-slate-50 hover:bg-accent-50 border-2 border-slate-200 hover:border-accent-300 rounded-xl p-5 transition-all hypothesis-option" data-value="A">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="font-semibold text-slate-900 mb-2">A. The field is too vague or intimidating</div>
+                                <p class="text-sm text-slate-600">Users don't know what to write. "About Me" feels too open-ended and personal.</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </button>
+
+                    <button onclick="selectHypothesis('B')" class="w-full text-left bg-slate-50 hover:bg-accent-50 border-2 border-slate-200 hover:border-accent-300 rounded-xl p-5 transition-all hypothesis-option" data-value="B">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="font-semibold text-slate-900 mb-2">B. The field appears too late in the flow</div>
+                                <p class="text-sm text-slate-600">Users are already tired by the time they reach "About Me" and just want to finish.</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </button>
+
+                    <button onclick="selectHypothesis('C')" class="w-full text-left bg-slate-50 hover:bg-accent-50 border-2 border-slate-200 hover:border-accent-300 rounded-xl p-5 transition-all hypothesis-option" data-value="C">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="font-semibold text-slate-900 mb-2">C. The field isn't clearly necessary</div>
+                                <p class="text-sm text-slate-600">Users don't understand why they need to fill it out, so they skip it.</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="task2-feedback" class="hidden mb-6"></div>
+                <button id="task2-continue" onclick="showTask3()" class="hidden w-full bg-accent-600 hover:bg-accent-700 text-white font-semibold px-8 py-3 rounded-xl transition-colors">
+                    Continue to Solution →
+                </button>
+            </div>
+
+            <!-- Task 3: Solution Selection -->
+            <div id="task-3" class="hidden bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-slate-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center">
+                        <span class="text-accent-700 font-bold">3</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900">Pick a Quick Fix</h2>
+                </div>
+
+                <p class="text-slate-700 mb-6">
+                    Now, based on your hypothesis, which solution would you implement first? (Quick wins are best!)
+                </p>
+
+                <div id="solution-options" class="space-y-4 mb-6">
+                    <button onclick="selectSolution('1')" class="w-full text-left bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-300 rounded-xl p-5 transition-all solution-option" data-value="1">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="font-semibold text-slate-900 mb-2">1. Add example text and a character count</div>
+                                <p class="text-sm text-slate-600">Show users what good "About Me" looks like with placeholders like "e.g., 5+ years in marketing, passionate about growth..."</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </button>
+
+                    <button onclick="selectSolution('2')" class="w-full text-left bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-300 rounded-xl p-5 transition-all solution-option" data-value="2">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="font-semibold text-slate-900 mb-2">2. Make it optional with clear value</div>
+                                <p class="text-sm text-slate-600">Add "Skip for now" button but explain: "Complete your About Me to get 3x better job matches"</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </button>
+
+                    <button onclick="selectSolution('3')" class="w-full text-left bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-300 rounded-xl p-5 transition-all solution-option" data-value="3">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="font-semibold text-slate-900 mb-2">3. Break it into smaller questions</div>
+                                <p class="text-sm text-slate-600">Instead of one big "About Me", ask 3 short questions: "What's your biggest career goal?", "What industry?", etc.</p>
+                            </div>
+                            <svg class="w-6 h-6 text-slate-400 ml-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="task3-feedback" class="hidden mb-6"></div>
+                <button id="task3-continue" onclick="showCompletion()" class="hidden w-full bg-accent-600 hover:bg-accent-700 text-white font-semibold px-8 py-3 rounded-xl transition-colors">
+                    See Your Results →
+                </button>
+            </div>
+
+            <!-- Completion Screen -->
+            <div id="completion-screen" class="hidden bg-gradient-to-br from-brand-50 to-accent-50 rounded-2xl shadow-lg p-8 md:p-12 border border-brand-200">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-4">Great Job!</h2>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-6">
+                        You just completed your first UX task. That feeling of analyzing data, forming a hypothesis, 
+                        and picking a solution? That's what UX designers do every day.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 mb-8 border border-slate-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <span class="text-white font-bold">AX</span>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-slate-900">Alex, UX Lead</h3>
+                            <p class="text-sm text-slate-600">Your mentor</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-4">
+                        <p class="text-slate-700 leading-relaxed">
+                            "You've got the right mindset! Good UX designers start with the user problem, not the solution. 
+                            You looked at the data, thought about why users might struggle, and picked a practical fix. 
+                            That's the UX process in action."
+                        </p>
+                        <p class="text-slate-600 text-sm mt-3 italic">
+                            Want more? The full 3-day simulator has 12+ tasks like this, team collaboration, 
+                            real presentations, and detailed feedback on your decisions.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <a href="/checkout?role=ux-designer&utm_source=mini-simulator&utm_medium=free-trial&utm_campaign=completion-cta&utm_content=upgrade-button" class="block w-full bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 text-center">
+                        Continue to Full 3-Day Simulator — $29
+                    </a>
+                    <a href="/ux.html?utm_source=mini-simulator&utm_medium=free-trial&utm_campaign=completion-cta&utm_content=learn-more" class="block w-full border-2 border-brand-600 text-brand-600 hover:bg-brand-50 font-semibold px-8 py-4 rounded-xl transition-all duration-200 text-center">
+                        Learn More About the Full Experience
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-16">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="/logo-64.png" alt="ProfPilot" class="h-8 w-8 mr-3">
+                        <span class="text-xl font-bold">ProfPilot</span>
+                    </div>
+                    <p class="text-slate-400 mb-4">
+                        Test-drive careers before you commit. Realistic scenarios for confident career moves.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Simulators</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="/ux.html" class="hover:text-white transition-colors">UX Designer</a></li>
+                        <li><a href="/lawyer.html" class="hover:text-white transition-colors">Corporate Lawyer</a></li>
+                        <li><a href="/copywriter.html" class="hover:text-white transition-colors">Copywriter</a></li>
+                        <li><a href="/psychologist.html" class="hover:text-white transition-colors">Psychologist</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="/blog.html" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="/blog/career-simulators-60-minutes.html" class="hover:text-white transition-colors">Free Mini Guide</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4">Company</h3>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="/terms.html" class="hover:text-white transition-colors">Terms</a></li>
+                        <li><a href="/policy.html" class="hover:text-white transition-colors">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
+                <p>&copy; 2025 ProfPilot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let selectedHypothesis = null;
+        let selectedSolution = null;
+
+        function startSimulator() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('task-1').classList.remove('hidden');
+            document.getElementById('task-1').classList.add('fade-in');
+        }
+
+        function showTask2() {
+            document.getElementById('task-1').classList.add('hidden');
+            document.getElementById('task-2').classList.remove('hidden');
+            document.getElementById('task-2').classList.add('fade-in');
+        }
+
+        function selectHypothesis(value) {
+            selectedHypothesis = value;
+            
+            // Update UI
+            document.querySelectorAll('.hypothesis-option').forEach(btn => {
+                btn.classList.remove('bg-accent-100', 'border-accent-500');
+                btn.classList.add('bg-slate-50', 'border-slate-200');
+                const svg = btn.querySelector('svg');
+                svg.classList.add('hidden');
+            });
+            
+            const selected = document.querySelector(`[data-value="${value}"]`);
+            selected.classList.remove('bg-slate-50', 'border-slate-200');
+            selected.classList.add('bg-accent-100', 'border-accent-500');
+            selected.querySelector('svg').classList.remove('hidden');
+            selected.querySelector('svg').classList.add('text-accent-600');
+
+            // Show feedback
+            const feedback = document.getElementById('task2-feedback');
+            feedback.classList.remove('hidden');
+            
+            let feedbackText = '';
+            if (value === 'A') {
+                feedbackText = `
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                        <p class="text-green-800 font-semibold mb-2">✓ Great thinking!</p>
+                        <p class="text-green-700 text-sm">This is actually the most common issue. "About Me" fields feel too open-ended and users get writer's block. Good UX intuition!</p>
+                    </div>
+                `;
+            } else if (value === 'B') {
+                feedbackText = `
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <p class="text-blue-800 font-semibold mb-2">💡 Also valid!</p>
+                        <p class="text-blue-700 text-sm">User fatigue is real. If the flow is too long, drop-offs happen. But the data shows most users start the field (spending 2.3 min), suggesting they're trying, not quitting early.</p>
+                    </div>
+                `;
+            } else {
+                feedbackText = `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                        <p class="text-amber-800 font-semibold mb-2">🤔 Could be part of it</p>
+                        <p class="text-amber-700 text-sm">Value communication matters, but analytics show users do start typing (2.3 min average). The real issue is likely the blank page problem—not knowing what to write.</p>
+                    </div>
+                `;
+            }
+            
+            feedback.innerHTML = feedbackText;
+            document.getElementById('task2-continue').classList.remove('hidden');
+        }
+
+        function showTask3() {
+            document.getElementById('task-2').classList.add('hidden');
+            document.getElementById('task-3').classList.remove('hidden');
+            document.getElementById('task-3').classList.add('fade-in');
+        }
+
+        function selectSolution(value) {
+            selectedSolution = value;
+            
+            // Update UI
+            document.querySelectorAll('.solution-option').forEach(btn => {
+                btn.classList.remove('bg-brand-100', 'border-brand-500');
+                btn.classList.add('bg-slate-50', 'border-slate-200');
+                const svg = btn.querySelector('svg');
+                svg.classList.add('hidden');
+            });
+            
+            const selected = document.querySelector(`.solution-option[data-value="${value}"]`);
+            selected.classList.remove('bg-slate-50', 'border-slate-200');
+            selected.classList.add('bg-brand-100', 'border-brand-500');
+            selected.querySelector('svg').classList.remove('hidden');
+            selected.querySelector('svg').classList.add('text-brand-600');
+
+            // Show feedback
+            const feedback = document.getElementById('task3-feedback');
+            feedback.classList.remove('hidden');
+            
+            let feedbackText = '';
+            if (value === '1') {
+                feedbackText = `
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                        <p class="text-green-800 font-semibold mb-2">✓ Excellent choice!</p>
+                        <p class="text-green-700 text-sm">Examples and constraints reduce cognitive load. Users see what "good" looks like and don't feel overwhelmed. This is a proven UX pattern for text fields.</p>
+                    </div>
+                `;
+            } else if (value === '2') {
+                feedbackText = `
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <p class="text-blue-800 font-semibold mb-2">💡 Good approach</p>
+                        <p class="text-blue-700 text-sm">Making it optional respects user choice, and explaining value can help. But if the field is intimidating, users might skip even with value messaging. Adding examples (Option 1) often works better first.</p>
+                    </div>
+                `;
+            } else {
+                feedbackText = `
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                        <p class="text-amber-800 font-semibold mb-2">🤔 Interesting idea</p>
+                        <p class="text-amber-700 text-sm">Breaking it down helps, but this requires more engineering work and changes the data model. For a quick win, Option 1 (examples + count) is faster to implement and tests well.</p>
+                    </div>
+                `;
+            }
+            
+            feedback.innerHTML = feedbackText;
+            document.getElementById('task3-continue').classList.remove('hidden');
+        }
+
+        function showCompletion() {
+            document.getElementById('task-3').classList.add('hidden');
+            document.getElementById('completion-screen').classList.remove('hidden');
+            document.getElementById('completion-screen').classList.add('slide-up');
+        }
+    </script>
+</body>
+</html>
+
