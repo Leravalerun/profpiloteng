@@ -222,6 +222,182 @@
     </div>
   </section>
 
+  <!-- Free Mini Simulator - Try It Now -->
+  <section id="try-now" class="py-16 bg-gradient-to-br from-green-50 via-emerald-50 to-brand-50 border-y border-green-200/50">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full bg-green-100 text-green-700 px-4 py-2 text-sm font-medium mb-4">
+          <span class="text-lg">🎁</span>
+          <span>Free Mini Experience — No Payment Required</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
+          Try <span class="gradient-text">UX Design</span> in 15 Minutes
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Experience your first UX task right here. No signup, no payment — just one real problem to solve.
+        </p>
+      </div>
+
+      <!-- Mini Simulator Container -->
+      <div id="mini-sim-container" class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 md:p-8">
+        <!-- Welcome Screen -->
+        <div id="mini-welcome" class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-br from-accent-500 to-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-3">Your First UX Task</h3>
+          <p class="text-slate-600 mb-6 max-w-xl mx-auto">
+            You're at JobHunter.ai. 38% of users drop off at the "About Me" field. 
+            Figure out why and pick a quick fix.
+          </p>
+          <button onclick="startMiniSim()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+            Start Free Task →
+          </button>
+          <p class="text-xs text-slate-500 mt-3">Takes ~15 minutes</p>
+        </div>
+
+        <!-- Task 1: Problem -->
+        <div id="mini-task1" class="hidden">
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 bg-accent-100 rounded-full flex items-center justify-center">
+                <span class="text-accent-700 font-bold text-sm">1</span>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900">The Problem</h3>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span class="text-white font-bold text-sm">JH</span>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-900">JobHunter.ai</h4>
+                  <p class="text-xs text-slate-600">Job search platform</p>
+                </div>
+              </div>
+              <p class="text-slate-700 mb-3"><strong>The Issue:</strong> 38% of users drop off at "About Me" field — highest drop-off point in onboarding.</p>
+              <div class="bg-white rounded-lg p-3 border-l-4 border-red-500 text-sm">
+                <p class="font-semibold mb-1">Analytics:</p>
+                <ul class="text-slate-600 space-y-1">
+                  <li>• 62% reach "About Me"</li>
+                  <li>• Only 38% complete it</li>
+                  <li>• Avg time: 2.3 minutes</li>
+                  <li>• Most click "Skip" or leave</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <button onclick="showMiniTask2()" class="w-full bg-accent-600 hover:bg-accent-700 text-white font-semibold py-3 rounded-xl">
+            Continue →
+          </button>
+        </div>
+
+        <!-- Task 2: Hypothesis -->
+        <div id="mini-task2" class="hidden">
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 bg-accent-100 rounded-full flex items-center justify-center">
+                <span class="text-accent-700 font-bold text-sm">2</span>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900">What's Your Hypothesis?</h3>
+            </div>
+            <p class="text-slate-700 mb-4">Why are users dropping off?</p>
+            <div class="space-y-3">
+              <button onclick="selectMiniHypothesis('A')" class="w-full text-left bg-slate-50 hover:bg-accent-50 border-2 border-slate-200 hover:border-accent-300 rounded-lg p-4 transition-all mini-hyp" data-val="A">
+                <div class="font-semibold text-slate-900 mb-1">A. Field is too vague</div>
+                <p class="text-sm text-slate-600">Users don't know what to write. "About Me" feels too open-ended.</p>
+              </button>
+              <button onclick="selectMiniHypothesis('B')" class="w-full text-left bg-slate-50 hover:bg-accent-50 border-2 border-slate-200 hover:border-accent-300 rounded-lg p-4 transition-all mini-hyp" data-val="B">
+                <div class="font-semibold text-slate-900 mb-1">B. Appears too late in flow</div>
+                <p class="text-sm text-slate-600">Users are tired and want to finish quickly.</p>
+              </button>
+              <button onclick="selectMiniHypothesis('C')" class="w-full text-left bg-slate-50 hover:bg-accent-50 border-2 border-slate-200 hover:border-accent-300 rounded-lg p-4 transition-all mini-hyp" data-val="C">
+                <div class="font-semibold text-slate-900 mb-1">C. Not clearly necessary</div>
+                <p class="text-sm text-slate-600">Users don't understand why they need to fill it out.</p>
+              </button>
+            </div>
+            <div id="mini-hyp-feedback" class="hidden mt-4"></div>
+          </div>
+          <button id="mini-task2-continue" onclick="showMiniTask3()" class="hidden w-full bg-accent-600 hover:bg-accent-700 text-white font-semibold py-3 rounded-xl">
+            Continue →
+          </button>
+        </div>
+
+        <!-- Task 3: Solution -->
+        <div id="mini-task3" class="hidden">
+          <div class="mb-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 bg-accent-100 rounded-full flex items-center justify-center">
+                <span class="text-accent-700 font-bold text-sm">3</span>
+              </div>
+              <h3 class="text-xl font-bold text-slate-900">Pick a Quick Fix</h3>
+            </div>
+            <p class="text-slate-700 mb-4">Which solution would you implement first?</p>
+            <div class="space-y-3">
+              <button onclick="selectMiniSolution('1')" class="w-full text-left bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-300 rounded-lg p-4 transition-all mini-sol" data-val="1">
+                <div class="font-semibold text-slate-900 mb-1">1. Add example text + character count</div>
+                <p class="text-sm text-slate-600">Show placeholders like "e.g., 5+ years in marketing..."</p>
+              </button>
+              <button onclick="selectMiniSolution('2')" class="w-full text-left bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-300 rounded-lg p-4 transition-all mini-sol" data-val="2">
+                <div class="font-semibold text-slate-900 mb-1">2. Make it optional with value</div>
+                <p class="text-sm text-slate-600">Add "Skip" button: "Complete About Me to get 3x better matches"</p>
+              </button>
+              <button onclick="selectMiniSolution('3')" class="w-full text-left bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-300 rounded-lg p-4 transition-all mini-sol" data-val="3">
+                <div class="font-semibold text-slate-900 mb-1">3. Break into smaller questions</div>
+                <p class="text-sm text-slate-600">Ask 3 short questions instead of one big field.</p>
+              </button>
+            </div>
+            <div id="mini-sol-feedback" class="hidden mt-4"></div>
+          </div>
+          <button id="mini-task3-continue" onclick="showMiniCompletion()" class="hidden w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl">
+            See Results →
+          </button>
+        </div>
+
+        <!-- Completion -->
+        <div id="mini-completion" class="hidden">
+          <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-2">Great Job!</h3>
+            <p class="text-slate-600 mb-6">
+              You just completed your first UX task. That feeling of analyzing data, forming a hypothesis, 
+              and picking a solution? That's what UX designers do every day.
+            </p>
+            <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 mb-6 text-left">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span class="text-white font-bold text-sm">AX</span>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-slate-900">Alex, UX Lead</h4>
+                  <p class="text-xs text-slate-600">Your mentor</p>
+                </div>
+              </div>
+              <p class="text-slate-700 text-sm">
+                "You've got the right mindset! Good UX designers start with the user problem, not the solution. 
+                That's the UX process in action."
+              </p>
+            </div>
+            <div class="space-y-3">
+              <a href="/checkout?role=ux-designer&utm_source=homepage&utm_medium=mini-simulator&utm_campaign=completion-cta&utm_content=upgrade-button" class="block w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                Continue to Full 3-Day Simulator — $29
+              </a>
+              <a href="/ux.html?utm_source=homepage&utm_medium=mini-simulator&utm_campaign=completion-cta&utm_content=learn-more" class="block w-full border-2 border-brand-600 text-brand-600 hover:bg-brand-50 font-semibold py-3 rounded-xl transition-all">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Roles -->
   <section id="roles" class="py-20 bg-white">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -896,6 +1072,81 @@
     document.querySelectorAll('.card-hover, .animate-slide-up').forEach(el => {
       observer.observe(el);
     });
+
+    // Mini Simulator Functions
+    function startMiniSim() {
+      document.getElementById('mini-welcome').classList.add('hidden');
+      document.getElementById('mini-task1').classList.remove('hidden');
+      document.getElementById('mini-task1').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showMiniTask2() {
+      document.getElementById('mini-task1').classList.add('hidden');
+      document.getElementById('mini-task2').classList.remove('hidden');
+      document.getElementById('mini-task2').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function selectMiniHypothesis(value) {
+      const options = document.querySelectorAll('.mini-hyp');
+      options.forEach(opt => {
+        opt.classList.remove('bg-accent-100', 'border-accent-500');
+        opt.classList.add('bg-slate-50', 'border-slate-200');
+      });
+      const selected = document.querySelector(`.mini-hyp[data-val="${value}"]`);
+      selected.classList.remove('bg-slate-50', 'border-slate-200');
+      selected.classList.add('bg-accent-100', 'border-accent-500');
+
+      const feedback = document.getElementById('mini-hyp-feedback');
+      feedback.classList.remove('hidden');
+      
+      let html = '';
+      if (value === 'A') {
+        html = '<div class="bg-green-50 border-l-4 border-green-500 p-3 rounded"><p class="text-green-800 text-sm font-semibold mb-1">✓ Great thinking!</p><p class="text-green-700 text-xs">This is the most common issue. "About Me" fields feel too open-ended and users get writer\'s block. Good UX intuition!</p></div>';
+      } else if (value === 'B') {
+        html = '<div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded"><p class="text-blue-800 text-sm font-semibold mb-1">💡 Also valid!</p><p class="text-blue-700 text-xs">User fatigue is real. But data shows users start typing (2.3 min), suggesting they\'re trying, not quitting early.</p></div>';
+      } else {
+        html = '<div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded"><p class="text-amber-800 text-sm font-semibold mb-1">🤔 Could be part of it</p><p class="text-amber-700 text-xs">Value communication matters, but the real issue is likely the blank page problem—not knowing what to write.</p></div>';
+      }
+      feedback.innerHTML = html;
+      document.getElementById('mini-task2-continue').classList.remove('hidden');
+    }
+
+    function showMiniTask3() {
+      document.getElementById('mini-task2').classList.add('hidden');
+      document.getElementById('mini-task3').classList.remove('hidden');
+      document.getElementById('mini-task3').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function selectMiniSolution(value) {
+      const options = document.querySelectorAll('.mini-sol');
+      options.forEach(opt => {
+        opt.classList.remove('bg-brand-100', 'border-brand-500');
+        opt.classList.add('bg-slate-50', 'border-slate-200');
+      });
+      const selected = document.querySelector(`.mini-sol[data-val="${value}"]`);
+      selected.classList.remove('bg-slate-50', 'border-slate-200');
+      selected.classList.add('bg-brand-100', 'border-brand-500');
+
+      const feedback = document.getElementById('mini-sol-feedback');
+      feedback.classList.remove('hidden');
+      
+      let html = '';
+      if (value === '1') {
+        html = '<div class="bg-green-50 border-l-4 border-green-500 p-3 rounded"><p class="text-green-800 text-sm font-semibold mb-1">✓ Excellent choice!</p><p class="text-green-700 text-xs">Examples and constraints reduce cognitive load. Users see what "good" looks like. This is a proven UX pattern for text fields.</p></div>';
+      } else if (value === '2') {
+        html = '<div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded"><p class="text-blue-800 text-sm font-semibold mb-1">💡 Good approach</p><p class="text-blue-700 text-xs">Making it optional respects user choice. But if the field is intimidating, users might skip even with value messaging. Adding examples (Option 1) often works better first.</p></div>';
+      } else {
+        html = '<div class="bg-amber-50 border-l-4 border-amber-500 p-3 rounded"><p class="text-amber-800 text-sm font-semibold mb-1">🤔 Interesting idea</p><p class="text-amber-700 text-xs">Breaking it down helps, but this requires more engineering work. For a quick win, Option 1 (examples + count) is faster to implement and tests well.</p></div>';
+      }
+      feedback.innerHTML = html;
+      document.getElementById('mini-task3-continue').classList.remove('hidden');
+    }
+
+    function showMiniCompletion() {
+      document.getElementById('mini-task3').classList.add('hidden');
+      document.getElementById('mini-completion').classList.remove('hidden');
+      document.getElementById('mini-completion').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   </script>
 
   <!-- Client-side redirects -->
