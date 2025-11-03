@@ -270,6 +270,8 @@
   <!-- Simple Email Service -->
   <script src="firebase-config.js"></script>
   <script src="email-service-simple.js"></script>
+  <script src="analytics-enhanced.js"></script>
+  <script src="ab-testing.js"></script>
 
   <script>
     // Simulator data
@@ -498,6 +500,29 @@
 
       console.log('🎉 Free access granted for:', simulatorKey);
 
+      // Track free access and payment completed
+      if (window.analytics) {
+        window.analytics.trackEvent('free_access_granted', {
+          simulator: simulatorKey,
+          promo_code: currentPromoCode,
+          original_price: originalPrice
+        });
+        
+        window.analytics.trackFunnelStep('payment_completed', {
+          simulator: simulatorKey,
+          amount: 0,
+          payment_method: 'promo',
+          promo_code: currentPromoCode
+        });
+        
+        window.analytics.trackPurchase(
+          simulatorKey,
+          0,
+          'promo',
+          currentPromoCode
+        );
+      }
+
       // Send confirmation email for free access
       if (window.SimpleEmailService) {
         const emailService = new window.SimpleEmailService();
@@ -572,8 +597,88 @@
         console.log('✅ Checkout page initialized successfully');
       }
       
+      // Initialize Enhanced Analytics
+      function initializeCheckoutAnalytics() {
+        const checkAnalytics = setInterval(() => {
+          if (window.EnhancedAnalytics && window.auth) {
+            clearInterval(checkAnalytics);
+            
+            window.analytics = new window.EnhancedAnalytics();
+            
+            // Set user ID if authenticated
+            window.auth.onAuthStateChanged((user) => {
+              if (user && window.analytics) {
+                window.analytics.setUserId(user.uid);
+              }
+            });
+            
+            console.log('✅ Checkout Analytics initialized');
+          }
+        }, 100);
+        
+        setTimeout(() => clearInterval(checkAnalytics), 5000);
+      }
+      
+      initializeCheckoutAnalytics();
+      
       // Initialize page immediately
       initializePage();
+      
+      // Track checkout funnel events
+      function trackCheckoutEvents() {
+        const checkAnalytics = setInterval(() => {
+          if (window.analytics) {
+            clearInterval(checkAnalytics);
+            
+            const simulator = getSimulatorFromURL();
+            
+            // Track checkout started
+            window.analytics.trackFunnelStep('checkout_started', {
+              simulator: simulator,
+              price: originalPrice
+            });
+            
+            // Track promo code applied
+            document.getElementById('apply-promo')?.addEventListener('click', function() {
+              const promoCode = document.getElementById('promo-code').value;
+              window.analytics.trackEvent('promo_code_applied', {
+                code: promoCode,
+                simulator: simulator,
+                original_price: originalPrice,
+                discount: originalPrice - currentPrice
+              });
+            });
+            
+            // Track payment method selection (when tabs are clicked)
+            const paypalTab = document.getElementById('paypal-tab');
+            const cryptoTab = document.getElementById('crypto-tab');
+            
+            if (paypalTab) {
+              paypalTab.addEventListener('click', function() {
+                window.analytics.trackFunnelStep('payment_method_selected', {
+                  method: 'paypal',
+                  simulator: simulator
+                });
+              });
+            }
+            
+            if (cryptoTab) {
+              cryptoTab.addEventListener('click', function() {
+                window.analytics.trackFunnelStep('payment_method_selected', {
+                  method: 'crypto',
+                  simulator: simulator
+                });
+              });
+            }
+            
+            console.log('✅ Checkout event tracking initialized');
+          }
+        }, 100);
+        
+        setTimeout(() => clearInterval(checkAnalytics), 5000);
+      }
+      
+      trackCheckoutEvents();
     });
   </script>
 </body>

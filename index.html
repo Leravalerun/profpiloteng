@@ -1161,7 +1161,9 @@
         'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
         'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js',
         'firebase-config.js?v=' + Date.now(),
-        'firebase-init.js?v=' + Date.now()
+        'firebase-init.js?v=' + Date.now(),
+        'analytics-enhanced.js?v=' + Date.now(),
+        'ab-testing.js?v=' + Date.now()
       ];
       
       let loadedCount = 0;
@@ -1174,6 +1176,8 @@
           console.log(`✅ Loaded ${src} (${loadedCount}/${scripts.length})`);
           if (loadedCount === scripts.length) {
             console.log('🎉 All Firebase scripts loaded successfully!');
+            // Initialize Enhanced Analytics
+            initializeEnhancedAnalytics();
           }
         };
         script.onerror = () => {
@@ -1183,11 +1187,122 @@
       });
     }
     
+    // Initialize Enhanced Analytics
+    function initializeEnhancedAnalytics() {
+      // Wait for EnhancedAnalytics class to be available
+      const checkAnalytics = setInterval(() => {
+        if (window.EnhancedAnalytics) {
+          clearInterval(checkAnalytics);
+          
+          // Create analytics instance
+          window.analytics = new window.EnhancedAnalytics();
+          
+          // Track landing page view
+          window.analytics.trackFunnelStep('landing_view', {
+            page: 'homepage',
+            referrer: document.referrer
+          });
+          
+          // Set user ID when authenticated
+          if (window.auth) {
+            window.auth.onAuthStateChanged((user) => {
+              if (user && window.analytics) {
+                window.analytics.setUserId(user.uid);
+                console.log('✅ Analytics: User ID set', user.uid);
+              }
+            });
+          } else {
+            // Wait for auth to be available
+            setTimeout(() => {
+              if (window.auth && window.auth.onAuthStateChanged) {
+                window.auth.onAuthStateChanged((user) => {
+                  if (user && window.analytics) {
+                    window.analytics.setUserId(user.uid);
+                    console.log('✅ Analytics: User ID set', user.uid);
+                  }
+                });
+              }
+            }, 1000);
+          }
+          
+          console.log('✅ Enhanced Analytics initialized');
+        }
+      }, 100);
+      
+      // Timeout after 5 seconds
+      setTimeout(() => {
+        clearInterval(checkAnalytics);
+      }, 5000);
+    }
+    
+    // Track button clicks on homepage
+    function trackHomepageEvents() {
+      // Wait for analytics to be ready
+      const checkAnalytics = setInterval(() => {
+        if (window.analytics) {
+          clearInterval(checkAnalytics);
+          
+          // Track "Start for $29" button clicks
+          document.querySelectorAll('a[href*="simulator-selection"], a[href*="checkout"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+              const simulator = this.getAttribute('aria-label')?.includes('UX') ? 'ux-designer' :
+                               this.getAttribute('aria-label')?.includes('Lawyer') ? 'lawyer' :
+                               this.getAttribute('aria-label')?.includes('Copywriter') ? 'copywriter' :
+                               this.getAttribute('aria-label')?.includes('Psychologist') ? 'psychologist' : 'unknown';
+              
+              window.analytics.trackFunnelStep('start_button_clicked', {
+                simulator: simulator,
+                price: 29,
+                button_text: this.textContent.trim(),
+                location: this.closest('section')?.id || 'unknown'
+              });
+            });
+          });
+          
+          // Track "Learn more" button clicks
+          document.querySelectorAll('a[href*=".html"]:not([href*="checkout"])').forEach(link => {
+            if (link.textContent.toLowerCase().includes('learn more')) {
+              link.addEventListener('click', function(e) {
+                const simulator = this.getAttribute('href')?.includes('ux') ? 'ux-designer' :
+                                 this.getAttribute('href')?.includes('lawyer') ? 'lawyer' :
+                                 this.getAttribute('href')?.includes('copywriter') ? 'copywriter' :
+                                 this.getAttribute('href')?.includes('psychologist') ? 'psychologist' : 'unknown';
+                
+                window.analytics.trackEvent('learn_more_clicked', {
+                  simulator: simulator,
+                  source: 'homepage',
+                  location: this.closest('section')?.id || 'unknown'
+                });
+              });
+            }
+          });
+          
+          // Track "Choose a profession" button
+          document.querySelectorAll('a[href="#roles"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+              window.analytics.trackEvent('choose_profession_clicked', {
+                source: 'homepage',
+                location: 'hero'
+              });
+            });
+          });
+          
+          console.log('✅ Homepage event tracking initialized');
+        }
+      }, 100);
+      
+      setTimeout(() => clearInterval(checkAnalytics), 5000);
+    }
+    
     // Load Firebase scripts after page load
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadFirebaseScripts);
+      document.addEventListener('DOMContentLoaded', () => {
+        loadFirebaseScripts();
+        trackHomepageEvents();
+      });
     } else {
       loadFirebaseScripts();
+      trackHomepageEvents();
     }
   </script>
 </body>
