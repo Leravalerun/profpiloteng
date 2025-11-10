@@ -10,6 +10,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="firebase-init.js"></script>
+    <script src="analytics-enhanced.js"></script>
+    <script src="ab-testing.js"></script>
     
     <script>
       // Check authentication before allowing access to simulator
@@ -299,8 +301,44 @@
                     product: "Smart move! Always start by exploring the product. JobHunter.ai is a job search platform. Here's what it offers: user creates an account and completes a profile form, auto-generates a resume, matches relevant jobs, gives personalized job-seeking advice. Problem: 38% of users stop at the 'About Me' field. If they don't finish the form, they lose access to personalized recommendations. We need to discover why and fix it!",
                     learn: "Perfect! Today you'll learn: 1) What UX design really is, 2) How to explore a product as a user, 3) Basic UX psychology principles, 4) How to work with a cross-functional team. We'll start with the fundamentals and then jump into the JobHunter.ai challenge!"
                 };
+                
+                // Analytics tracking
+                this.simulatorStartTime = Date.now();
+                this.dayStartTimes = {};
+                
                 this.dayContent = this.getDayContent();
+                
+                // Initialize analytics
+                this.initAnalytics();
+                
                 this.init();
+            }
+            
+            initAnalytics() {
+                // Wait for analytics to be available
+                const checkAnalytics = setInterval(() => {
+                    if (window.EnhancedAnalytics && window.auth) {
+                        clearInterval(checkAnalytics);
+                        
+                        if (!window.analytics) {
+                            window.analytics = new window.EnhancedAnalytics();
+                        }
+                        
+                        // Set user ID if authenticated
+                        window.auth.onAuthStateChanged((user) => {
+                            if (user && window.analytics) {
+                                window.analytics.setUserId(user.uid);
+                            }
+                        });
+                        
+                        // Track simulator start
+                        window.analytics.trackSimulatorStart('ux-designer');
+                        
+                        console.log('✅ UX Simulator Analytics initialized');
+                    }
+                }, 100);
+                
+                setTimeout(() => clearInterval(checkAnalytics), 5000);
             }
 
             init() {
@@ -366,6 +404,28 @@
             }
 
             loadDay(day) {
+                // Track previous day completion
+                if (this.currentDay !== day && this.dayStartTimes[this.currentDay] && window.analytics) {
+                    const timeSpent = Math.floor((Date.now() - this.dayStartTimes[this.currentDay]) / 1000);
+                    if (timeSpent > 0) {
+                        window.analytics.trackEvent('day_completed', {
+                            simulator: 'ux-designer',
+                            day: this.currentDay,
+                            time_spent: timeSpent,
+                            tasks_completed: this.completedTasks.filter(t => t === this.currentDay).length
+                        });
+                    }
+                }
+                
+                // Track day start
+                this.dayStartTimes[day] = Date.now();
+                if (window.analytics) {
+                    window.analytics.trackEvent('day_started', {
+                        simulator: 'ux-designer',
+                        day: day
+                    });
+                }
+                
                 this.currentDay = day;
                 this.updateDayDisplay();
                 this.loadDayContent(day);
@@ -443,6 +503,38 @@
                     this.completedTasks.push(day);
                     this.experience += exp;
                     this.updateProgress();
+                    
+                    // Track task completion
+                    if (window.analytics) {
+                        window.analytics.trackEvent('task_completed', {
+                            simulator: 'ux-designer',
+                            day: day,
+                            task: day,
+                            experience: exp
+                        });
+                    }
+                    
+                    // Track day completion if last task
+                    const dayData = this.dayContent[day];
+                    const totalTasks = dayData?.tasks?.length || 1;
+                    const completedCount = this.completedTasks.filter(t => t === day).length;
+                    
+                    if (completedCount >= totalTasks && window.analytics && this.dayStartTimes[day]) {
+                        const timeSpent = Math.floor((Date.now() - this.dayStartTimes[day]) / 1000);
+                        window.analytics.trackEvent('day_completed', {
+                            simulator: 'ux-designer',
+                            day: day,
+                            time_spent: timeSpent,
+                            tasks_completed: completedCount
+                        });
+                        
+                        // Track simulator completion if last day (Day 2)
+                        if (day === 2) {
+                            const totalTime = Math.floor((Date.now() - this.simulatorStartTime) / 1000);
+                            window.analytics.trackSimulatorCompletion('ux-designer', 3, this.completedTasks.length);
+                            console.log('✅ UX Simulator completion tracked');
+                        }
+                    }
                     
                     // Unlock next day if available
                     if (day < 3 && !this.completedTasks.includes(day + 1)) {

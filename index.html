@@ -558,6 +558,31 @@
               </div>
             </div>
 
+            <!-- Product Manager card -->
+            <div class="bg-white rounded-3xl shadow-card p-8 card-hover border border-slate-100 flex flex-col group">
+              <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-900 mb-4">Product Manager</h3>
+              <p class="text-slate-600 flex-grow leading-relaxed">
+                Lead product discovery, prioritize features, and present to stakeholders. Master the art of product management.
+              </p>
+              <div class="mt-8 flex flex-col gap-3">
+                <a href="/product-manager.html" class="group relative inline-flex items-center justify-center rounded-2xl border-2 border-slate-200 px-6 py-4 font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-all duration-300 text-center">
+                  <span class="relative z-10">Learn more</span>
+                  <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <a href="/simulator-selection.html" class="group relative inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-brand-600 to-brand-700 text-white px-6 py-4 font-bold hover:from-brand-700 hover:to-brand-800 transition-all duration-300 text-center shadow-lg hover:shadow-xl hover:scale-105 transform" aria-label="Start Product Manager simulator for $29">
+                  <span class="relative z-10">Start for $29</span>
+                  <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-700 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                </a>
+              </div>
+            </div>
+
       </div>
     </div>
   </section>
@@ -1163,7 +1188,8 @@
         'firebase-config.js?v=' + Date.now(),
         'firebase-init.js?v=' + Date.now(),
         'analytics-enhanced.js?v=' + Date.now(),
-        'ab-testing.js?v=' + Date.now()
+        'ab-testing.js?v=' + Date.now(),
+        'error-tracking.js?v=' + Date.now()
       ];
       
       let loadedCount = 0;

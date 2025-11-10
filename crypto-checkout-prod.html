@@ -838,6 +838,7 @@
   <script src="firebase-config.js"></script>
   <!-- Если firebase-config.js не существует, скопируйте firebase-config.example.js в firebase-config.js -->
   <script src="firebase-init.js"></script>
+  <script src="analytics-enhanced.js"></script>
   
   <!-- Payment Tracker -->
   <script src="payment-tracker.js"></script>
@@ -1400,6 +1401,32 @@
       // Send verification email to admin
       await sendVerificationEmail(userEmail, simulator, txHash, explorerUrl);
 
+      // Track payment success
+      if (window.analytics) {
+        window.analytics.trackEvent('payment_completed', {
+          payment_method: 'crypto',
+          simulator: simulator,
+          amount: currentPrice,
+          currency: 'USD',
+          crypto_type: selectedCrypto,
+          transaction_hash: txHash
+        });
+        
+        window.analytics.trackFunnelStep('payment_completed', {
+          simulator: simulator,
+          amount: currentPrice,
+          payment_method: 'crypto'
+        });
+        
+        window.analytics.trackPurchase(
+          simulator,
+          currentPrice,
+          'crypto',
+          null,
+          { crypto_type: selectedCrypto, transaction_hash: txHash }
+        );
+      }
+      
       // Show success message
       showPaymentStatus('success', 'Payment Confirmed!', 'Redirecting to simulator...');
       
@@ -1446,7 +1473,8 @@ Time: ${new Date().toISOString()}
         'copywriter': 'Copywriter / Creator',
         'psychologist': 'Psychologist',
         'brand-marketer': 'Brand Marketer',
-        'qa-engineer': 'QA Automation Engineer'
+        'qa-engineer': 'QA Automation Engineer',
+        'product-manager': 'Product Manager'
       };
       return names[simulator] || simulator;
     }
@@ -1459,12 +1487,40 @@ Time: ${new Date().toISOString()}
         'copywriter': '/copywriter-simulator.html',
         'psychologist': '/psychologist-simulator.html',
         'brand-marketer': '/brand-marketer-simulator.html',
-        'qa-engineer': '/qa-engineer-simulator.html'
+        'qa-engineer': '/qa-engineer-simulator.html',
+        'product-manager': '/product-manager-simulator.html'
       };
       
       const url = urls[simulator] || '/dashboard.html';
       window.location.href = url;
     }
+    
+    // Initialize Analytics
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkAnalytics = setInterval(() => {
+        if (window.EnhancedAnalytics && window.auth) {
+          clearInterval(checkAnalytics);
+          
+          if (!window.analytics) {
+            window.analytics = new window.EnhancedAnalytics();
+          }
+          
+          // Set user ID if authenticated
+          window.auth.onAuthStateChanged((user) => {
+            if (user && window.analytics) {
+              window.analytics.setUserId(user.uid);
+            }
+          });
+          
+          // Track page view
+          window.analytics.trackPageView('crypto-checkout');
+          
+          console.log('✅ Crypto Checkout Analytics initialized');
+        }
+      }, 100);
+      
+      setTimeout(() => clearInterval(checkAnalytics), 5000);
+    });
   </script>
 </body>
 </html>

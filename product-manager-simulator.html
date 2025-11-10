@@ -1,0 +1,1409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ProfPilot — Product Manager Simulator</title>
+  <meta name="description" content="Experience a 3-day product manager simulation with realistic product scenarios, user research, and stakeholder management." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Access Control -->
+  <script src="access-control.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { 
+            brand: { 
+              50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' 
+            },
+            pm: {
+              50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d'
+            }
+          },
+          boxShadow: { 
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(34, 197, 94, 0.3)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.6s ease-out',
+            'slide-up': 'slideUp 0.6s ease-out',
+            'bounce-gentle': 'bounceGentle 2s infinite'
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' }
+            },
+            bounceGentle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      scroll-behavior: smooth;
+    }
+    .card-hover { 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    .card-hover:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .pm-gradient {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .task-locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .task-unlocked {
+      opacity: 1;
+      cursor: pointer;
+    }
+    .task-completed {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+  </style>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="analytics-enhanced.js"></script>
+  <script src="ab-testing.js"></script>
+  <script src="error-tracking.js"></script>
+  
+  <script>
+    // Check authentication before allowing access to simulator
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        if (!window.auth || !window.auth.currentUser) {
+          window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
+        }
+      }, 1000);
+    });
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+  <!-- Navbar -->
+  <header class="fixed top-0 w-full z-20 backdrop-blur-md border-b border-slate-200/50 bg-white/90 transition-all duration-300 shadow-sm">
+    <div class="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+      <a href="/" class="flex items-center gap-2 text-xl font-bold text-pm-700 hover:text-pm-800 transition-colors">
+        <img src="logo.png" alt="ProfPilot logo" class="h-8 w-8 rounded-xl object-contain floating" />
+        ProfPilot
+      </a>
+      <div class="flex items-center gap-4">
+        <span class="text-sm font-medium text-pm-600">Product Manager Simulator</span>
+        <button id="logoutBtn" class="px-4 py-2 border border-pm-600 text-pm-700 font-semibold rounded-xl hover:bg-pm-50 transition-colors duration-200">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="h-16"></div><!-- spacer for fixed navbar -->
+
+  <!-- Main Content -->
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-pm-50">
+    
+    <!-- Day Navigation -->
+    <div class="bg-white border-b border-slate-200 shadow-sm">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between py-4">
+          <h1 class="text-2xl font-bold text-slate-900">TechFlow Product Team</h1>
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-slate-600">Progress:</span>
+            <div class="w-32 bg-slate-200 rounded-full h-2">
+              <div id="progressBar" class="bg-pm-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <span id="progressText" class="text-sm font-medium text-slate-700">0/12</span>
+          </div>
+        </div>
+        
+        <!-- Day Cards -->
+        <div class="flex gap-4 pb-4 overflow-x-auto">
+          <div id="day0Card" class="day-card flex-shrink-0 bg-white border-2 border-pm-200 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 min-w-[200px]">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-pm-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl font-bold text-pm-700">0</span>
+              </div>
+              <h3 class="font-semibold text-slate-900 mb-2">Orientation</h3>
+              <p class="text-sm text-slate-600">Team Intro & Product Overview</p>
+              <div class="mt-3 text-xs text-slate-500">
+                <span id="day0Progress">0/3</span> tasks
+              </div>
+            </div>
+          </div>
+          
+          <div id="day1Card" class="day-card flex-shrink-0 bg-white border-2 border-slate-200 rounded-xl p-4 cursor-not-allowed opacity-60 min-w-[200px]">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl font-bold text-slate-400">🔒</span>
+              </div>
+              <h3 class="font-semibold text-slate-400 mb-2">Day 1</h3>
+              <p class="text-sm text-slate-400">Discovery & Research</p>
+              <div class="mt-3 text-xs text-slate-400">
+                <span id="day1Progress">0/4</span> tasks
+              </div>
+            </div>
+          </div>
+          
+          <div id="day2Card" class="day-card flex-shrink-0 bg-white border-2 border-slate-200 rounded-xl p-4 cursor-not-allowed opacity-60 min-w-[200px]">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl font-bold text-slate-400">🔒</span>
+              </div>
+              <h3 class="font-semibold text-slate-400 mb-2">Day 2</h3>
+              <p class="text-sm text-slate-400">Prioritization & Roadmap</p>
+              <div class="mt-3 text-xs text-slate-400">
+                <span id="day2Progress">0/4</span> tasks
+              </div>
+            </div>
+          </div>
+          
+          <div id="day3Card" class="day-card flex-shrink-0 bg-white border-2 border-slate-200 rounded-xl p-4 cursor-not-allowed opacity-60 min-w-[200px]">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <span class="text-2xl font-bold text-slate-400">🔒</span>
+              </div>
+              <h3 class="font-semibold text-slate-400 mb-2">Day 3</h3>
+              <p class="text-sm text-slate-400">Stakeholder Presentation</p>
+              <div class="mt-3 text-xs text-slate-400">
+                <span id="day3Progress">0/3</span> tasks
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Day Content -->
+    <div id="currentDaySection" class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Day content will be loaded here -->
+    </div>
+
+    <!-- ProductMind AI Chat -->
+    <div id="productMindChat" class="fixed bottom-6 right-6 z-30">
+      <div id="chatToggle" class="w-16 h-16 bg-pm-600 rounded-full shadow-lg cursor-pointer flex items-center justify-center hover:bg-pm-700 transition-all duration-200">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+      </div>
+      
+      <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-96 bg-white rounded-2xl shadow-2xl border border-slate-200">
+        <div class="bg-pm-600 text-white p-4 rounded-t-2xl">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+              <span class="text-pm-600 font-bold text-lg">🤖</span>
+            </div>
+            <div>
+              <h3 class="font-semibold">ProductMind AI</h3>
+              <p class="text-pm-100 text-sm">Your AI Product Mentor</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="chatMessages" class="p-4 h-64 overflow-y-auto">
+          <div class="bg-pm-50 rounded-lg p-3 mb-3">
+            <p class="text-sm text-slate-700">👋 Hello! I'm ProductMind, your AI product mentor. Ask me anything about product management, user research, or prioritization!</p>
+          </div>
+        </div>
+        
+        <div class="p-4 border-t border-slate-200">
+          <div class="flex gap-2">
+            <input type="text" id="chatInput" placeholder="Ask ProductMind anything..." class="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pm-500">
+            <button id="sendChat" class="px-4 py-2 bg-pm-600 text-white rounded-lg hover:bg-pm-700 transition-colors">Send</button>
+          </div>
+          <div class="mt-2 text-xs text-slate-500">
+            Try: "What is user research?" or "How do I prioritize features?"
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sarah Message Display -->
+    <div id="sarahMessageDisplay" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-40 hidden">
+      <div class="bg-white rounded-xl shadow-2xl border border-slate-200 p-4 max-w-md">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-8 h-8 bg-pm-600 rounded-full flex items-center justify-center">
+            <span class="text-white font-bold text-sm">S</span>
+          </div>
+          <span class="font-semibold text-slate-900">Sarah (Product Lead)</span>
+        </div>
+        <p id="sarahMessageText" class="text-slate-700"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Product Manager Simulator Class
+    class ProductManagerSimulator {
+      constructor() {
+        this.currentDay = 0;
+        this.experience = 0;
+        this.completedTasks = [];
+        this.dayProgress = {
+          0: { completed: 0, total: 3 },
+          1: { completed: 0, total: 4 },
+          2: { completed: 0, total: 4 },
+          3: { completed: 0, total: 3 }
+        };
+        
+        // Analytics tracking
+        this.simulatorStartTime = Date.now();
+        this.dayStartTimes = {};
+        
+        console.log("🚀 Initializing Product Manager Simulator...");
+        
+        // Initialize analytics and track simulator start
+        this.initAnalytics();
+        
+        this.init();
+      }
+      
+      initAnalytics() {
+        // Wait for analytics to be available
+        const checkAnalytics = setInterval(() => {
+          if (window.EnhancedAnalytics && window.auth) {
+            clearInterval(checkAnalytics);
+            
+            if (!window.analytics) {
+              window.analytics = new window.EnhancedAnalytics();
+            }
+            
+            // Set user ID if authenticated
+            window.auth.onAuthStateChanged((user) => {
+              if (user && window.analytics) {
+                window.analytics.setUserId(user.uid);
+              }
+            });
+            
+            // Track simulator start
+            window.analytics.trackSimulatorStart('product-manager');
+            
+            console.log('✅ Product Manager Simulator Analytics initialized');
+          }
+        }, 100);
+        
+        setTimeout(() => clearInterval(checkAnalytics), 5000);
+      }
+
+      init() {
+        console.log("📊 Initial day progress:", this.dayProgress);
+        this.setupEventListeners();
+        this.loadDay(0);
+        this.updateProgress();
+        console.log("✅ Product Manager Simulator initialized");
+      }
+
+      setupEventListeners() {
+        console.log("🔧 Setting up event listeners...");
+        
+        // Day cards
+        const dayCards = document.querySelectorAll('.day-card');
+        console.log(`📋 Found ${dayCards.length} day cards`);
+        
+        dayCards.forEach((card, index) => {
+          console.log(`🔧 Setting up Day ${index} card:`, card.id);
+          card.addEventListener('click', () => {
+            if (this.canUnlockDay(index)) {
+              this.loadDay(index);
+            }
+          });
+        });
+
+        // Chat toggle
+        const chatToggle = document.getElementById('chatToggle');
+        if (chatToggle) {
+          chatToggle.addEventListener('click', () => {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.toggle('hidden');
+          });
+        }
+
+        // Send chat message
+        const sendChat = document.getElementById('sendChat');
+        const chatInput = document.getElementById('chatInput');
+        if (sendChat && chatInput) {
+          sendChat.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+              this.sendChatMessage(message);
+              chatInput.value = '';
+            }
+          });
+          
+          chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              sendChat.click();
+            }
+          });
+        }
+
+        // Logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', () => {
+            if (window.auth) {
+              window.auth.signOut().then(() => {
+                window.location.href = '/login.html';
+              });
+            }
+          });
+        }
+      }
+
+      canUnlockDay(day) {
+        if (day === 0) return true;
+        if (day === 1) return this.dayProgress[0].completed === this.dayProgress[0].total;
+        if (day === 2) return this.dayProgress[1].completed === this.dayProgress[1].total;
+        if (day === 3) return this.dayProgress[2].completed === this.dayProgress[2].total;
+        return false;
+      }
+
+      unlockDay(day) {
+        const dayCard = document.getElementById(`day${day}Card`);
+        if (dayCard) {
+          dayCard.classList.remove('opacity-60', 'cursor-not-allowed');
+          dayCard.classList.add('cursor-pointer', 'hover:shadow-lg');
+          dayCard.querySelector('.border-slate-200').classList.remove('border-slate-200');
+          dayCard.querySelector('.border-slate-200').classList.add('border-pm-200');
+          
+          const dayIcon = dayCard.querySelector('.bg-slate-100');
+          if (dayIcon) {
+            dayIcon.classList.remove('bg-slate-100');
+            dayIcon.classList.add('bg-pm-100');
+            dayIcon.innerHTML = `<span class="text-2xl font-bold text-pm-700">${day}</span>`;
+          }
+          
+          const dayTitle = dayCard.querySelector('.text-slate-400');
+          if (dayTitle) {
+            dayTitle.classList.remove('text-slate-400');
+            dayTitle.classList.add('text-slate-900');
+          }
+          
+          console.log(`✅ Day ${day} unlocked successfully`);
+        } else {
+          console.log(`❌ Day ${day} card not found`);
+        }
+      }
+
+      loadDay(day) {
+        console.log(`🔄 Loading Day ${day}...`);
+        
+        // Track previous day completion
+        if (this.currentDay !== day && this.dayStartTimes[this.currentDay] && window.analytics) {
+          const timeSpent = Math.floor((Date.now() - this.dayStartTimes[this.currentDay]) / 1000);
+          if (timeSpent > 0) {
+            window.analytics.trackEvent('day_completed', {
+              simulator: 'product-manager',
+              day: this.currentDay,
+              time_spent: timeSpent,
+              tasks_completed: this.dayProgress[this.currentDay]?.completed || 0
+            });
+          }
+        }
+        
+        // Track day start
+        this.dayStartTimes[day] = Date.now();
+        if (window.analytics) {
+          window.analytics.trackEvent('day_started', {
+            simulator: 'product-manager',
+            day: day
+          });
+        }
+        
+        // Show loading message
+        this.addSarahMessage(`⏳ Loading Day ${day} content...`);
+        
+        // Smooth transition animation
+        const currentDaySection = document.getElementById('currentDaySection');
+        if (currentDaySection) {
+          currentDaySection.style.opacity = '0.5';
+          currentDaySection.style.transform = 'translateY(10px)';
+          currentDaySection.style.transition = 'all 0.3s ease';
+        }
+        
+        // Load new day
+        this.currentDay = day;
+        this.updateDayDisplay();
+        this.loadDayContent(day);
+        this.updateProgress();
+        
+        // Show loading animation
+        setTimeout(() => {
+          if (currentDaySection) {
+            currentDaySection.style.opacity = '1';
+            currentDaySection.style.transform = 'translateY(0)';
+          }
+          // Remove loading message
+          const sarahMessageDiv = document.getElementById('sarahMessageDisplay');
+          if (sarahMessageDiv) {
+            sarahMessageDiv.classList.add('hidden');
+          }
+          
+          // Auto-scroll to top
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }, 300);
+        
+        console.log(`✅ Day ${day} loaded successfully`);
+      }
+
+      updateDayDisplay() {
+        // Update active day styling
+        document.querySelectorAll('.day-card').forEach((card, index) => {
+          if (index === this.currentDay) {
+            card.classList.add('ring-2', 'ring-pm-500');
+          } else {
+            card.classList.remove('ring-2', 'ring-pm-500');
+          }
+        });
+        
+        // Make sure the current day card is unlocked and colored
+        if (this.currentDay > 0) {
+          this.unlockDay(this.currentDay);
+        }
+      }
+
+      loadDayContent(day) {
+        console.log(`📝 Loading content for Day ${day}...`);
+        
+        const currentDaySection = document.getElementById('currentDaySection');
+        if (!currentDaySection) return;
+        
+        switch (day) {
+          case 0:
+            currentDaySection.innerHTML = this.getDay0HTML();
+            this.setupDay0Events();
+            break;
+          case 1:
+            currentDaySection.innerHTML = this.getDay1HTML();
+            this.setupDay1Events();
+            break;
+          case 2:
+            currentDaySection.innerHTML = this.getDay2HTML();
+            this.setupDay2Events();
+            break;
+          case 3:
+            currentDaySection.innerHTML = this.getDay3HTML();
+            this.setupDay3Events();
+            break;
+        }
+      }
+
+      updateProgress() {
+        const totalTasks = Object.values(this.dayProgress).reduce((sum, day) => sum + day.total, 0);
+        const completedTasks = Object.values(this.dayProgress).reduce((sum, day) => sum + day.completed, 0);
+        
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        if (progressBar) {
+          const percentage = (completedTasks / totalTasks) * 100;
+          progressBar.style.width = `${percentage}%`;
+        }
+        
+        if (progressText) {
+          progressText.textContent = `${completedTasks}/${totalTasks}`;
+        }
+        
+        // Update day progress displays
+        Object.keys(this.dayProgress).forEach(day => {
+          const dayProgressEl = document.getElementById(`day${day}Progress`);
+          if (dayProgressEl) {
+            const dayData = this.dayProgress[day];
+            dayProgressEl.textContent = `${dayData.completed}/${dayData.total}`;
+          }
+        });
+      }
+
+      addSarahMessage(message) {
+        const messageDiv = document.getElementById('sarahMessageDisplay');
+        const messageText = document.getElementById('sarahMessageText');
+        
+        if (messageDiv && messageText) {
+          messageText.textContent = message;
+          messageDiv.classList.remove('hidden');
+          
+          // Auto-hide after 5 seconds
+          setTimeout(() => {
+            messageDiv.classList.add('hidden');
+          }, 5000);
+        }
+      }
+
+      sendChatMessage(message) {
+        const chatMessages = document.getElementById('chatMessages');
+        if (!chatMessages) return;
+        
+        // Add user message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'bg-pm-100 rounded-lg p-3 mb-3 ml-8';
+        userMessage.innerHTML = `<p class="text-sm text-slate-800">${message}</p>`;
+        chatMessages.appendChild(userMessage);
+        
+        // Simulate AI response (in real app, this would call an API)
+        setTimeout(() => {
+          const aiMessage = document.createElement('div');
+          aiMessage.className = 'bg-slate-100 rounded-lg p-3 mb-3';
+          aiMessage.innerHTML = `<p class="text-sm text-slate-700">Great question! As a PM, ${this.getAIResponse(message)}</p>`;
+          chatMessages.appendChild(aiMessage);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+      }
+
+      getAIResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        if (lowerMessage.includes('research') || lowerMessage.includes('user')) {
+          return "user research is crucial. Start with understanding the problem, then interview users, analyze data, and synthesize insights.";
+        } else if (lowerMessage.includes('prioritiz') || lowerMessage.includes('roadmap')) {
+          return "prioritization is about impact vs effort. Use frameworks like RICE or Value vs Effort. Focus on user value and business goals.";
+        } else if (lowerMessage.includes('stakeholder') || lowerMessage.includes('present')) {
+          return "stakeholder management requires clear communication, data-driven decisions, and alignment on goals. Always frame decisions in terms of user value and business impact.";
+        }
+        return "product management is about balancing user needs, business goals, and technical constraints. Focus on solving real problems for real users.";
+      }
+
+      // Day 0: Orientation
+      getDay0HTML() {
+        return `
+          <div class="space-y-8">
+            <div class="bg-gradient-to-br from-pm-50 to-blue-50 rounded-3xl border border-pm-200 p-8 shadow-card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-pm-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-white">👋</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">Welcome to TechFlow!</h2>
+                  <p class="text-slate-600">Your First Day as Product Manager</p>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-6 border border-slate-200 mb-6">
+                <h3 class="font-semibold text-slate-900 mb-4">📧 Email from Sarah (Product Lead)</h3>
+                <div class="space-y-3 text-slate-700">
+                  <p>Hi there! 👋</p>
+                  <p>Welcome to TechFlow! I'm Sarah, your Product Lead. I'm excited to have you on the team.</p>
+                  <p>We're working on <strong>TaskFlow</strong> - a project management tool for remote teams. We've been growing fast, but we're facing a critical challenge:</p>
+                  <div class="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
+                    <p class="font-semibold text-red-900 mb-2">⚠️ The Problem:</p>
+                    <p class="text-red-800">Our user retention dropped 25% in the last quarter. Users sign up, create a few tasks, but then stop using the product.</p>
+                  </div>
+                  <p class="mt-4">Your mission: Help us understand why users are leaving and propose solutions to improve retention.</p>
+                  <p>Let's start by meeting the team and understanding the product!</p>
+                </div>
+              </div>
+              
+              <button id="startOrientationBtn" class="w-full bg-pm-600 text-white px-8 py-4 rounded-xl hover:bg-pm-700 transition-colors font-semibold text-lg">
+                Start Orientation →
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      setupDay0Events() {
+        const startBtn = document.getElementById('startOrientationBtn');
+        if (startBtn) {
+          startBtn.addEventListener('click', () => {
+            this.completeTask(0, 0);
+            this.showTeamIntro();
+          });
+        }
+      }
+
+      completeTask(day, taskIndex) {
+        if (!this.completedTasks.includes(`${day}-${taskIndex}`)) {
+          this.completedTasks.push(`${day}-${taskIndex}`);
+          this.dayProgress[day].completed++;
+          this.updateProgress();
+          
+          // Track task completion
+          if (window.analytics) {
+            window.analytics.trackEvent('task_completed', {
+              simulator: 'product-manager',
+              day: day,
+              task: taskIndex,
+              experience: 10
+            });
+          }
+        }
+      }
+
+      showTeamIntro() {
+        const currentDaySection = document.getElementById('currentDaySection');
+        if (!currentDaySection) return;
+        
+        currentDaySection.innerHTML = `
+          <div class="space-y-8">
+            <div class="bg-gradient-to-br from-pm-50 to-blue-50 rounded-3xl border border-pm-200 p-8 shadow-card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-pm-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-white">👥</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">Meet Your Team</h2>
+                  <p class="text-slate-600">The people you'll work with</p>
+                </div>
+              </div>
+              
+              <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white rounded-xl p-6 border border-slate-200">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-pm-100 rounded-full flex items-center justify-center">
+                      <span class="text-2xl">👩‍💼</span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-slate-900">Sarah Chen</h3>
+                      <p class="text-sm text-slate-600">Product Lead</p>
+                    </div>
+                  </div>
+                  <p class="text-slate-700 text-sm">"I focus on strategy and stakeholder alignment. You'll help me with discovery and prioritization. Let's make TaskFlow the best PM tool out there!"</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 border border-slate-200">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span class="text-2xl">👨‍💻</span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-slate-900">Mike Rodriguez</h3>
+                      <p class="text-sm text-slate-600">Engineering Lead</p>
+                    </div>
+                  </div>
+                  <p class="text-slate-700 text-sm">"I'll help you understand technical constraints and feasibility. We need features that are both valuable and buildable within our timeline."</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 border border-slate-200">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                      <span class="text-2xl">👩‍🎨</span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-slate-900">Emma Park</h3>
+                      <p class="text-sm text-slate-600">UX Designer</p>
+                    </div>
+                  </div>
+                  <p class="text-slate-700 text-sm">"I'll work with you on user research and design solutions. Together we'll create features users actually want to use."</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 border border-slate-200">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
+                      <span class="text-2xl">📊</span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-slate-900">Data Team</h3>
+                      <p class="text-sm text-slate-600">Analytics & Insights</p>
+                    </div>
+                  </div>
+                  <p class="text-slate-700 text-sm">"We track user behavior and provide insights. You'll use our data to make informed product decisions."</p>
+                </div>
+              </div>
+              
+              <button id="continueProductBtn" class="w-full bg-pm-600 text-white px-8 py-4 rounded-xl hover:bg-pm-700 transition-colors font-semibold text-lg">
+                Continue to Product Overview →
+              </button>
+            </div>
+          </div>
+        `;
+        
+        const continueBtn = document.getElementById('continueProductBtn');
+        if (continueBtn) {
+          continueBtn.addEventListener('click', () => {
+            this.completeTask(0, 1);
+            this.showProductOverview();
+          });
+        }
+      }
+
+      showProductOverview() {
+        const currentDaySection = document.getElementById('currentDaySection');
+        if (!currentDaySection) return;
+        
+        currentDaySection.innerHTML = `
+          <div class="space-y-8">
+            <div class="bg-gradient-to-br from-pm-50 to-blue-50 rounded-3xl border border-pm-200 p-8 shadow-card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-pm-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-white">📱</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">TaskFlow Overview</h2>
+                  <p class="text-slate-600">Understanding the product</p>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-6 border border-slate-200 mb-6">
+                <h3 class="font-semibold text-slate-900 mb-4">What is TaskFlow?</h3>
+                <div class="space-y-4 text-slate-700">
+                  <p><strong>TaskFlow</strong> is a project management tool designed for remote teams. It helps teams:</p>
+                  <ul class="list-disc list-inside space-y-2 ml-4">
+                    <li>Create and organize tasks</li>
+                    <li>Collaborate in real-time</li>
+                    <li>Track project progress</li>
+                    <li>Set deadlines and reminders</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+                <h3 class="font-semibold text-red-900 mb-4">⚠️ Current Challenge</h3>
+                <div class="space-y-3 text-red-800">
+                  <p><strong>Problem:</strong> User retention dropped 25% in Q3</p>
+                  <p><strong>Symptoms:</strong></p>
+                  <ul class="list-disc list-inside space-y-1 ml-4">
+                    <li>Users sign up and create 2-3 tasks</li>
+                    <li>Then they stop logging in</li>
+                    <li>Only 35% of users are active after 30 days</li>
+                    <li>Competitor tools have 60%+ retention</li>
+                  </ul>
+                  <p class="mt-4"><strong>Your Goal:</strong> Find the root cause and propose solutions to improve retention to 50%+ in the next quarter.</p>
+                </div>
+              </div>
+              
+              <button id="completeDay0Btn" class="w-full bg-pm-600 text-white px-8 py-4 rounded-xl hover:bg-pm-700 transition-colors font-semibold text-lg">
+                ✅ Complete Day 0 & Move to Day 1
+              </button>
+            </div>
+          </div>
+        `;
+        
+        const completeBtn = document.getElementById('completeDay0Btn');
+        if (completeBtn) {
+          completeBtn.addEventListener('click', () => {
+            this.completeTask(0, 2);
+            this.completeDay0();
+          });
+        }
+      }
+
+      completeDay0() {
+        this.addSarahMessage("🎉 Excellent! You've completed Day 0. Tomorrow we'll dive deep into user research and data analysis!");
+        
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => {
+            this.unlockDay(1);
+            this.loadDay(1);
+          }, 300);
+        }, 1500);
+      }
+
+      // Day 1: Discovery & Research
+      getDay1HTML() {
+        return `
+          <div class="space-y-8">
+            <div class="bg-gradient-to-br from-pm-50 to-blue-50 rounded-3xl border border-pm-200 p-8 shadow-card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-pm-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-white">🔍</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">Day 1: Discovery & Research</h2>
+                  <p class="text-slate-600">Understand why users are leaving</p>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-6 border border-slate-200 mb-6">
+                <h3 class="font-semibold text-slate-900 mb-4">📊 Task 1: Analyze User Data</h3>
+                <p class="text-slate-700 mb-4">Let's start by looking at the analytics data. The data team has prepared a report for you.</p>
+                
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200 mb-4">
+                  <h4 class="font-medium text-slate-900 mb-3">Key Metrics:</h4>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p class="text-slate-600">Sign-ups (last 30 days):</p>
+                      <p class="font-bold text-slate-900">12,450</p>
+                    </div>
+                    <div>
+                      <p class="text-slate-600">Active Users (D30):</p>
+                      <p class="font-bold text-red-600">35%</p>
+                    </div>
+                    <div>
+                      <p class="text-slate-600">Avg. Tasks Created:</p>
+                      <p class="font-bold text-slate-900">2.8 per user</p>
+                    </div>
+                    <div>
+                      <p class="text-slate-600">Drop-off Point:</p>
+                      <p class="font-bold text-red-600">Day 3-5</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <p class="text-blue-900 text-sm"><strong>Insight:</strong> Most users create 2-3 tasks and then stop using the product. This suggests they're not finding value after initial setup.</p>
+                </div>
+                
+                <button id="analyzeDataBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  ✅ Complete: Analyze Data
+                </button>
+              </div>
+              
+              <div id="userInterviewSection" class="bg-white rounded-xl p-6 border border-slate-200 mb-6 hidden">
+                <h3 class="font-semibold text-slate-900 mb-4">🎤 Task 2: User Interviews</h3>
+                <p class="text-slate-700 mb-4">Emma has conducted interviews with churned users. Let's review the key findings:</p>
+                
+                <div class="space-y-4 mb-4">
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <p class="text-sm text-slate-700 italic mb-2">"I created a few tasks, but then I forgot about the app. There's no reminder system."</p>
+                    <p class="text-xs text-slate-500">- Sarah, Marketing Manager</p>
+                  </div>
+                  
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <p class="text-sm text-slate-700 italic mb-2">"It's hard to see what my team is working on. I need a better overview dashboard."</p>
+                    <p class="text-xs text-slate-500">- Marcus, Team Lead</p>
+                  </div>
+                  
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <p class="text-sm text-slate-700 italic mb-2">"The onboarding was confusing. I didn't know what to do after creating my first task."</p>
+                    <p class="text-xs text-slate-500">- Jennifer, Freelancer</p>
+                  </div>
+                </div>
+                
+                <button id="completeInterviewBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  ✅ Complete: Review Interviews
+                </button>
+              </div>
+              
+              <div id="synthesizeInsightsSection" class="bg-white rounded-xl p-6 border border-slate-200 mb-6 hidden">
+                <h3 class="font-semibold text-slate-900 mb-4">💡 Task 3: Synthesize Insights</h3>
+                <p class="text-slate-700 mb-4">Based on the data and interviews, what are the main reasons users are churning?</p>
+                
+                <div class="space-y-3 mb-4">
+                  <label class="flex items-center gap-3 p-4 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+                    <input type="checkbox" id="insight1" class="w-5 h-5 text-pm-600">
+                    <span class="text-slate-700">Lack of engagement mechanisms (no reminders, notifications)</span>
+                  </label>
+                  <label class="flex items-center gap-3 p-4 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+                    <input type="checkbox" id="insight2" class="w-5 h-5 text-pm-600">
+                    <span class="text-slate-700">Poor visibility into team/work progress</span>
+                  </label>
+                  <label class="flex items-center gap-3 p-4 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+                    <input type="checkbox" id="insight3" class="w-5 h-5 text-pm-600">
+                    <span class="text-slate-700">Confusing onboarding and unclear value proposition</span>
+                  </label>
+                  <label class="flex items-center gap-3 p-4 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+                    <input type="checkbox" id="insight4" class="w-5 h-5 text-pm-600">
+                    <span class="text-slate-700">All of the above</span>
+                  </label>
+                </div>
+                
+                <button id="synthesizeBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  Submit Insights
+                </button>
+              </div>
+              
+              <div id="day1CompleteSection" class="bg-green-50 border border-green-200 rounded-xl p-6 hidden">
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl text-white">🎉</span>
+                  </div>
+                  <h3 class="font-semibold text-green-900 mb-2">Day 1 Complete!</h3>
+                  <p class="text-green-700 mb-4">You've identified the key retention problems. Tomorrow we'll prioritize solutions and build a roadmap.</p>
+                  <button id="goToDay2Btn" class="bg-pm-600 text-white px-8 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                    🚀 Go to Day 2
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      setupDay1Events() {
+        const analyzeBtn = document.getElementById('analyzeDataBtn');
+        if (analyzeBtn) {
+          analyzeBtn.addEventListener('click', () => {
+            this.completeTask(1, 0);
+            document.getElementById('userInterviewSection').classList.remove('hidden');
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '✅ Completed';
+          });
+        }
+        
+        const interviewBtn = document.getElementById('completeInterviewBtn');
+        if (interviewBtn) {
+          interviewBtn.addEventListener('click', () => {
+            this.completeTask(1, 1);
+            document.getElementById('synthesizeInsightsSection').classList.remove('hidden');
+            interviewBtn.disabled = true;
+            interviewBtn.textContent = '✅ Completed';
+          });
+        }
+        
+        const synthesizeBtn = document.getElementById('synthesizeBtn');
+        if (synthesizeBtn) {
+          synthesizeBtn.addEventListener('click', () => {
+            const allChecked = ['insight1', 'insight2', 'insight3'].every(id => document.getElementById(id)?.checked);
+            const allSelected = document.getElementById('insight4')?.checked;
+            
+            if (allChecked || allSelected) {
+              this.completeTask(1, 2);
+              this.addSarahMessage("Excellent analysis! You've identified all three key retention problems. Now let's move to prioritization!");
+              document.getElementById('day1CompleteSection').classList.remove('hidden');
+              synthesizeBtn.disabled = true;
+            } else {
+              this.addSarahMessage("Think about it more carefully. Review the data and interviews again.");
+            }
+          });
+        }
+        
+        const goToDay2Btn = document.getElementById('goToDay2Btn');
+        if (goToDay2Btn) {
+          goToDay2Btn.addEventListener('click', () => {
+            this.completeDay1();
+          });
+        }
+      }
+
+      completeDay1() {
+        if (window.analytics && this.dayStartTimes[1]) {
+          const timeSpent = Math.floor((Date.now() - this.dayStartTimes[1]) / 1000);
+          window.analytics.trackEvent('day_completed', {
+            simulator: 'product-manager',
+            day: 1,
+            time_spent: timeSpent,
+            tasks_completed: this.dayProgress[1]?.completed || 0
+          });
+        }
+        
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => {
+            this.unlockDay(2);
+            this.loadDay(2);
+          }, 300);
+        }, 500);
+      }
+
+      // Day 2: Prioritization & Roadmap
+      getDay2HTML() {
+        return `
+          <div class="space-y-8">
+            <div class="bg-gradient-to-br from-pm-50 to-blue-50 rounded-3xl border border-pm-200 p-8 shadow-card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-pm-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-white">📋</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">Day 2: Prioritization & Roadmap</h2>
+                  <p class="text-slate-600">Build solutions and prioritize features</p>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-6 border border-slate-200 mb-6">
+                <h3 class="font-semibold text-slate-900 mb-4">📝 Task 1: Create User Stories</h3>
+                <p class="text-slate-700 mb-4">Based on yesterday's insights, let's create user stories for potential solutions:</p>
+                
+                <div class="space-y-4 mb-4">
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <p class="text-sm text-slate-700 mb-2"><strong>Story 1:</strong> As a user, I want to receive email reminders about my tasks, so that I don't forget to work on them.</p>
+                    <p class="text-xs text-slate-500">Addresses: Lack of engagement</p>
+                  </div>
+                  
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <p class="text-sm text-slate-700 mb-2"><strong>Story 2:</strong> As a team lead, I want to see a dashboard with all team members' progress, so that I can track what everyone is working on.</p>
+                    <p class="text-xs text-slate-500">Addresses: Poor visibility</p>
+                  </div>
+                  
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <p class="text-sm text-slate-700 mb-2"><strong>Story 3:</strong> As a new user, I want a guided onboarding tutorial, so that I understand how to use TaskFlow effectively.</p>
+                    <p class="text-xs text-slate-500">Addresses: Confusing onboarding</p>
+                  </div>
+                </div>
+                
+                <button id="createStoriesBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  ✅ Complete: User Stories Created
+                </button>
+              </div>
+              
+              <div id="prioritizeSection" class="bg-white rounded-xl p-6 border border-slate-200 mb-6 hidden">
+                <h3 class="font-semibold text-slate-900 mb-4">⚖️ Task 2: Prioritize with RICE Framework</h3>
+                <p class="text-slate-700 mb-4">Use the RICE framework (Reach, Impact, Confidence, Effort) to prioritize features:</p>
+                
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <p class="text-blue-900 text-sm mb-2"><strong>RICE Formula:</strong> (Reach × Impact × Confidence) / Effort</p>
+                  <p class="text-blue-800 text-xs">Higher score = Higher priority</p>
+                </div>
+                
+                <div class="space-y-4 mb-4">
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <h4 class="font-medium text-slate-900 mb-2">Feature 1: Email Reminders</h4>
+                    <div class="grid grid-cols-4 gap-2 text-xs mb-2">
+                      <div><span class="text-slate-600">Reach:</span> <span class="font-bold">100%</span> (all users)</div>
+                      <div><span class="text-slate-600">Impact:</span> <span class="font-bold">High</span> (3)</div>
+                      <div><span class="text-slate-600">Confidence:</span> <span class="font-bold">High</span> (80%)</div>
+                      <div><span class="text-slate-600">Effort:</span> <span class="font-bold">Low</span> (2 weeks)</div>
+                    </div>
+                    <p class="text-sm font-bold text-pm-600">RICE Score: (100 × 3 × 0.8) / 2 = 120</p>
+                  </div>
+                  
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <h4 class="font-medium text-slate-900 mb-2">Feature 2: Team Dashboard</h4>
+                    <div class="grid grid-cols-4 gap-2 text-xs mb-2">
+                      <div><span class="text-slate-600">Reach:</span> <span class="font-bold">40%</span> (team users)</div>
+                      <div><span class="text-slate-600">Impact:</span> <span class="font-bold">High</span> (3)</div>
+                      <div><span class="text-slate-600">Confidence:</span> <span class="font-bold">Medium</span> (60%)</div>
+                      <div><span class="text-slate-600">Effort:</span> <span class="font-bold">High</span> (6 weeks)</div>
+                    </div>
+                    <p class="text-sm font-bold text-pm-600">RICE Score: (40 × 3 × 0.6) / 6 = 12</p>
+                  </div>
+                  
+                  <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                    <h4 class="font-medium text-slate-900 mb-2">Feature 3: Onboarding Tutorial</h4>
+                    <div class="grid grid-cols-4 gap-2 text-xs mb-2">
+                      <div><span class="text-slate-600">Reach:</span> <span class="font-bold">100%</span> (new users)</div>
+                      <div><span class="text-slate-600">Impact:</span> <span class="font-bold">Medium</span> (2)</div>
+                      <div><span class="text-slate-600">Confidence:</span> <span class="font-bold">High</span> (90%)</div>
+                      <div><span class="text-slate-600">Effort:</span> <span class="font-bold">Medium</span> (3 weeks)</div>
+                    </div>
+                    <p class="text-sm font-bold text-pm-600">RICE Score: (100 × 2 × 0.9) / 3 = 60</p>
+                  </div>
+                </div>
+                
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                  <p class="text-green-900 text-sm"><strong>Priority Order:</strong> 1) Email Reminders (120), 2) Onboarding Tutorial (60), 3) Team Dashboard (12)</p>
+                </div>
+                
+                <button id="prioritizeBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  ✅ Complete: Prioritization Done
+                </button>
+              </div>
+              
+              <div id="roadmapSection" class="bg-white rounded-xl p-6 border border-slate-200 mb-6 hidden">
+                <h3 class="font-semibold text-slate-900 mb-4">🗺️ Task 3: Create Roadmap</h3>
+                <p class="text-slate-700 mb-4">Build a 3-month roadmap based on your prioritization:</p>
+                
+                <div class="space-y-4 mb-4">
+                  <div class="bg-pm-50 border border-pm-200 rounded-lg p-4">
+                    <h4 class="font-medium text-pm-900 mb-2">Q1 Month 1</h4>
+                    <p class="text-sm text-slate-700">✅ Email Reminders (2 weeks) + Onboarding Tutorial (3 weeks)</p>
+                  </div>
+                  
+                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-medium text-blue-900 mb-2">Q1 Month 2-3</h4>
+                    <p class="text-sm text-slate-700">📊 Team Dashboard (6 weeks) + Iteration based on feedback</p>
+                  </div>
+                </div>
+                
+                <button id="createRoadmapBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  ✅ Complete: Roadmap Created
+                </button>
+              </div>
+              
+              <div id="day2CompleteSection" class="bg-green-50 border border-green-200 rounded-xl p-6 hidden">
+                <div class="text-center">
+                  <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-3xl text-white">🎉</span>
+                  </div>
+                  <h3 class="font-semibold text-green-900 mb-2">Day 2 Complete!</h3>
+                  <p class="text-green-700 mb-4">You've built a prioritized roadmap. Tomorrow you'll present it to stakeholders!</p>
+                  <button id="goToDay3Btn" class="bg-pm-600 text-white px-8 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                    🚀 Go to Day 3
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      setupDay2Events() {
+        const storiesBtn = document.getElementById('createStoriesBtn');
+        if (storiesBtn) {
+          storiesBtn.addEventListener('click', () => {
+            this.completeTask(2, 0);
+            document.getElementById('prioritizeSection').classList.remove('hidden');
+            storiesBtn.disabled = true;
+            storiesBtn.textContent = '✅ Completed';
+          });
+        }
+        
+        const prioritizeBtn = document.getElementById('prioritizeBtn');
+        if (prioritizeBtn) {
+          prioritizeBtn.addEventListener('click', () => {
+            this.completeTask(2, 1);
+            document.getElementById('roadmapSection').classList.remove('hidden');
+            prioritizeBtn.disabled = true;
+            prioritizeBtn.textContent = '✅ Completed';
+          });
+        }
+        
+        const roadmapBtn = document.getElementById('createRoadmapBtn');
+        if (roadmapBtn) {
+          roadmapBtn.addEventListener('click', () => {
+            this.completeTask(2, 2);
+            this.addSarahMessage("Excellent roadmap! You've prioritized features based on impact and effort. Ready for the presentation!");
+            document.getElementById('day2CompleteSection').classList.remove('hidden');
+            roadmapBtn.disabled = true;
+            roadmapBtn.textContent = '✅ Completed';
+          });
+        }
+        
+        const goToDay3Btn = document.getElementById('goToDay3Btn');
+        if (goToDay3Btn) {
+          goToDay3Btn.addEventListener('click', () => {
+            this.completeDay2();
+          });
+        }
+      }
+
+      completeDay2() {
+        if (window.analytics && this.dayStartTimes[2]) {
+          const timeSpent = Math.floor((Date.now() - this.dayStartTimes[2]) / 1000);
+          window.analytics.trackEvent('day_completed', {
+            simulator: 'product-manager',
+            day: 2,
+            time_spent: timeSpent,
+            tasks_completed: this.dayProgress[2]?.completed || 0
+          });
+        }
+        
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => {
+            this.unlockDay(3);
+            this.loadDay(3);
+          }, 300);
+        }, 500);
+      }
+
+      // Day 3: Stakeholder Presentation
+      getDay3HTML() {
+        return `
+          <div class="space-y-8">
+            <div class="bg-gradient-to-br from-pm-50 to-blue-50 rounded-3xl border border-pm-200 p-8 shadow-card">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-pm-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-white">📊</span>
+                </div>
+                <div>
+                  <h2 class="text-2xl font-bold text-slate-900">Day 3: Stakeholder Presentation</h2>
+                  <p class="text-slate-600">Present your solution and get buy-in</p>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-xl p-6 border border-slate-200 mb-6">
+                <h3 class="font-semibold text-slate-900 mb-4">🎯 Task 1: Prepare Presentation</h3>
+                <p class="text-slate-700 mb-4">You'll present to: CEO, CTO, and Engineering Lead. Focus on:</p>
+                
+                <div class="space-y-3 mb-4">
+                  <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                    <span class="text-pm-600 font-bold">1.</span>
+                    <div>
+                      <p class="font-medium text-slate-900">Problem Statement</p>
+                      <p class="text-sm text-slate-600">Retention dropped 25%, users churn after 2-3 tasks</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                    <span class="text-pm-600 font-bold">2.</span>
+                    <div>
+                      <p class="font-medium text-slate-900">Root Causes</p>
+                      <p class="text-sm text-slate-600">Lack of engagement, poor visibility, confusing onboarding</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                    <span class="text-pm-600 font-bold">3.</span>
+                    <div>
+                      <p class="font-medium text-slate-900">Proposed Solutions</p>
+                      <p class="text-sm text-slate-600">Email reminders, onboarding tutorial, team dashboard</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                    <span class="text-pm-600 font-bold">4.</span>
+                    <div>
+                      <p class="font-medium text-slate-900">Expected Impact</p>
+                      <p class="text-sm text-slate-600">50%+ retention (from 35%), improved engagement</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <button id="preparePresentationBtn" class="w-full bg-pm-600 text-white px-6 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                  ✅ Complete: Presentation Ready
+                </button>
+              </div>
+              
+              <div id="presentationSection" class="bg-white rounded-xl p-6 border border-slate-200 mb-6 hidden">
+                <h3 class="font-semibold text-slate-900 mb-4">🎤 Task 2: Present to Stakeholders</h3>
+                <p class="text-slate-700 mb-4">You're presenting to the leadership team. Here's how they respond:</p>
+                
+                <div class="space-y-4 mb-4">
+                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p class="text-sm text-blue-900 mb-2"><strong>CEO:</strong> "I like the focus on retention. Email reminders sound like a quick win. But can we do all three features?"</p>
+                    <div class="mt-3 space-y-2">
+                      <button class="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 response-btn" data-response="all">
+                        "Yes, we can do all three if we add 2 more engineers"
+                      </button>
+                      <button class="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 response-btn" data-response="prioritized">
+                        "Let's start with email reminders and onboarding, then evaluate before adding dashboard"
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div id="ctoResponse" class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4 hidden">
+                  <p class="text-sm text-purple-900 mb-2"><strong>CTO (Mike):</strong> "The technical feasibility looks good. Email reminders are straightforward. But the dashboard will require significant backend work."</p>
+                  <div class="mt-3 space-y-2">
+                    <button class="w-full text-left p-3 bg-white border border-purple-200 rounded-lg hover:bg-purple-50 response-btn" data-response="agree">
+                      "Agreed. Let's phase the dashboard development"
+                    </button>
+                  </div>
+                </div>
+                
+                <div id="finalDecision" class="bg-green-50 border border-green-200 rounded-lg p-4 hidden">
+                  <p class="text-sm text-green-900"><strong>✅ Decision:</strong> Approved! You'll start with email reminders and onboarding tutorial. Dashboard will be evaluated after Q1 results.</p>
+                </div>
+              </div>
+              
+              <div id="day3CompleteSection" class="bg-gradient-to-br from-green-50 to-pm-50 border border-green-200 rounded-xl p-6 hidden">
+                <div class="text-center">
+                  <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-4xl text-white">🎉</span>
+                  </div>
+                  <h2 class="text-3xl font-bold text-slate-900 mb-4">Simulation Complete!</h2>
+                  <p class="text-lg text-slate-700 mb-6 max-w-2xl mx-auto">
+                    Congratulations! You've successfully completed the Product Manager Simulator. 
+                    You've learned how to conduct user research, prioritize features, and present to stakeholders.
+                  </p>
+                  
+                  <div class="bg-white rounded-2xl p-6 border border-green-200 mb-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">Your Journey:</h3>
+                    <ul class="text-slate-700 space-y-2 text-left max-w-md mx-auto">
+                      <li class="flex items-center gap-2">
+                        <span class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+                        <span>Day 0: Orientation & Product Overview</span>
+                      </li>
+                      <li class="flex items-center gap-2">
+                        <span class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+                        <span>Day 1: Discovery & User Research</span>
+                      </li>
+                      <li class="flex items-center gap-2">
+                        <span class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+                        <span>Day 2: Prioritization & Roadmap</span>
+                      </li>
+                      <li class="flex items-center gap-2">
+                        <span class="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+                        <span>Day 3: Stakeholder Presentation</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/dashboard.html" class="bg-pm-600 text-white px-8 py-3 rounded-xl hover:bg-pm-700 transition-colors font-semibold">
+                      Go to Dashboard
+                    </a>
+                    <button onclick="location.reload()" class="border-2 border-pm-600 text-pm-600 px-8 py-3 rounded-xl hover:bg-pm-50 transition-colors font-semibold">
+                      Restart Simulator
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      setupDay3Events() {
+        const prepareBtn = document.getElementById('preparePresentationBtn');
+        if (prepareBtn) {
+          prepareBtn.addEventListener('click', () => {
+            this.completeTask(3, 0);
+            document.getElementById('presentationSection').classList.remove('hidden');
+            prepareBtn.disabled = true;
+            prepareBtn.textContent = '✅ Completed';
+          });
+        }
+        
+        const responseBtns = document.querySelectorAll('.response-btn');
+        responseBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const response = btn.dataset.response;
+            if (response === 'prioritized' || response === 'all') {
+              document.getElementById('ctoResponse').classList.remove('hidden');
+              responseBtns.forEach(b => b.disabled = true);
+            }
+            if (response === 'agree') {
+              document.getElementById('finalDecision').classList.remove('hidden');
+              this.completeTask(3, 1);
+              
+              setTimeout(() => {
+                this.completeTask(3, 2);
+                this.completeDay3();
+              }, 1000);
+            }
+          });
+        });
+      }
+
+      completeDay3() {
+        if (window.analytics && this.dayStartTimes[3]) {
+          const timeSpent = Math.floor((Date.now() - this.dayStartTimes[3]) / 1000);
+          window.analytics.trackEvent('day_completed', {
+            simulator: 'product-manager',
+            day: 3,
+            time_spent: timeSpent,
+            tasks_completed: this.dayProgress[3]?.completed || 0
+          });
+          
+          // Track simulator completion
+          const totalDays = 4;
+          const totalTime = Math.floor((Date.now() - this.simulatorStartTime) / 1000);
+          const totalTasks = Object.values(this.dayProgress).reduce((sum, day) => sum + (day.completed || 0), 0);
+          
+          window.analytics.trackSimulatorCompletion('product-manager', totalDays, totalTasks);
+        }
+        
+        setTimeout(() => {
+          document.getElementById('day3CompleteSection').classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 500);
+      }
+    }
+  
+    // Initialize simulator when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      window.pmSimulator = new ProductManagerSimulator();
+    });
+  </script>
+</body>
+</html>
+

@@ -102,6 +102,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="firebase-config.js"></script>
   <script src="firebase-init.js"></script>
+  <script src="analytics-enhanced.js"></script>
+  <script src="ab-testing.js"></script>
   
   <script>
     // Check authentication before allowing access to simulator
@@ -313,8 +315,44 @@
         this.fundamentalsCompleted = false;
         this.documentReviewCompleted = false;
         
+        // Analytics tracking
+        this.simulatorStartTime = Date.now();
+        this.dayStartTimes = {};
+        this.day4CompletedTracked = false;
+        
         console.log("🚀 Initializing Corporate Lawyer Simulator...");
+        
+        // Initialize analytics and track simulator start
+        this.initAnalytics();
+        
         this.init();
+      }
+      
+      initAnalytics() {
+        // Wait for analytics to be available
+        const checkAnalytics = setInterval(() => {
+          if (window.EnhancedAnalytics && window.auth) {
+            clearInterval(checkAnalytics);
+            
+            if (!window.analytics) {
+              window.analytics = new window.EnhancedAnalytics();
+            }
+            
+            // Set user ID if authenticated
+            window.auth.onAuthStateChanged((user) => {
+              if (user && window.analytics) {
+                window.analytics.setUserId(user.uid);
+              }
+            });
+            
+            // Track simulator start
+            window.analytics.trackSimulatorStart('lawyer');
+            
+            console.log('✅ Lawyer Simulator Analytics initialized');
+          }
+        }, 100);
+        
+        setTimeout(() => clearInterval(checkAnalytics), 5000);
       }
 
       init() {
@@ -427,6 +465,28 @@
 
       loadDay(day) {
         console.log(`🔄 Loading Day ${day}...`);
+        
+        // Track previous day completion
+        if (this.currentDay !== day && this.dayStartTimes[this.currentDay] && window.analytics) {
+          const timeSpent = Math.floor((Date.now() - this.dayStartTimes[this.currentDay]) / 1000);
+          if (timeSpent > 0) {
+            window.analytics.trackEvent('day_completed', {
+              simulator: 'lawyer',
+              day: this.currentDay,
+              time_spent: timeSpent,
+              tasks_completed: this.dayProgress[this.currentDay]?.completed || 0
+            });
+          }
+        }
+        
+        // Track day start
+        this.dayStartTimes[day] = Date.now();
+        if (window.analytics) {
+          window.analytics.trackEvent('day_started', {
+            simulator: 'lawyer',
+            day: day
+          });
+        }
         
         // Show loading message
         this.addAlexMessage(`⏳ Loading Day ${day} content...`);
@@ -4253,6 +4313,27 @@ Based upon our examination of such documents and such other matters as we have d
             console.log("✅ All closing conditions checked");
             this.addAlexMessage("🎯 Excellent! All closing conditions are ready. Let's proceed with the closing sequence.");
             
+            // Track Day 4 completion
+            if (window.analytics && this.dayStartTimes[4] && !this.day4CompletedTracked) {
+              this.day4CompletedTracked = true;
+              const timeSpent = Math.floor((Date.now() - this.dayStartTimes[4]) / 1000);
+              window.analytics.trackEvent('day_completed', {
+                simulator: 'lawyer',
+                day: 4,
+                time_spent: timeSpent,
+                tasks_completed: this.dayProgress[4]?.completed || 0
+              });
+              
+              // Track simulator completion
+              const totalDays = 5; // Day 0-4
+              const totalTime = Math.floor((Date.now() - this.simulatorStartTime) / 1000);
+              const totalTasks = Object.values(this.dayProgress).reduce((sum, day) => sum + (day.completed || 0), 0);
+              
+              window.analytics.trackSimulatorCompletion('lawyer', totalDays, totalTasks);
+              
+              console.log('✅ Simulator completion tracked');
+            }
+            
             // Show closing conditions section
             setTimeout(() => {
               this.showClosingConditionsSection();
@@ -4606,6 +4687,17 @@ Based upon our examination of such documents and such other matters as we have d
         }
 
         completeDay2() {
+          // Track day 2 completion
+          if (window.analytics && this.dayStartTimes[2]) {
+            const timeSpent = Math.floor((Date.now() - this.dayStartTimes[2]) / 1000);
+            window.analytics.trackEvent('day_completed', {
+              simulator: 'lawyer',
+              day: 2,
+              time_spent: timeSpent,
+              tasks_completed: this.dayProgress[2]?.completed || 0
+            });
+          }
+          
           // Show success message and auto-unlock Day 3
           this.addAlexMessage("🎉 Excellent! You've completed Day 2 negotiation and documentation. Now let's move to Day 3: Closing Preparation & Crisis Management!");
           
