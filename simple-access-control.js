@@ -117,7 +117,9 @@ class SimpleAccessControl {
       'copywriter': 'copywriter',
       'psychologist': 'psychologist',
       'brand-marketer': 'brand-marketer',
-      'qa-engineer': 'qa-engineer'
+      'qa-engineer': 'qa-engineer',
+      'product-manager': 'product-manager',
+      'data-analyst': 'data-analyst'
     };
     return keys[simulator] || simulator;
   }
@@ -230,6 +232,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     '/psychologist-simulator.html', 
     '/brand-marketer-simulator.html',
     '/qa-engineer-simulator.html',
+    '/product-manager-simulator.html',
+    '/data-analyst-simulator.html',
     '/ux-sim.html'
   ];
   
@@ -248,6 +252,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       simulator = 'brand-marketer';
     } else if (currentPath.includes('qa-engineer')) {
       simulator = 'qa-engineer';
+    } else if (currentPath.includes('product-manager')) {
+      simulator = 'product-manager';
+    } else if (currentPath.includes('data-analyst')) {
+      simulator = 'data-analyst';
     }
     
     // Получаем email пользователя

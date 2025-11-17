@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyst Simulator - ProfPilot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="simple-access-control.js"></script>
+    <style>
+        .data-gradient {
+            background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+        }
+        .data-text {
+            background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.15);
+        }
+        .unlock-animation {
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .feedback {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            border-left: 4px solid #7c3aed;
+        }
+        .choice-button {
+            transition: all 0.3s ease;
+        }
+        .choice-button:hover {
+            transform: translateX(8px);
+            background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+            color: white;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #7c3aed 0%, #4c1d95 100%);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        .data-result {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+        }
+        .data-insight {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .data-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="logo-64.png" alt="ProfPilot" class="h-8 w-8 rounded-xl">
+                    <span class="text-xl font-bold text-slate-900">ProfPilot</span>
+                </div>
+                <div class="text-sm text-slate-600">
+                    Data Analyst Simulator
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 py-2">
+            <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+                <span>Progress</span>
+                <span id="progress-text">0/3 days completed</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2">
+                <div id="progress-bar" class="progress-bar h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <!-- Intro Block -->
+        <div id="intro-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 data-gradient rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-900 mb-4">
+                    📊 DATA ANALYST SIMULATION
+                </h1>
+                <p class="text-lg text-slate-600 mb-6">
+                    Welcome to your 3-day journey as a Data Analyst at DataFlow, a fast-growing e-commerce company.
+                </p>
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6 mb-6">
+                    <h3 class="font-semibold text-purple-900 mb-2">🎯 Your Mission</h3>
+                    <p class="text-purple-800">
+                        You'll analyze customer behavior data, identify trends, and present insights to help the company make data-driven decisions about product strategy and marketing.
+                    </p>
+                </div>
+                
+                <!-- Name Input -->
+                <div class="bg-slate-50 rounded-xl p-6 mb-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">👋 What's your name?</h3>
+                    <p class="text-slate-600 text-sm mb-4">We'll use this throughout your simulation experience</p>
+                    <input type="text" id="player-name" placeholder="Enter your name" 
+                        class="w-full max-w-xs px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center">
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button id="start-btn" class="data-gradient text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                    Start Your Data Analysis Journey
+                </button>
+            </div>
+        </div>
+
+        <!-- Day 1 Block -->
+        <div id="day1-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 data-gradient rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">1</span>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Day 1: Data Exploration & Cleaning</h2>
+                    <p class="text-slate-600">Your first day - understanding the dataset and preparing it for analysis</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Morning Meeting -->
+                <div class="bg-slate-50 rounded-xl p-6" id="morning-meeting">
+                    <h3 class="font-semibold text-slate-900 mb-3">🌅 9:00 AM - Team Meeting</h3>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-purple-500">
+                        <p class="text-slate-800 mb-2"><strong>Lisa (Data Lead):</strong> "Welcome to the team, [PLAYER_NAME]! We need to understand why our customer retention dropped 15% last quarter. I've pulled the customer behavior dataset for you to analyze."</p>
+                        <p class="text-slate-800 mb-2"><strong>Mark (Product Manager):</strong> "The dataset includes purchase history, website interactions, and customer demographics. We suspect the issue might be related to our recent product changes."</p>
+                        <p class="text-slate-800"><strong>You:</strong> "I'll start by exploring the data structure and checking for data quality issues. What's the time period we're looking at?"</p>
+                    </div>
+                </div>
+
+                <!-- Data Overview -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">🔍 10:30 AM - Initial Data Review</h3>
+                    <div class="bg-white rounded-lg p-4">
+                        <p class="text-slate-800 mb-4"><strong>Lisa:</strong> "Here's what you're working with. The dataset has 50,000 customer records from the past 6 months."</p>
+                        
+                        <div class="code-block">
+                            <div class="text-green-400"># Dataset Overview</div>
+                            <div class="text-blue-400">import pandas as pd</div>
+                            <div class="text-blue-400">df = pd.read_csv('customer_data.csv')</div>
+                            <div class="text-white"></div>
+                            <div class="text-yellow-400">print</div><div class="text-white">(df.info())</div>
+                            <div class="text-white"># Columns: customer_id, purchase_date, product_category,</div>
+                            <div class="text-white">#          amount, website_visits, last_login, age, region</div>
+                            <div class="text-white"></div>
+                            <div class="text-green-400"># Shape: (50000, 8)</div>
+                        </div>
+
+                        <p class="text-slate-800 mt-4"><strong>Lisa:</strong> "Before diving into analysis, you need to clean the data. What's the first thing you should check?"</p>
+                    </div>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="bg-slate-50 rounded-xl p-6" id="question-1">
+                    <h3 class="font-semibold text-slate-900 mb-3">❓ Question 1: Data Quality Check</h3>
+                    <p class="text-slate-700 mb-4">What's the most important first step when working with a new dataset?</p>
+                    
+                    <div class="space-y-3">
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="missing-values">
+                            <strong>A) Check for Missing Values</strong> - Identify nulls, empty cells, and incomplete records
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="outliers">
+                            <strong>B) Detect Outliers</strong> - Find unusual values that might skew results
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="data-types">
+                            <strong>C) Verify Data Types</strong> - Ensure columns are in the correct format
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feedback for Question 1 -->
+                <div id="feedback-1" class="feedback p-4 rounded-lg hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">💡 Expert Feedback</h4>
+                    <div id="feedback-content-1"></div>
+                </div>
+                
+                <!-- SQL Query Example -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-6">
+                    <h3 class="font-semibold text-blue-900 mb-3">📚 SQL for Data Cleaning</h3>
+                    <div class="text-blue-800 text-sm space-y-3">
+                        <p><strong>SQL</strong> is essential for data analysts. Here's how you'd check for missing values:</p>
+                        
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <pre class="text-green-400 text-xs overflow-x-auto"><code>-- Check for missing values
+SELECT 
+    COUNT(*) as total_rows,
+    COUNT(customer_id) as non_null_ids,
+    COUNT(purchase_date) as non_null_dates,
+    COUNT(*) - COUNT(customer_id) as missing_ids
+FROM customer_data;
+
+-- Find duplicates
+SELECT customer_id, COUNT(*) as count
+FROM customer_data
+GROUP BY customer_id
+HAVING COUNT(*) > 1;</code></pre>
+                        </div>
+                        
+                        <div class="bg-blue-100 rounded-lg p-3 mt-3">
+                            <p class="text-blue-900"><strong>💡 Pro Tip:</strong> Always start with data quality checks. Missing values can lead to incorrect conclusions. Common issues: nulls, duplicates, inconsistent formats, and outliers.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Afternoon Task -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">🛠️ 2:00 PM - Data Cleaning Task</h3>
+                    <div class="bg-white rounded-lg p-4">
+                        <p class="text-slate-800 mb-4"><strong>Lisa:</strong> "I've identified some data quality issues. Here's what needs to be fixed:"</p>
+                        
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-purple-900 mb-2">📋 Data Issues Found:</h4>
+                            <ul class="text-purple-800 space-y-1">
+                                <li>• 1,200 records with missing purchase_date</li>
+                                <li>• 350 duplicate customer_id entries</li>
+                                <li>• Negative values in 'amount' column (should be positive)</li>
+                                <li>• Age values over 120 (likely data entry errors)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-green-400 mb-2">💻 Cleaning Steps:</h4>
+                            <pre class="text-green-400 text-xs overflow-x-auto"><code># Remove duplicates
+df = df.drop_duplicates(subset=['customer_id'])
+
+# Handle missing dates
+df = df.dropna(subset=['purchase_date'])
+
+# Fix negative amounts
+df['amount'] = df['amount'].abs()
+
+# Remove invalid ages
+df = df[(df['age'] >= 18) & (df['age'] <= 100)]</code></pre>
+                        </div>
+
+                        <p class="text-slate-800"><strong>Lisa:</strong> "After cleaning, you'll have 48,200 clean records. Now you can start exploring patterns!"</p>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-slate-50 rounded-xl p-6" id="reflection-1">
+                    <h3 class="font-semibold text-slate-900 mb-3">🤔 End of Day Reflection</h3>
+                    <p class="text-slate-700 mb-4">How do you feel about your first day working with data?</p>
+                    
+                    <div class="space-y-3">
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="excited">
+                            <strong>Excited</strong> - I love finding patterns in data
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="methodical">
+                            <strong>Methodical</strong> - I prefer systematic approaches to analysis
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="curious">
+                            <strong>Curious</strong> - I'm eager to discover what the data reveals
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Feedback for Reflection -->
+                <div id="feedback-reflection-1" class="feedback p-4 rounded-lg hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">💡 Reflection Feedback</h4>
+                    <div id="feedback-content-reflection-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 Block -->
+        <div id="day2-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 data-gradient rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">2</span>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Day 2: Analysis & Visualization</h2>
+                    <p class="text-slate-600">Finding insights and creating visualizations to communicate findings</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Morning Check-in -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">☕ 9:00 AM - Daily Standup</h3>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-purple-500">
+                        <p class="text-slate-800 mb-2"><strong>You:</strong> "I've cleaned the data and removed 1,800 problematic records. The dataset is now ready for analysis."</p>
+                        <p class="text-slate-800 mb-2"><strong>Lisa:</strong> "Great work, [PLAYER_NAME]! Now let's dig into the retention problem. What questions should we ask the data?"</p>
+                        <p class="text-slate-800"><strong>Mark:</strong> "We need to understand: Are customers leaving after their first purchase? Is it specific product categories? Or certain demographics?"</p>
+                    </div>
+                </div>
+
+                <!-- Analysis Approach -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">📈 10:00 AM - Starting Your Analysis</h3>
+                    <div class="bg-white rounded-lg p-4">
+                        <p class="text-slate-800 mb-4"><strong>Lisa:</strong> "Let's start with customer retention. Here's a query to identify repeat customers:"</p>
+                        
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-gray-900 mb-2">📝 Analysis Question: Customer Retention</h4>
+                            <p class="text-gray-800 text-sm mb-2">What percentage of customers make a second purchase?</p>
+                            <div class="code-block text-sm">
+                                <div class="text-green-400">-- Calculate retention rate</div>
+                                <div class="text-blue-400">SELECT </div>
+                                <div class="text-white">    COUNT(DISTINCT customer_id) as total_customers,</div>
+                                <div class="text-white">    COUNT(DISTINCT CASE WHEN purchase_count > 1 </div>
+                                <div class="text-white">        THEN customer_id END) as repeat_customers</div>
+                                <div class="text-blue-400">FROM </div>
+                                <div class="text-white">    (SELECT customer_id, COUNT(*) as purchase_count</div>
+                                <div class="text-white">     FROM customer_data GROUP BY customer_id) sub</div>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-800"><strong>Lisa:</strong> "The results show only 32% of customers make a second purchase. That's below our 45% target. What's the best way to visualize this?"</p>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">❓ Question 2: Visualization Choice</h3>
+                    <p class="text-slate-700 mb-4">What visualization would best show customer retention rates?</p>
+                    
+                    <div class="space-y-3">
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="bar-chart">
+                            <strong>A) Bar Chart</strong> - Compare retention rates across different segments
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="pie-chart">
+                            <strong>B) Pie Chart</strong> - Show proportion of repeat vs. one-time customers
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="line-chart">
+                            <strong>C) Line Chart</strong> - Track retention trends over time
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feedback for Question 2 -->
+                <div id="feedback-2" class="feedback p-4 rounded-lg hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">💡 Expert Feedback</h4>
+                    <div id="feedback-content-2"></div>
+                </div>
+
+                <!-- Key Findings -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">🔍 2:00 PM - Key Findings</h3>
+                    <div class="bg-white rounded-lg p-4">
+                        <p class="text-slate-800 mb-4"><strong>You:</strong> "I've analyzed the data and found some interesting patterns..."</p>
+                        
+                        <div class="data-result data-insight">
+                            <strong>✅ Key Insight:</strong> Customers aged 25-35 have 48% retention rate (above average)
+                        </div>
+                        
+                        <div class="data-result data-warning">
+                            <strong>⚠️ Warning:</strong> Customers who only buy electronics have 18% retention (very low)
+                        </div>
+
+                        <div class="data-result data-insight">
+                            <strong>✅ Key Insight:</strong> Customers from West Coast region show 42% retention vs 28% in other regions
+                        </div>
+
+                        <p class="text-slate-800 mt-4"><strong>Mark:</strong> "Excellent findings! The electronics category issue is concerning. Can you dig deeper into why those customers aren't returning?"</p>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">❓ Question 3: Statistical Analysis</h3>
+                    <p class="text-slate-700 mb-4">To understand why electronics customers don't return, what analysis would be most helpful?</p>
+                    
+                    <div class="space-y-3">
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="correlation">
+                            <strong>A) Correlation Analysis</strong> - Find relationships between variables
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="cohort">
+                            <strong>B) Cohort Analysis</strong> - Track customer behavior over time
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="segmentation">
+                            <strong>C) Customer Segmentation</strong> - Group customers by behavior patterns
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feedback for Question 3 -->
+                <div id="feedback-3" class="feedback p-4 rounded-lg hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">💡 Expert Feedback</h4>
+                    <div id="feedback-content-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 Block -->
+        <div id="day3-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 data-gradient rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold">3</span>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Day 3: Reporting & Presentation</h2>
+                    <p class="text-slate-600">Creating dashboards and presenting findings to stakeholders</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Pre-Presentation Meeting -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">🚀 9:00 AM - Pre-Presentation Meeting</h3>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-purple-500">
+                        <p class="text-slate-800 mb-2"><strong>Lisa:</strong> "Great work on the analysis, [PLAYER_NAME]! The executive team wants to see your findings today at 2 PM."</p>
+                        <p class="text-slate-800 mb-2"><strong>Mark:</strong> "They'll want to know: What's causing the retention drop? What should we do about it? And what's the expected impact?"</p>
+                        <p class="text-slate-800"><strong>CEO:</strong> "This is critical. We're losing $2M annually from low retention. Your insights will drive our strategy."</p>
+                    </div>
+                </div>
+
+                <!-- Dashboard Creation -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">📊 10:00 AM - Building Your Dashboard</h3>
+                    <div class="bg-white rounded-lg p-4">
+                        <p class="text-slate-800 mb-4"><strong>Lisa:</strong> "You need to create a dashboard that tells the story clearly. Here's what should be included:"</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-purple-900 mb-2">✅ Key Metrics</h4>
+                                <ul class="text-purple-800 text-sm space-y-1">
+                                    <li>• Overall retention: 32%</li>
+                                    <li>• Target: 45%</li>
+                                    <li>• Gap: -13 percentage points</li>
+                                    <li>• Revenue impact: $2M/year</li>
+                                </ul>
+                            </div>
+                            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-orange-900 mb-2">⚠️ Problem Areas</h4>
+                                <ul class="text-orange-800 text-sm space-y-1">
+                                    <li>• Electronics: 18% retention</li>
+                                    <li>• East Coast: 28% retention</li>
+                                    <li>• First-time buyers: 68% churn</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-800"><strong>Lisa:</strong> "The dashboard should be clear, actionable, and tell a story. What's the most important thing to emphasize?"</p>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">❓ Question 4: Presentation Strategy</h3>
+                    <p class="text-slate-700 mb-4">When presenting to executives, what should you lead with?</p>
+                    
+                    <div class="space-y-3">
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="business-impact">
+                            <strong>A) Business Impact</strong> - Start with the $2M revenue loss and what it means
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="root-cause">
+                            <strong>B) Root Cause</strong> - Explain the data analysis and why retention dropped
+                        </button>
+                        <button class="choice-button w-full text-left p-4 bg-white border border-slate-200 rounded-lg hover:border-purple-500" data-choice="recommendations">
+                            <strong>C) Recommendations</strong> - Present solutions and action items first
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feedback for Question 4 -->
+                <div id="feedback-4" class="feedback p-4 rounded-lg hidden">
+                    <h4 class="font-semibold text-slate-900 mb-2">💡 Expert Feedback</h4>
+                    <div id="feedback-content-4"></div>
+                </div>
+
+                <!-- Final Presentation -->
+                <div class="bg-slate-50 rounded-xl p-6">
+                    <h3 class="font-semibold text-slate-900 mb-3">🎯 2:00 PM - Executive Presentation</h3>
+                    <div class="bg-white rounded-lg p-4">
+                        <p class="text-slate-800 mb-4"><strong>You:</strong> "Here's my analysis and recommendations:"</p>
+                        
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-purple-900 mb-2">📋 Executive Summary</h4>
+                            <ul class="text-purple-800 space-y-1 text-sm">
+                                <li>• Retention dropped from 45% to 32% in Q3</li>
+                                <li>• Primary issue: Electronics category (18% retention)</li>
+                                <li>• Root cause: Poor post-purchase experience, no follow-up</li>
+                                <li>• Recommendation: Implement email campaigns and product recommendations</li>
+                                <li>• Expected impact: +8% retention, $1.2M additional revenue</li>
+                            </ul>
+                        </div>
+
+                        <p class="text-slate-800"><strong>CEO:</strong> "Outstanding analysis! Your data-driven approach gives us clear direction. The marketing team will implement your recommendations. Great work, [PLAYER_NAME]!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Block -->
+        <div id="completion-block" class="bg-white rounded-2xl shadow-lg p-8 mb-8 card-hover hidden">
+            <div class="text-center">
+                <div class="w-20 h-20 data-gradient rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">
+                    🎉 Congratulations!
+                </h2>
+                
+                <p class="text-xl text-slate-600 mb-8">
+                    Congratulations, [PLAYER_NAME]! You've successfully completed the Data Analyst simulation!
+                </p>
+
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6 mb-8">
+                    <h3 class="text-lg font-semibold text-purple-900 mb-4">What You've Accomplished</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-purple-800">
+                        <div>
+                            <h4 class="font-semibold mb-2">Technical Skills:</h4>
+                            <ul class="space-y-1 text-sm">
+                                <li>• SQL queries for data extraction</li>
+                                <li>• Data cleaning and quality checks</li>
+                                <li>• Statistical analysis and insights</li>
+                                <li>• Data visualization best practices</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">Professional Skills:</h4>
+                            <ul class="space-y-1 text-sm">
+                                <li>• Business problem framing</li>
+                                <li>• Stakeholder communication</li>
+                                <li>• Dashboard creation</li>
+                                <li>• Actionable recommendations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 mb-8">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">Next Steps in Your Data Career</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-700">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <span class="text-purple-600 font-bold">📚</span>
+                            </div>
+                            <h4 class="font-semibold mb-2">Learn More</h4>
+                            <p class="text-sm">Python, advanced SQL, machine learning basics, Tableau/Power BI</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <span class="text-purple-600 font-bold">🛠️</span>
+                            </div>
+                            <h4 class="font-semibold mb-2">Build Projects</h4>
+                            <p class="text-sm">Analyze public datasets, create dashboards, write case studies</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <span class="text-purple-600 font-bold">🚀</span>
+                            </div>
+                            <h4 class="font-semibold mb-2">Apply</h4>
+                            <p class="text-sm">Look for data analyst roles, highlight your analytical thinking</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/simulator-selection.html" class="bg-slate-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-slate-700 transition-colors">
+                        Try Another Simulator
+                    </a>
+                    <a href="/blog.html" class="bg-purple-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-purple-700 transition-colors">
+                        Read Career Tips
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentDay = 0;
+        let completedQuestions = 0;
+        let totalQuestions = 4;
+        let playerName = '';
+
+        // Feedback content
+        const feedbackContent = {
+            'missing-values': {
+                title: 'Excellent First Step!',
+                content: 'Checking for missing values is crucial. Missing data can lead to biased results and incorrect conclusions. Always start with data quality checks before any analysis.'
+            },
+            'outliers': {
+                title: 'Important but Not First',
+                content: 'Outlier detection is valuable, but you should first understand the data structure and completeness. Check for missing values and data types before looking for outliers.'
+            },
+            'data-types': {
+                title: 'Good Practice',
+                content: 'Verifying data types is important, but missing values are a more critical first step. If you have nulls, data type checks might not reveal the full picture.'
+            },
+            'bar-chart': {
+                title: 'Perfect Choice!',
+                content: 'Bar charts are ideal for comparing retention rates across different segments (age groups, regions, product categories). They make it easy to see which segments perform better or worse.'
+            },
+            'pie-chart': {
+                title: 'Works but Limited',
+                content: 'Pie charts can show the proportion, but they\'re less effective for comparing multiple segments. Bar charts are better for retention analysis across different groups.'
+            },
+            'line-chart': {
+                title: 'Great for Trends',
+                content: 'Line charts are perfect for showing trends over time, but for comparing retention rates across segments, bar charts are more effective and easier to read.'
+            },
+            'correlation': {
+                title: 'Useful Tool',
+                content: 'Correlation analysis can reveal relationships, but cohort analysis is better for understanding customer behavior over time and identifying when customers churn.'
+            },
+            'cohort': {
+                title: 'Best Choice!',
+                content: 'Cohort analysis tracks groups of customers over time, showing exactly when and why they stop returning. This is perfect for understanding retention patterns.'
+            },
+            'segmentation': {
+                title: 'Valuable Approach',
+                content: 'Segmentation helps identify customer groups, but cohort analysis provides the time dimension needed to understand retention behavior patterns.'
+            },
+            'business-impact': {
+                title: 'Executive-Focused',
+                content: 'Starting with business impact ($2M loss) immediately grabs attention and shows you understand the business context. Then you can explain the analysis and recommendations.'
+            },
+            'root-cause': {
+                title: 'Analytical but Risky',
+                content: 'While thorough, starting with technical analysis might lose executive attention. Lead with business impact, then explain the analysis that supports it.'
+            },
+            'recommendations': {
+                title: 'Action-Oriented',
+                content: 'Recommendations are important, but executives need context first. Start with the problem (business impact), then the analysis, then your recommendations.'
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('start-btn').addEventListener('click', startSimulation);
+            
+            // Add event listeners for choice buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('choice-button')) {
+                    handleChoice(e.target);
+                }
+            });
+        });
+
+        function startSimulation() {
+            const nameInput = document.getElementById('player-name');
+            const playerName = nameInput.value.trim();
+            
+            if (!playerName) {
+                alert('Please enter your name to continue!');
+                return;
+            }
+            
+            // Store player name globally
+            window.playerName = playerName;
+            console.log('Player name set:', playerName);
+            
+            document.getElementById('intro-block').classList.add('hidden');
+            document.getElementById('day1-block').classList.remove('hidden');
+            currentDay = 1;
+            updateProgress();
+            
+            // Update dialogues with player name
+            updateDialoguesWithName();
+            console.log('Dialogues updated with name:', playerName);
+        }
+
+        function handleChoice(button) {
+            const choice = button.dataset.choice;
+            const questionNumber = getQuestionNumber(button);
+            
+            // Add hints based on question
+            if (questionNumber === 1) {
+                addHint('question-1', 'Consider: What could cause incorrect analysis results? What should you check before doing any calculations?');
+            } else if (questionNumber === 2) {
+                addHint('question-2', 'Think about: What visualization makes it easiest to compare values across different categories?');
+            } else if (questionNumber === 3) {
+                addHint('question-3', 'Consider: What analysis method tracks customer behavior over time and shows when they churn?');
+            }
+            
+            // Show feedback
+            showFeedback(choice, questionNumber);
+            
+            // Mark question as completed
+            completedQuestions++;
+            
+            // Check if we can unlock next day
+            if (completedQuestions >= getRequiredQuestionsForDay(currentDay)) {
+                setTimeout(() => {
+                    unlockNextDay();
+                }, 2000);
+            }
+            
+            updateProgress();
+        }
+
+        function getQuestionNumber(button) {
+            const block = button.closest('[id$="-block"]');
+            if (block.id.includes('day1')) {
+                // Check if it's reflection
+                if (button.closest('#reflection-1')) {
+                    return 'reflection-1';
+                }
+                return 1;
+            }
+            if (block.id.includes('day2')) return 2;
+            if (block.id.includes('day3')) return 3;
+            return 1;
+        }
+
+        function getRequiredQuestionsForDay(day) {
+            if (day === 1) return 2; // Need 1 question + 1 reflection to unlock day 2
+            if (day === 2) return 2; // Need 2 questions to unlock day 3
+            if (day === 3) return 1; // Need 1 question to unlock completion
+            return 0;
+        }
+
+        function showFeedback(choice, questionNumber) {
+            let feedback;
+            
+            // Handle reflection feedback
+            if (questionNumber === 'reflection-1') {
+                const reflectionFeedback = {
+                    'excited': {
+                        title: 'Great enthusiasm!',
+                        content: 'Passion for data is essential for a data analyst. Your excitement will help you stay motivated when working with complex datasets.'
+                    },
+                    'methodical': {
+                        title: 'Perfect approach!',
+                        content: 'A systematic, methodical approach is exactly what data analysis requires. This mindset will help you catch errors and ensure accuracy.'
+                    },
+                    'curious': {
+                        title: 'Excellent trait!',
+                        content: 'Curiosity drives great data analysts. Always asking "why" and digging deeper leads to valuable insights that others might miss.'
+                    }
+                };
+                feedback = reflectionFeedback[choice];
+            } else {
+                feedback = feedbackContent[choice];
+            }
+            
+            if (!feedback) return;
+            
+            const feedbackElement = document.getElementById(`feedback-${questionNumber}`);
+            const contentElement = document.getElementById(`feedback-content-${questionNumber}`);
+            
+            if (feedbackElement && contentElement) {
+                contentElement.innerHTML = `
+                    <h5 class="font-semibold text-purple-900 mb-2">${feedback.title}</h5>
+                    <p class="text-slate-700">${feedback.content}</p>
+                `;
+                feedbackElement.classList.remove('hidden');
+                feedbackElement.classList.add('unlock-animation');
+            }
+        }
+
+        function unlockNextDay() {
+            if (currentDay === 1) {
+                document.getElementById('day2-block').classList.remove('hidden');
+                document.getElementById('day2-block').classList.add('unlock-animation');
+                currentDay = 2;
+            } else if (currentDay === 2) {
+                document.getElementById('day3-block').classList.remove('hidden');
+                document.getElementById('day3-block').classList.add('unlock-animation');
+                currentDay = 3;
+            } else if (currentDay === 3) {
+                document.getElementById('completion-block').classList.remove('hidden');
+                document.getElementById('completion-block').classList.add('unlock-animation');
+                currentDay = 4;
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressText = document.getElementById('progress-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            if (currentDay === 0) {
+                progressText.textContent = '0/3 days completed';
+                progressBar.style.width = '0%';
+            } else if (currentDay === 1) {
+                progressText.textContent = '1/3 days completed';
+                progressBar.style.width = '33%';
+            } else if (currentDay === 2) {
+                progressText.textContent = '2/3 days completed';
+                progressBar.style.width = '66%';
+            } else if (currentDay === 3) {
+                progressText.textContent = '3/3 days completed';
+                progressBar.style.width = '100%';
+            } else if (currentDay === 4) {
+                progressText.textContent = 'Simulation Complete!';
+                progressBar.style.width = '100%';
+            }
+        }
+
+        function updateDialoguesWithName() {
+            const playerName = window.playerName || 'there';
+            console.log('Updating dialogues with name:', playerName);
+            
+            // Update all text content that contains [PLAYER_NAME]
+            const allElements = document.querySelectorAll('*');
+            let updatedCount = 0;
+            allElements.forEach(element => {
+                if (element.innerHTML && element.innerHTML.includes('[PLAYER_NAME]')) {
+                    element.innerHTML = element.innerHTML.replace(/\[PLAYER_NAME\]/g, playerName);
+                    updatedCount++;
+                }
+            });
+            console.log('Updated', updatedCount, 'elements with player name');
+        }
+
+        function addHint(elementId, hintText) {
+            const element = document.getElementById(elementId);
+            if (element && !element.querySelector('.hint')) {
+                const hintDiv = document.createElement('div');
+                hintDiv.className = 'hint bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3';
+                hintDiv.innerHTML = `
+                    <div class="flex items-start gap-2">
+                        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h4 class="font-semibold text-blue-900 mb-1">💡 Hint</h4>
+                            <p class="text-blue-800 text-sm">${hintText}</p>
+                        </div>
+                    </div>
+                `;
+                element.appendChild(hintDiv);
+            }
+        }
+    </script>
+</body>
+</html>
+

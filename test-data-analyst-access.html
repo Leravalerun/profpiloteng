@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Access - Data Analyst Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 p-8">
+  <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-slate-900 mb-6">Test Access - Data Analyst</h1>
+    
+    <div class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+      <p class="text-purple-800 font-medium mb-2">✅ Quick Test Access</p>
+      <p class="text-purple-700 text-sm">Click the button below to grant yourself test access to the Data Analyst simulator.</p>
+    </div>
+
+    <div class="space-y-4">
+      <button 
+        onclick="grantTestAccess()" 
+        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-xl transition-colors">
+        Grant Test Access
+      </button>
+
+      <button 
+        onclick="checkAccess()" 
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-colors">
+        Check Current Access
+      </button>
+
+      <button 
+        onclick="clearAccess()" 
+        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl transition-colors">
+        Clear Test Access
+      </button>
+
+      <a 
+        href="/data-analyst-simulator.html" 
+        class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-xl transition-colors text-center">
+        Open Data Analyst Simulator
+      </a>
+    </div>
+
+    <div id="status" class="mt-6 p-4 rounded-lg hidden"></div>
+  </div>
+
+  <script>
+    function grantTestAccess() {
+      const testData = {
+        simulator: 'data-analyst',
+        email: 'test@example.com',
+        accessGranted: true,
+        paymentId: 'test-' + Date.now(),
+        status: 'confirmed',
+        createdAt: new Date().toISOString()
+      };
+
+      // Сохраняем тестовые данные
+      localStorage.setItem('testPaymentData', JSON.stringify(testData));
+      
+      // Также сохраняем как обычный paymentData для совместимости
+      localStorage.setItem('paymentData', JSON.stringify({
+        simulator: 'data-analyst',
+        userEmail: 'test@example.com',
+        status: 'confirmed',
+        id: testData.paymentId,
+        timestamp: new Date().toISOString()
+      }));
+
+      showStatus('✅ Test access granted! You can now open the simulator.', 'green');
+    }
+
+    function checkAccess() {
+      const testData = localStorage.getItem('testPaymentData');
+      const paymentData = localStorage.getItem('paymentData');
+
+      if (testData || paymentData) {
+        try {
+          const test = testData ? JSON.parse(testData) : null;
+          const payment = paymentData ? JSON.parse(paymentData) : null;
+          
+          let message = '📋 Current Access Status:\n\n';
+          if (test) {
+            message += `Test Access: ✅ Active\n`;
+            message += `Simulator: ${test.simulator}\n`;
+            message += `Email: ${test.email}\n`;
+          }
+          if (payment) {
+            message += `\nPayment Data: ✅ Found\n`;
+            message += `Simulator: ${payment.simulator}\n`;
+            message += `Status: ${payment.status}\n`;
+          }
+          
+          showStatus(message, 'blue');
+        } catch (e) {
+          showStatus('❌ Error reading access data', 'red');
+        }
+      } else {
+        showStatus('❌ No access data found. Click "Grant Test Access" first.', 'red');
+      }
+    }
+
+    function clearAccess() {
+      localStorage.removeItem('testPaymentData');
+      localStorage.removeItem('paymentData');
+      showStatus('🗑️ Test access cleared.', 'yellow');
+    }
+
+    function showStatus(message, color) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.className = `mt-6 p-4 rounded-lg ${
+        color === 'green' ? 'bg-green-50 border border-green-200 text-green-800' :
+        color === 'blue' ? 'bg-blue-50 border border-blue-200 text-blue-800' :
+        color === 'red' ? 'bg-red-50 border border-red-200 text-red-800' :
+        'bg-yellow-50 border border-yellow-200 text-yellow-800'
+      }`;
+      statusDiv.innerHTML = `<pre class="whitespace-pre-wrap font-mono text-sm">${message}</pre>`;
+      statusDiv.classList.remove('hidden');
+    }
+
+    // Проверяем доступ при загрузке
+    window.addEventListener('load', () => {
+      checkAccess();
+    });
+  </script>
+</body>
+</html>
+

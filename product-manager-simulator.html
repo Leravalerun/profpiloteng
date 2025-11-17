@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Access Control -->
-  <script src="access-control.js"></script>
+  <script src="simple-access-control.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -107,14 +107,8 @@
   <script src="error-tracking.js"></script>
   
   <script>
-    // Check authentication before allowing access to simulator
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(() => {
-        if (!window.auth || !window.auth.currentUser) {
-          window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname);
-        }
-      }, 1000);
-    });
+    // Access control is handled by simple-access-control.js
+    // No Firebase auth required for test access
   </script>
 </head>
 <body class="bg-slate-50 text-slate-900">

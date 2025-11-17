@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Your Perfect Career Match - ProfPilot</title>
+  <meta name="description" content="Take our career quiz to discover which profession matches your interests, skills, and goals. Get personalized recommendations for career simulators.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#00d4aa',
+              600: '#00a896',
+              700: '#007a6b',
+              800: '#065f56',
+              900: '#064e3b'
+            },
+            accent: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(2, 6, 23, 0.08)',
+            glow: '0 0 20px rgba(0, 212, 170, 0.3)',
+            card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4aa 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 212, 170, 0.15);
+    }
+    .progress-bar {
+      background: linear-gradient(90deg, #00d4aa 0%, #3b82f6 100%);
+      transition: width 0.3s ease;
+    }
+    .question-enter {
+      animation: slideIn 0.4s ease-out;
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <div class="flex items-center">
+          <a href="/index.html" class="flex items-center">
+            <img src="logo-64.png" alt="ProfPilot" class="h-8 w-8 mr-3">
+            <span class="text-2xl font-bold text-slate-900">ProfPilot</span>
+          </a>
+        </div>
+        <nav class="hidden md:flex space-x-8">
+          <a href="/index.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">Home</a>
+          <a href="/simulator-selection.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">Simulators</a>
+          <a href="/blog.html" class="text-slate-600 hover:text-slate-900 font-medium transition-colors">Blog</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Intro Screen -->
+    <div id="intro-screen" class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+        Find Your <span class="gradient-text">Perfect Career Match</span>
+      </h1>
+      <p class="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+        Answer a few questions about your interests, skills, and goals. We'll recommend the best career simulator for you to try.
+      </p>
+      <button onclick="startQuiz()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+        Start Quiz
+      </button>
+      <p class="text-sm text-slate-500 mt-4">Takes about 3 minutes</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="progress-container" class="hidden mb-8">
+      <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+        <span>Question <span id="current-question">1</span> of <span id="total-questions">8</span></span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="w-full bg-slate-200 rounded-full h-2">
+        <div id="progress-bar" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Quiz Questions -->
+    <div id="quiz-container" class="hidden">
+      <div id="question-container" class="bg-white rounded-2xl shadow-card p-8 mb-8 question-enter">
+        <!-- Questions will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden">
+      <div class="text-center mb-12">
+        <div class="w-20 h-20 bg-gradient-to-br from-brand-500 to-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">
+          Your Career Match Results
+        </h2>
+        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+          Based on your answers, here are the career simulators we recommend for you:
+        </p>
+      </div>
+
+      <div id="recommendations-container" class="grid md:grid-cols-2 gap-6 mb-8">
+        <!-- Recommendations will be inserted here -->
+      </div>
+
+      <div class="text-center">
+        <a href="/simulator-selection.html" class="inline-block bg-slate-600 hover:bg-slate-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-all">
+          View All Simulators
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Quiz data
+    const questions = [
+      {
+        id: 1,
+        question: "What type of work environment do you prefer?",
+        options: [
+          { text: "Creative and visual", value: { 'ux-designer': 3, 'copywriter': 2, 'brand-marketer': 2 } },
+          { text: "Analytical and data-driven", value: { 'data-analyst': 3, 'product-manager': 2, 'qa-engineer': 1 } },
+          { text: "Collaborative and strategic", value: { 'product-manager': 3, 'brand-marketer': 2, 'ux-designer': 1 } },
+          { text: "Helping and supporting others", value: { 'psychologist': 3, 'lawyer': 1 } }
+        ]
+      },
+      {
+        id: 2,
+        question: "What skills do you enjoy using most?",
+        options: [
+          { text: "Writing and communication", value: { 'copywriter': 3, 'lawyer': 2, 'product-manager': 1 } },
+          { text: "Problem-solving and logic", value: { 'data-analyst': 3, 'qa-engineer': 2, 'product-manager': 2 } },
+          { text: "Design and creativity", value: { 'ux-designer': 3, 'brand-marketer': 2 } },
+          { text: "Understanding people", value: { 'psychologist': 3, 'ux-designer': 2, 'product-manager': 1 } }
+        ]
+      },
+      {
+        id: 3,
+        question: "What's your ideal work pace?",
+        options: [
+          { text: "Fast-paced with deadlines", value: { 'copywriter': 2, 'product-manager': 2, 'qa-engineer': 2 } },
+          { text: "Steady and methodical", value: { 'data-analyst': 3, 'lawyer': 2, 'psychologist': 2 } },
+          { text: "Creative and flexible", value: { 'ux-designer': 3, 'brand-marketer': 2 } },
+          { text: "Varied - some fast, some slow", value: { 'product-manager': 3, 'brand-marketer': 2 } }
+        ]
+      },
+      {
+        id: 4,
+        question: "What type of problems do you like solving?",
+        options: [
+          { text: "User experience and design challenges", value: { 'ux-designer': 3, 'product-manager': 1 } },
+          { text: "Data puzzles and finding patterns", value: { 'data-analyst': 3, 'qa-engineer': 1 } },
+          { text: "Business and strategy problems", value: { 'product-manager': 3, 'brand-marketer': 2, 'lawyer': 1 } },
+          { text: "Human and emotional challenges", value: { 'psychologist': 3, 'ux-designer': 1 } }
+        ]
+      },
+      {
+        id: 5,
+        question: "How do you prefer to communicate?",
+        options: [
+          { text: "Through writing and content", value: { 'copywriter': 3, 'lawyer': 2 } },
+          { text: "With data and visualizations", value: { 'data-analyst': 3, 'product-manager': 1 } },
+          { text: "Through presentations and meetings", value: { 'product-manager': 3, 'brand-marketer': 2 } },
+          { text: "One-on-one conversations", value: { 'psychologist': 3, 'lawyer': 1 } }
+        ]
+      },
+      {
+        id: 6,
+        question: "What tools do you enjoy working with?",
+        options: [
+          { text: "Design and prototyping tools", value: { 'ux-designer': 3, 'brand-marketer': 1 } },
+          { text: "Data analysis tools (Excel, SQL)", value: { 'data-analyst': 3, 'product-manager': 1 } },
+          { text: "Code and testing tools", value: { 'qa-engineer': 3, 'data-analyst': 1 } },
+          { text: "Words and documents", value: { 'copywriter': 3, 'lawyer': 2, 'psychologist': 1 } }
+        ]
+      },
+      {
+        id: 7,
+        question: "What's your career change priority?",
+        options: [
+          { text: "High demand and good salary", value: { 'data-analyst': 2, 'product-manager': 2, 'qa-engineer': 2 } },
+          { text: "Creative fulfillment", value: { 'ux-designer': 3, 'copywriter': 2, 'brand-marketer': 2 } },
+          { text: "Helping others", value: { 'psychologist': 3, 'lawyer': 1 } },
+          { text: "Strategic impact", value: { 'product-manager': 3, 'brand-marketer': 2 } }
+        ]
+      },
+      {
+        id: 8,
+        question: "How do you learn best?",
+        options: [
+          { text: "By doing hands-on projects", value: { 'ux-designer': 2, 'data-analyst': 2, 'qa-engineer': 2, 'product-manager': 2 } },
+          { text: "Through analysis and research", value: { 'data-analyst': 3, 'lawyer': 2 } },
+          { text: "By creating and experimenting", value: { 'copywriter': 3, 'ux-designer': 2, 'brand-marketer': 2 } },
+          { text: "Through interaction and practice", value: { 'psychologist': 3, 'product-manager': 1 } }
+        ]
+      }
+    ];
+
+    // Simulator info
+    const simulators = {
+      'ux-designer': {
+        name: 'UX Designer',
+        description: 'Design user experiences and solve usability problems',
+        link: '/ux.html',
+        color: 'purple',
+        icon: '🎨'
+      },
+      'data-analyst': {
+        name: 'Data Analyst',
+        description: 'Analyze data and create insights for business decisions',
+        link: '/data-analyst.html',
+        color: 'purple',
+        icon: '📊'
+      },
+      'product-manager': {
+        name: 'Product Manager',
+        description: 'Lead product strategy and work with cross-functional teams',
+        link: '/product-manager.html',
+        color: 'green',
+        icon: '📋'
+      },
+      'copywriter': {
+        name: 'Copywriter',
+        description: 'Create compelling content and persuasive copy',
+        link: '/copywriter.html',
+        color: 'amber',
+        icon: '✍️'
+      },
+      'lawyer': {
+        name: 'Corporate Lawyer',
+        description: 'Review contracts and provide legal counsel',
+        link: '/lawyer.html',
+        color: 'blue',
+        icon: '⚖️'
+      },
+      'psychologist': {
+        name: 'Psychologist',
+        description: 'Help people through therapy and counseling',
+        link: '/psychologist.html',
+        color: 'indigo',
+        icon: '🧠'
+      },
+      'brand-marketer': {
+        name: 'Brand Marketer',
+        description: 'Build brand strategy and create marketing campaigns',
+        link: '/brand-marketer.html',
+        color: 'green',
+        icon: '📢'
+      },
+      'qa-engineer': {
+        name: 'QA Engineer',
+        description: 'Test software and ensure quality',
+        link: '/qa-engineer.html',
+        color: 'orange',
+        icon: '🔧'
+      }
+    };
+
+    let currentQuestion = 0;
+    let scores = {};
+    let answers = [];
+
+    function startQuiz() {
+      document.getElementById('intro-screen').classList.add('hidden');
+      document.getElementById('progress-container').classList.remove('hidden');
+      document.getElementById('quiz-container').classList.remove('hidden');
+      showQuestion(0);
+    }
+
+    function showQuestion(index) {
+      if (index >= questions.length) {
+        showResults();
+        return;
+      }
+
+      currentQuestion = index;
+      const question = questions[index];
+      const container = document.getElementById('question-container');
+      
+      // Update progress
+      const progress = ((index + 1) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = progress + '%';
+      document.getElementById('current-question').textContent = index + 1;
+      document.getElementById('total-questions').textContent = questions.length;
+      document.getElementById('progress-percent').textContent = Math.round(progress) + '%';
+
+      // Create question HTML
+      container.innerHTML = `
+        <h3 class="text-2xl font-bold text-slate-900 mb-6">${question.question}</h3>
+        <div class="space-y-4">
+          ${question.options.map((option, i) => `
+            <button 
+              onclick="selectAnswer(${i})"
+              class="w-full text-left p-6 bg-slate-50 hover:bg-brand-50 border-2 border-slate-200 hover:border-brand-500 rounded-xl transition-all card-hover"
+            >
+              <span class="text-lg font-medium text-slate-900">${option.text}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(optionIndex) {
+      const question = questions[currentQuestion];
+      const selectedOption = question.options[optionIndex];
+      
+      // Update scores
+      Object.keys(selectedOption.value).forEach(simulator => {
+        if (!scores[simulator]) scores[simulator] = 0;
+        scores[simulator] += selectedOption.value[simulator];
+      });
+
+      answers.push({
+        question: question.question,
+        answer: selectedOption.text
+      });
+
+      // Move to next question
+      setTimeout(() => {
+        showQuestion(currentQuestion + 1);
+      }, 300);
+    }
+
+    function showResults() {
+      document.getElementById('quiz-container').classList.add('hidden');
+      document.getElementById('progress-container').classList.add('hidden');
+      document.getElementById('results-screen').classList.remove('hidden');
+
+      // Sort simulators by score
+      const sortedSimulators = Object.entries(scores)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3); // Top 3
+
+      const container = document.getElementById('recommendations-container');
+      
+      if (sortedSimulators.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 text-center p-8">
+            <p class="text-slate-600">We couldn't determine a clear match. Try exploring all simulators!</p>
+            <a href="/simulator-selection.html" class="inline-block mt-4 bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold">
+              View All Simulators
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sortedSimulators.map(([key, score], index) => {
+        const simulator = simulators[key];
+        if (!simulator) return '';
+        
+        const isTop = index === 0;
+        return `
+          <div class="bg-white rounded-2xl shadow-card p-8 card-hover border-2 ${isTop ? 'border-brand-500' : 'border-slate-200'}">
+            ${isTop ? `
+              <div class="inline-flex items-center gap-2 bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-sm font-medium mb-4">
+                <span>⭐</span>
+                <span>Best Match</span>
+              </div>
+            ` : ''}
+            <div class="flex items-center gap-4 mb-4">
+              <div class="text-4xl">${simulator.icon}</div>
+              <div>
+                <h3 class="text-2xl font-bold text-slate-900">${simulator.name}</h3>
+                <p class="text-slate-600">${simulator.description}</p>
+              </div>
+            </div>
+            <div class="mb-6">
+              <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+                <span>Match Score</span>
+                <span class="font-semibold">${score}%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2">
+                <div class="bg-brand-600 h-2 rounded-full" style="width: ${score}%"></div>
+              </div>
+            </div>
+            <div class="flex gap-3">
+              <a href="${simulator.link}" class="flex-1 text-center border border-slate-300 text-slate-700 px-4 py-3 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
+                Learn More
+              </a>
+              <a href="/checkout.html?role=${key}" class="flex-1 text-center bg-brand-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-brand-700 transition-colors">
+                Try for $29
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
+
