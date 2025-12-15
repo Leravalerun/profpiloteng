@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Simulator Access - Debug</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="simple-access-control.js"></script>
+</head>
+<body class="bg-slate-50 p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">🔍 Simulator Access Debug</h1>
+
+    <div class="bg-white rounded-xl p-6 mb-6 border border-slate-200">
+      <h2 class="text-xl font-bold mb-4">Quick Test</h2>
+      <div class="space-y-4">
+        <button onclick="grantTestAccess()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+          ✅ Grant Test Access (All Simulators)
+        </button>
+        <button onclick="testAccess('product-manager')" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">
+          🔍 Test Product Manager Access
+        </button>
+        <button onclick="testAccess('data-analyst')" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold">
+          🔍 Test Data Analyst Access
+        </button>
+        <button onclick="openSimulator('product-manager')" class="bg-pm-600 text-white px-6 py-3 rounded-lg font-semibold">
+          🚀 Open Product Manager Simulator
+        </button>
+        <button onclick="openSimulator('data-analyst')" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold">
+          🚀 Open Data Analyst Simulator
+        </button>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 mb-6 border border-slate-200">
+      <h2 class="text-xl font-bold mb-4">Current Status</h2>
+      <div id="status" class="space-y-2"></div>
+    </div>
+
+    <div class="bg-white rounded-xl p-6 border border-slate-200">
+      <h2 class="text-xl font-bold mb-4">localStorage Data</h2>
+      <pre id="localStorageData" class="bg-slate-100 p-4 rounded-lg text-sm overflow-auto"></pre>
+    </div>
+  </div>
+
+  <script>
+    function grantTestAccess() {
+      const testData = {
+        simulator: 'all',
+        email: 'test@example.com',
+        accessGranted: true,
+        allSimulators: true,
+        paymentId: 'test-all-' + Date.now(),
+        status: 'confirmed',
+        createdAt: new Date().toISOString()
+      };
+
+      localStorage.setItem('testPaymentData', JSON.stringify(testData));
+      
+      localStorage.setItem('paymentData', JSON.stringify({
+        simulator: 'product-manager',
+        userEmail: 'test@example.com',
+        status: 'confirmed',
+        id: testData.paymentId,
+        timestamp: new Date().toISOString(),
+        allSimulators: true
+      }));
+
+      updateStatus();
+      updateLocalStorage();
+      alert('✅ Test access granted for ALL simulators!');
+    }
+
+    async function testAccess(simulator) {
+      const accessControl = new SimpleAccessControl();
+      const access = await accessControl.checkSimulatorAccess(simulator);
+      
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerHTML = `
+        <div class="p-4 rounded-lg ${access.hasAccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}">
+          <p class="font-semibold ${access.hasAccess ? 'text-green-800' : 'text-red-800'}">
+            ${access.hasAccess ? '✅' : '❌'} Access for ${simulator}: ${access.hasAccess ? 'GRANTED' : 'DENIED'}
+          </p>
+          <p class="text-sm mt-2">Reason: ${access.reason || 'Access granted'}</p>
+          <pre class="text-xs mt-2 bg-white p-2 rounded">${JSON.stringify(access, null, 2)}</pre>
+        </div>
+      `;
+    }
+
+    function openSimulator(simulator) {
+      const paths = {
+        'product-manager': '/product-manager-simulator.html',
+        'data-analyst': '/data-analyst-simulator.html',
+        'ux-designer': '/ux-sim-simple.html',
+        'copywriter': '/copywriter-simulator.html',
+        'qa-engineer': '/qa-engineer-simulator.html'
+      };
+
+      const path = paths[simulator];
+      if (path) {
+        window.open(path, '_blank');
+      } else {
+        alert(`Unknown simulator: ${simulator}`);
+      }
+    }
+
+    function updateStatus() {
+      const testData = localStorage.getItem('testPaymentData');
+      const paymentData = localStorage.getItem('paymentData');
+      
+      const statusDiv = document.getElementById('status');
+      let html = '';
+      
+      if (testData) {
+        try {
+          const test = JSON.parse(testData);
+          html += `<div class="p-4 bg-green-50 border border-green-200 rounded-lg mb-2">
+            <p class="font-semibold text-green-800">✅ Test Access Active</p>
+            <p class="text-sm text-green-700">Simulator: ${test.simulator}</p>
+            <p class="text-sm text-green-700">All Simulators: ${test.allSimulators ? 'Yes' : 'No'}</p>
+          </div>`;
+        } catch (e) {
+          html += `<div class="p-4 bg-red-50 border border-red-200 rounded-lg mb-2">
+            <p class="text-red-800">❌ Error parsing test data</p>
+          </div>`;
+        }
+      } else {
+        html += `<div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-2">
+          <p class="text-yellow-800">⚠️ No test access data</p>
+        </div>`;
+      }
+
+      if (paymentData) {
+        try {
+          const payment = JSON.parse(paymentData);
+          html += `<div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p class="font-semibold text-blue-800">📋 Payment Data Found</p>
+            <p class="text-sm text-blue-700">Simulator: ${payment.simulator}</p>
+            <p class="text-sm text-blue-700">Status: ${payment.status}</p>
+            <p class="text-sm text-blue-700">All Simulators: ${payment.allSimulators ? 'Yes' : 'No'}</p>
+          </div>`;
+        } catch (e) {
+          html += `<div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-red-800">❌ Error parsing payment data</p>
+          </div>`;
+        }
+      }
+
+      statusDiv.innerHTML = html;
+    }
+
+    function updateLocalStorage() {
+      const testData = localStorage.getItem('testPaymentData');
+      const paymentData = localStorage.getItem('paymentData');
+      
+      const data = {
+        testPaymentData: testData ? JSON.parse(testData) : null,
+        paymentData: paymentData ? JSON.parse(paymentData) : null
+      };
+      
+      document.getElementById('localStorageData').textContent = JSON.stringify(data, null, 2);
+    }
+
+    // Update on load
+    window.addEventListener('load', () => {
+      updateStatus();
+      updateLocalStorage();
+    });
+
+    // Update every 2 seconds
+    setInterval(() => {
+      updateStatus();
+      updateLocalStorage();
+    }, 2000);
+  </script>
+</body>
+</html>
+
+

@@ -20,14 +20,33 @@ class SimpleAccessControl {
     if (testPaymentData) {
       try {
         const testData = JSON.parse(testPaymentData);
-        if (testData.simulator === simulator && testData.accessGranted) {
-          console.log('✅ Test access granted for:', simulator);
+        // Тестовый доступ работает если:
+        // 1. Симулятор совпадает ИЛИ
+        // 2. accessGranted = true (универсальный доступ) ИЛИ
+        // 3. simulator = 'all' (доступ ко всем)
+        // Тестовый доступ работает если:
+        // 1. accessGranted = true И (симулятор совпадает ИЛИ simulator = 'all' ИЛИ allSimulators = true)
+        const hasTestAccess = testData.accessGranted === true && (
+          testData.simulator === simulator || 
+          testData.simulator === 'all' ||
+          testData.allSimulators === true
+        );
+        
+        if (hasTestAccess) {
+          console.log('✅ Test access granted for:', simulator, 'testData:', testData);
           return {
             hasAccess: true,
             source: 'test',
             email: testData.email,
             paymentId: testData.paymentId
           };
+        } else {
+          console.log('❌ Test access check failed:', {
+            accessGranted: testData.accessGranted,
+            testSimulator: testData.simulator,
+            requestedSimulator: simulator,
+            allSimulators: testData.allSimulators
+          });
         }
       } catch (error) {
         console.error('❌ Error parsing test payment data:', error);
@@ -49,7 +68,8 @@ class SimpleAccessControl {
       const data = JSON.parse(paymentData);
       
       // Проверяем соответствие симулятора
-      if (data.simulator !== simulator) {
+      // Если allSimulators = true, доступ работает для всех симуляторов
+      if (data.simulator !== simulator && !data.allSimulators) {
         console.log('❌ Payment for different simulator:', data.simulator, 'expected:', simulator);
         return {
           hasAccess: false,

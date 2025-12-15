@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Access - All Simulators | ProfPilot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 p-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">🧪 Test Access - All Simulators</h1>
+      <p class="text-slate-600">Quick access to all simulators for testing</p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <h2 class="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
+      <div class="flex flex-wrap gap-4">
+        <button onclick="grantAllAccess()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+          ✅ Grant Access to All
+        </button>
+        <button onclick="clearAllAccess()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+          🗑️ Clear All Access
+        </button>
+        <button onclick="checkAllAccess()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+          📋 Check Status
+        </button>
+      </div>
+    </div>
+
+    <!-- Simulators Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Product Manager -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Product Manager</h3>
+          <span class="text-2xl">📋</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('product-manager')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('product-manager')" class="w-full bg-pm-600 hover:bg-pm-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Analyst -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Data Analyst</h3>
+          <span class="text-2xl">📊</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('data-analyst')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('data-analyst')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- UX Designer -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">UX Designer</h3>
+          <span class="text-2xl">🎨</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('ux-designer')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('ux-designer')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- Copywriter -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Copywriter</h3>
+          <span class="text-2xl">✍️</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('copywriter')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('copywriter')" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- QA Engineer -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">QA Engineer</h3>
+          <span class="text-2xl">🔧</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('qa-engineer')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('qa-engineer')" class="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- Brand Marketer -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Brand Marketer</h3>
+          <span class="text-2xl">📢</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('brand-marketer')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('brand-marketer')" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- Psychologist -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Psychologist</h3>
+          <span class="text-2xl">🧠</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('psychologist')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('psychologist')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+
+      <!-- Lawyer -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">Lawyer</h3>
+          <span class="text-2xl">⚖️</span>
+        </div>
+        <div class="space-y-2">
+          <button onclick="grantAccess('lawyer')" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Grant Access
+          </button>
+          <button onclick="openSimulator('lawyer')" class="w-full bg-slate-600 hover:bg-slate-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+            Open Simulator
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Display -->
+    <div id="status" class="mt-6 bg-white rounded-xl shadow-lg p-6 border border-slate-200 hidden">
+      <h2 class="text-xl font-bold text-slate-900 mb-4">Status</h2>
+      <div id="statusContent" class="text-slate-700"></div>
+    </div>
+  </div>
+
+  <script>
+    const simulators = [
+      'product-manager',
+      'data-analyst',
+      'ux-designer',
+      'copywriter',
+      'qa-engineer',
+      'brand-marketer',
+      'psychologist',
+      'lawyer'
+    ];
+
+    function grantAccess(simulator) {
+      const testData = {
+        simulator: simulator,
+        email: 'test@example.com',
+        accessGranted: true,
+        paymentId: 'test-' + Date.now(),
+        status: 'confirmed',
+        createdAt: new Date().toISOString()
+      };
+
+      // Сохраняем тестовые данные
+      localStorage.setItem('testPaymentData', JSON.stringify(testData));
+      
+      // Также сохраняем как обычный paymentData для совместимости
+      localStorage.setItem('paymentData', JSON.stringify({
+        simulator: simulator,
+        userEmail: 'test@example.com',
+        status: 'confirmed',
+        id: testData.paymentId,
+        timestamp: new Date().toISOString()
+      }));
+
+      showStatus(`✅ Test access granted for ${simulator}!`, 'success');
+    }
+
+    function grantAllAccess() {
+      // Грантим универсальный доступ ко всем симуляторам
+      const testData = {
+        simulator: 'all', // Специальное значение для доступа ко всем
+        email: 'test@example.com',
+        accessGranted: true,
+        allSimulators: true, // Дополнительный флаг
+        paymentId: 'test-all-' + Date.now(),
+        status: 'confirmed',
+        createdAt: new Date().toISOString()
+      };
+
+      // Сохраняем тестовые данные
+      localStorage.setItem('testPaymentData', JSON.stringify(testData));
+      
+      // Также сохраняем как обычный paymentData для совместимости
+      // Используем первый симулятор как пример
+      localStorage.setItem('paymentData', JSON.stringify({
+        simulator: 'product-manager',
+        userEmail: 'test@example.com',
+        status: 'confirmed',
+        id: testData.paymentId,
+        timestamp: new Date().toISOString(),
+        allSimulators: true // Флаг для универсального доступа
+      }));
+
+      showStatus('✅ Test access granted for ALL simulators! You can now open any simulator.', 'success');
+    }
+
+    function clearAllAccess() {
+      localStorage.removeItem('testPaymentData');
+      localStorage.removeItem('paymentData');
+      showStatus('🗑️ All test access cleared.', 'info');
+    }
+
+    function checkAllAccess() {
+      const testData = localStorage.getItem('testPaymentData');
+      const paymentData = localStorage.getItem('paymentData');
+
+      let statusHTML = '';
+
+      if (testData) {
+        try {
+          const test = JSON.parse(testData);
+          statusHTML += `<div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">`;
+          statusHTML += `<p class="font-semibold text-green-800">✅ Test Access Active</p>`;
+          statusHTML += `<p class="text-sm text-green-700 mt-1">Simulator: ${test.simulator}</p>`;
+          statusHTML += `<p class="text-sm text-green-700">Email: ${test.email}</p>`;
+          statusHTML += `</div>`;
+        } catch (e) {
+          statusHTML += `<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">`;
+          statusHTML += `<p class="text-red-800">❌ Error reading test data</p>`;
+          statusHTML += `</div>`;
+        }
+      }
+
+      if (paymentData) {
+        try {
+          const payment = JSON.parse(paymentData);
+          statusHTML += `<div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">`;
+          statusHTML += `<p class="font-semibold text-blue-800">📋 Payment Data Found</p>`;
+          statusHTML += `<p class="text-sm text-blue-700 mt-1">Simulator: ${payment.simulator}</p>`;
+          statusHTML += `<p class="text-sm text-blue-700">Status: ${payment.status}</p>`;
+          statusHTML += `</div>`;
+        } catch (e) {
+          statusHTML += `<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">`;
+          statusHTML += `<p class="text-red-800">❌ Error reading payment data</p>`;
+          statusHTML += `</div>`;
+        }
+      }
+
+      if (!testData && !paymentData) {
+        statusHTML += `<div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">`;
+        statusHTML += `<p class="text-yellow-800">⚠️ No access data found. Click "Grant Access" first.</p>`;
+        statusHTML += `</div>`;
+      }
+
+      document.getElementById('statusContent').innerHTML = statusHTML;
+      document.getElementById('status').classList.remove('hidden');
+    }
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('status');
+      const statusContent = document.getElementById('statusContent');
+      
+      const bgColor = type === 'success' ? 'bg-green-50 border-green-200 text-green-800' :
+                     type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-800' :
+                     'bg-yellow-50 border-yellow-200 text-yellow-800';
+      
+      statusContent.innerHTML = `<div class="p-4 ${bgColor} rounded-lg">${message}</div>`;
+      statusDiv.classList.remove('hidden');
+      
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        statusDiv.classList.add('hidden');
+      }, 3000);
+    }
+
+    function openSimulator(simulator) {
+      // Сначала убеждаемся, что доступ выдан
+      const testData = localStorage.getItem('testPaymentData');
+      if (!testData) {
+        alert('⚠️ Please grant access first by clicking "Grant Access" or "Grant Access to All"');
+        return;
+      }
+
+      // Пути к симуляторам
+      const paths = {
+        'product-manager': '/product-manager-simulator.html',
+        'data-analyst': '/data-analyst-simulator.html',
+        'ux-designer': '/ux-sim-simple.html',
+        'copywriter': '/copywriter-simulator.html',
+        'qa-engineer': '/qa-engineer-simulator.html',
+        'brand-marketer': '/brand-marketer-simulator.html',
+        'psychologist': '/psychologist-simulator.html',
+        'lawyer': '/lawyer-simulator.html'
+      };
+
+      const path = paths[simulator];
+      if (path) {
+        // Открываем в новой вкладке
+        window.open(path, '_blank');
+      } else {
+        alert(`Unknown simulator: ${simulator}`);
+      }
+    }
+
+    // Check access on load
+    window.addEventListener('load', () => {
+      checkAllAccess();
+    });
+  </script>
+</body>
+</html>
+
