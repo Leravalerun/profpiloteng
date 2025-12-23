@@ -605,6 +605,17 @@
   <!-- Main Content -->
   <main class="main">
     <div class="container">
+      <!-- Progress Bar -->
+      <div style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+          <span style="font-size: 0.875rem; font-weight: 500; color: #64748b;">Step 2 of 2</span>
+          <span style="font-size: 0.875rem; font-weight: 500; color: #64748b;">100% Complete</span>
+        </div>
+        <div style="width: 100%; background: #e2e8f0; border-radius: 9999px; height: 0.5rem;">
+          <div style="background: #3b82f6; height: 0.5rem; border-radius: 9999px; width: 100%; transition: width 0.3s;"></div>
+        </div>
+      </div>
+      
       <h1 class="title">Crypto Payment</h1>
       <p class="subtitle">Secure, fast, and private payment with cryptocurrency</p>
 
@@ -746,14 +757,18 @@
         </div>
 
         <!-- Transaction Hash Input -->
-        <div class="wallet-section" id="tx-hash-section">
-          <label class="wallet-label">After payment, enter your transaction hash (optional):</label>
+        <div class="wallet-section" id="tx-hash-section" style="background: #f8fafc; padding: 1.5rem; border-radius: 0.75rem; border: 2px solid #3b82f6;">
+          <label class="wallet-label" style="font-weight: 600; color: #1e293b; margin-bottom: 1rem; display: block;">
+            ✓ Payment Sent? Enter Transaction Hash
+          </label>
           <div class="wallet-input">
-            <input type="text" id="tx-hash-input" placeholder="0x... or paste your TX ID here">
-            <button class="btn btn-primary" id="confirm-payment-btn">Confirm Payment</button>
+            <input type="text" id="tx-hash-input" placeholder="0x... or paste your TX ID here" style="font-size: 0.875rem; font-family: monospace;">
+            <button class="btn btn-primary" id="confirm-payment-btn" style="font-weight: 600; padding: 0.875rem 1.5rem; background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+              ✓ Confirm Payment
+            </button>
           </div>
-          <p style="font-size: 0.875rem; color: #64748b; margin-top: 0.5rem;">
-            You can find the transaction hash in your wallet after sending the payment. This helps us verify your payment faster.
+          <p style="font-size: 0.875rem; color: #64748b; margin-top: 0.75rem; line-height: 1.5;">
+            <strong>Tip:</strong> You can find the transaction hash in your wallet after sending the payment. This helps us verify your payment faster and grant you instant access.
           </p>
         </div>
 
@@ -790,13 +805,13 @@
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-          <button class="btn btn-primary btn-full" id="check-payment">
-            Check Payment Status
+          <button class="btn btn-primary btn-full" id="check-payment" style="font-size: 1rem; padding: 1rem; font-weight: 600; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+            ✓ Check Payment Status
           </button>
-          <button class="btn btn-success btn-full hidden" id="continue-simulator">
-            Continue to Simulator
+          <button class="btn btn-success btn-full hidden" id="continue-simulator" style="font-size: 1rem; padding: 1rem; font-weight: 600; background: linear-gradient(135deg, #059669 0%, #047857 100%); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);">
+            Continue to Simulator →
           </button>
-          <a href="/crypto-faq.html" class="btn btn-help btn-full">
+          <a href="/crypto-faq.html" class="btn btn-help btn-full" style="font-size: 0.875rem;">
             ❓ Need Help? View FAQ
           </a>
         </div>

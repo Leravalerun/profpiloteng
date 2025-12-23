@@ -82,12 +82,39 @@
   <div class="min-h-screen py-8">
     <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
       
+      <!-- Progress Bar -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium text-slate-600">Step 1 of 2</span>
+          <span class="text-sm font-medium text-slate-600">50% Complete</span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-2">
+          <div class="bg-brand-600 h-2 rounded-full transition-all duration-300" style="width: 50%"></div>
+        </div>
+      </div>
+
       <!-- Header -->
-      <div class="text-center mb-12">
+      <div class="text-center mb-8">
         <h1 class="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
           Complete Your <span class="gradient-text">Purchase</span>
         </h1>
-        <p class="text-lg text-slate-600">Secure payment with cryptocurrency</p>
+        <p class="text-lg text-slate-600 mb-4">Secure payment with cryptocurrency</p>
+        
+        <!-- Social Proof -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 mb-4">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span><strong>127 people</strong> purchased this month</span>
+        </div>
+        
+        <!-- Urgency -->
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-full text-sm text-amber-700">
+          <svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Special price ends in <strong id="countdown">24:00:00</strong></span>
+        </div>
       </div>
 
       <div class="grid lg:grid-cols-2 gap-8">
@@ -149,14 +176,38 @@
             </div>
           </div>
 
-          <div class="mt-6 p-4 bg-green-50 rounded-xl border border-green-200">
-            <div class="flex items-center gap-2 text-green-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span class="font-medium">30-day money-back guarantee</span>
+          <!-- Trust Badges -->
+          <div class="mt-6 space-y-3">
+            <div class="p-4 bg-green-50 rounded-xl border border-green-200">
+              <div class="flex items-center gap-2 text-green-700 mb-1">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-medium">30-day money-back guarantee</span>
+              </div>
+              <p class="text-sm text-green-600">If you're not satisfied, we'll refund your payment within 30 days.</p>
             </div>
-            <p class="text-sm text-green-600 mt-1">If you're not satisfied, we'll refund your payment within 30 days.</p>
+            
+            <div class="flex items-center justify-center gap-6 py-4 border-t border-slate-200">
+              <div class="flex items-center gap-2 text-slate-600">
+                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <span class="text-xs">SSL Secure</span>
+              </div>
+              <div class="flex items-center gap-2 text-slate-600">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                <span class="text-xs">Protected</span>
+              </div>
+              <div class="flex items-center gap-2 text-slate-600">
+                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+                <span class="text-xs">No Hidden Fees</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -193,9 +244,10 @@
                 </div>
                 <div class="mb-4">
                   <p class="text-sm text-slate-600 mb-4">Pay with Bitcoin, Ethereum, USDT, or USDC. Secure, decentralized, and available worldwide.</p>
-                  <a href="/crypto-checkout-prod.html" id="crypto-checkout-link" class="inline-block w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition-colors text-center">
-                    Continue with Crypto
+                  <a href="/crypto-checkout-prod.html" id="crypto-checkout-link" class="inline-block w-full bg-gradient-to-r from-orange-600 to-orange-700 text-white py-4 px-6 rounded-xl font-bold hover:from-orange-700 hover:to-orange-800 transition-all text-center text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                    Continue to Payment →
                   </a>
+                  <p class="text-xs text-slate-500 text-center mt-2">Secure • Fast • Private</p>
                 </div>
               </div>
             </div>
@@ -588,10 +640,43 @@
     }
 
 
+    // Countdown timer (24 hours)
+    function startCountdown() {
+      const countdownElement = document.getElementById('countdown');
+      if (!countdownElement) return;
+      
+      let hours = 24;
+      let minutes = 0;
+      let seconds = 0;
+      
+      setInterval(() => {
+        seconds--;
+        if (seconds < 0) {
+          seconds = 59;
+          minutes--;
+          if (minutes < 0) {
+            minutes = 59;
+            hours--;
+            if (hours < 0) {
+              hours = 24; // Reset to 24 hours
+            }
+          }
+        }
+        
+        const h = hours.toString().padStart(2, '0');
+        const m = minutes.toString().padStart(2, '0');
+        const s = seconds.toString().padStart(2, '0');
+        countdownElement.textContent = `${h}:${m}:${s}`;
+      }, 1000);
+    }
+
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
       // Update year in footer
       document.getElementById('year').textContent = new Date().getFullYear();
+      
+      // Start countdown
+      startCountdown();
 
       // Initialize immediately without waiting for Firebase
       function initializePage() {
