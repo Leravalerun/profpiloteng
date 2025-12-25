@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Access Control -->
     <script src="access-control.js"></script>
+    <!-- Game Engine -->
+    <script src="simulator-game-engine.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
@@ -208,6 +210,16 @@
                     2: { completed: 0, total: 3 }, // Prototype quiz, Team critique quiz, Unlock Day 3
                     3: { completed: 0, total: 3 }  // Final decision, Presentation, Unlock Final
                 };
+                
+                // 🎮 Initialize Game Engine
+                this.game = new SimulatorGameEngine({
+                    startXP: this.experience,
+                    startLevel: 1
+                });
+                
+                // Load saved game progress
+                this.game.loadProgress();
+                
                 this.init();
             }
 
@@ -215,11 +227,25 @@
                 console.log('🚀 Initializing Simple UX Simulator...');
                 console.log('📊 Initial day progress:', this.dayProgress);
                 
+                // 🎮 Загрузить сохраненный игровой прогресс
+                this.game.loadProgress();
+                
+                // 🎮 Синхронизировать опыт
+                if (this.game.xp > 0) {
+                    this.experience = this.game.xp;
+                }
+                
                 this.setupEventListeners();
                 this.loadDay(0);
                 this.updateProgress();
                 
                 console.log('✅ Simple UX Simulator initialized');
+                console.log('🎮 Game Engine:', {
+                    xp: this.game.xp,
+                    level: this.game.level,
+                    stars: this.game.totalStars,
+                    achievements: this.game.achievements.size
+                });
                 console.log('📊 Current state:', {
                     currentDay: this.currentDay,
                     experience: this.experience,
@@ -275,6 +301,9 @@
 
             loadDay(day) {
                 console.log(`🔄 Loading Day ${day}...`);
+                
+                // 🎮 Начать день в игровом движке (для speed runner achievement)
+                this.game.startDay();
                 
                 // Показываем индикатор загрузки
                 this.addAlexMessage(`⏳ Loading Day ${day} content...`);
@@ -742,19 +771,26 @@
             handleQuizChoice(choice) {
                 const correctAnswer = 'D';
                 const resultDiv = document.getElementById('day0QuizResult');
+                const taskId = 'day0-ux-psychology-quiz';
                 
-                if (choice === correctAnswer) {
+                // 🎮 Оценить ответ через игровой движок
+                const stars = this.game.evaluateAnswer(taskId, choice, correctAnswer);
+                const isCorrect = choice === correctAnswer;
+                
+                if (isCorrect) {
                     resultDiv.innerHTML = `
-                        <div class="bg-green-100 border border-green-300 rounded-lg p-3">
+                        <div class="bg-green-100 border border-green-300 rounded-lg p-3" data-task-id="${taskId}">
                             <div class="flex items-center gap-2 mb-2">
                                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="font-semibold text-green-800">Perfect!</span>
+                                <span class="font-semibold text-green-800">Perfect! ⭐⭐⭐</span>
                             </div>
                             <p class="text-green-700 text-sm">Excellent thinking! Multiple psychological barriers can indeed combine to create user abandonment. Tomorrow we'll explore this through user interviews.</p>
                         </div>
                     `;
+                    // 🎮 Записать результат в игровой движок
+                    this.game.rateTask(taskId, stars, 'Perfect answer!');
                     this.completeTaskForDay(0, 'UX Psychology Quiz');
                     
                     // Автоматически открываем Day 1 после правильного ответа
@@ -782,16 +818,19 @@
                     };
                     
                     resultDiv.innerHTML = `
-                        <div class="bg-red-100 border border-red-300 rounded-lg p-3">
+                        <div class="bg-amber-100 border border-amber-300 rounded-lg p-3" data-task-id="${taskId}">
                             <div class="flex items-center gap-2 mb-2">
-                                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <span class="text-red-800">Not quite right</span>
+                                <span class="text-amber-800">Not quite right ⭐</span>
                             </div>
-                            <p class="text-red-700 text-sm">${feedback[choice]}</p>
+                            <p class="text-amber-700 text-sm">${feedback[choice]}</p>
+                            <p class="text-xs text-amber-600 mt-2">💡 Try again for a better score!</p>
                         </div>
                     `;
+                    // 🎮 Записать результат (1 звезда за попытку)
+                    this.game.rateTask(taskId, stars, feedback[choice]);
                 }
                 
                 resultDiv.classList.remove('hidden');
@@ -800,19 +839,26 @@
             handleAnalyticsQuiz(choice) {
                 const correctAnswer = 'C';
                 const resultDiv = document.getElementById('analyticsQuizResult');
+                const taskId = 'day1-analytics-quiz';
                 
-                if (choice === correctAnswer) {
+                // 🎮 Оценить ответ
+                const stars = this.game.evaluateAnswer(taskId, choice, correctAnswer);
+                const isCorrect = choice === correctAnswer;
+                
+                if (isCorrect) {
                     resultDiv.innerHTML = `
-                        <div class="bg-green-100 border border-green-300 rounded-lg p-3">
+                        <div class="bg-green-100 border border-green-300 rounded-lg p-3" data-task-id="${taskId}">
                             <div class="flex items-center gap-2 mb-2">
-                                <svg class="svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="font-semibold text-green-800">Excellent!</span>
+                                <span class="font-semibold text-green-800">Excellent! ⭐⭐⭐</span>
                             </div>
                             <p class="text-green-700 text-sm">Great insight! Most of that time is spent thinking, not typing. This suggests users are struggling with content, not technical issues.</p>
                         </div>
                     `;
+                    // 🎮 Записать результат
+                    this.game.rateTask(taskId, stars, 'Excellent analysis!');
                     this.completeTaskForDay(1, 'Analytics Quiz');
                 } else {
                     // Different feedback for each wrong choice
@@ -823,16 +869,19 @@
                     };
                     
                     resultDiv.innerHTML = `
-                        <div class="bg-red-100 border border-red-300 rounded-lg p-3">
+                        <div class="bg-amber-100 border border-amber-300 rounded-lg p-3" data-task-id="${taskId}">
                             <div class="flex items-center gap-2 mb-2">
-                                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <span class="text-red-800">Not quite right</span>
+                                <span class="text-amber-800">Not quite right ⭐</span>
                             </div>
-                            <p class="text-red-700 text-sm">${feedback[choice]}</p>
+                            <p class="text-amber-700 text-sm">${feedback[choice]}</p>
+                            <p class="text-xs text-amber-600 mt-2">💡 Try again for a better score!</p>
                         </div>
                     `;
+                    // 🎮 Записать результат
+                    this.game.rateTask(taskId, stars, feedback[choice]);
                 }
                 
                 resultDiv.classList.remove('hidden');
@@ -841,19 +890,26 @@
             handleHypothesisChoice(choice) {
                 const correctAnswer = 'D';
                 const resultDiv = document.getElementById('hypothesisQuizResult');
+                const taskId = 'day1-hypothesis-quiz';
                 
-                if (choice === correctAnswer) {
+                // 🎮 Оценить ответ
+                const stars = this.game.evaluateAnswer(taskId, choice, correctAnswer);
+                const isCorrect = choice === correctAnswer;
+                
+                if (isCorrect) {
                     resultDiv.innerHTML = `
-                        <div class="bg-green-100 border border-green-300 rounded-lg p-3">
+                        <div class="bg-green-100 border border-green-300 rounded-lg p-3" data-task-id="${taskId}">
                             <div class="flex items-center gap-2 mb-2">
                                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="text-green-800">Excellent!</span>
+                                <span class="text-green-800">Excellent! ⭐⭐⭐</span>
                             </div>
                             <p class="text-green-700 text-sm">Perfect approach! Always test options in UX. Don't assume - validate with real users!</p>
                         </div>
                     `;
+                    // 🎮 Записать результат
+                    this.game.rateTask(taskId, stars, 'Perfect UX thinking!');
                     this.completeTaskForDay(1, 'Hypothesis Quiz');
                     
                     // Автоматически открываем Day 2 после правильного ответа
@@ -936,26 +992,38 @@
                 resultDiv.innerHTML = resultHTML;
                 resultDiv.classList.remove('hidden');
                 
+                // 🎮 Записать результат (если еще не записано)
+                if (choice !== 'D') {
+                    this.game.rateTask('day2-prototype-quiz', stars, feedback[choice] || 'Good thinking!');
+                }
+                
                 // Mark prototype quiz as completed for Day 2
                 this.completeTaskForDay(2, 'Prototype Quiz');
             }
 
             handleTeamCritiqueQuiz(choice) {
                 const resultDiv = document.getElementById('teamCritiqueQuizResult');
+                const taskId = 'day2-team-critique-quiz';
+                const correctAnswer = 'D';
+                
+                // 🎮 Оценить ответ
+                const stars = this.game.evaluateAnswer(taskId, choice, correctAnswer);
                 let resultHTML = '';
                 
-                if (choice === 'D') {
+                if (choice === correctAnswer) {
                     resultHTML = `
-                        <div class="bg-green-100 border border-green-300 rounded-lg p-4">
+                        <div class="bg-green-100 border border-green-300 rounded-lg p-4" data-task-id="${taskId}">
                             <div class="flex items-center gap-2 mb-2">
                                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                <span class="font-semibold text-green-800">Perfect!</span>
+                                <span class="font-semibold text-green-800">Perfect! ⭐⭐⭐</span>
                             </div>
                             <p class="text-green-700 text-sm">Always test with real users! Data beats opinions every time.</p>
                         </div>
                     `;
+                    // 🎮 Записать результат
+                    this.game.rateTask(taskId, stars, 'Perfect UX approach!');
                     
                     // Автоматически открываем Day 3 после правильного ответа
                     setTimeout(() => {
@@ -1191,11 +1259,20 @@
                     this.dayProgress[day].completed++;
                     this.experience += 5; // Small experience boost for each task
                     
+                    // 🎮 Синхронизировать опыт с игровым движком
+                    if (this.game.xp < this.experience) {
+                        this.game.addXP(this.experience - this.game.xp, `Task: ${taskName}`);
+                    }
+                    
                     console.log(`✅ Task completed for Day ${day}: ${taskName}. Progress: ${this.dayProgress[day].completed}/${this.dayProgress[day].total}`);
                     
                     // Check if day is complete and can unlock next
                     if (this.dayProgress[day].completed >= this.dayProgress[day].total) {
                         console.log(`🎉 Day ${day} completed! All ${this.dayProgress[day].total} tasks finished.`);
+                        
+                        // 🎮 Завершить день в игровом движке
+                        this.game.completeDay(day);
+                        
                         this.addAlexMessage(`🎉 Day ${day} completed! You can now unlock the next day.`);
                         
                         // Auto-unlock next day if available
@@ -3384,37 +3461,46 @@
 
             handleFinalDecision(decision) {
                 const resultDiv = document.getElementById('finalDecisionResult');
+                const taskId = 'day3-final-decision';
+                
                 const decisions = {
                     inline: {
-                        title: "Inline Example Approach Selected! 🎯",
+                        title: "Inline Example Approach Selected! 🎯 ⭐⭐",
                         message: "Great choice! This approach prioritizes speed and simplicity. Users complete the form in just 28 seconds with 100% success rate. Perfect for users who want to get through quickly.",
-                        color: "bg-green-50 border-green-300 text-green-800"
+                        color: "bg-green-50 border-green-300 text-green-800",
+                        stars: 2
                     },
                     micro: {
-                        title: "Micro-Questions Approach Selected! 🎯",
+                        title: "Micro-Questions Approach Selected! 🎯 ⭐⭐",
                         message: "Excellent decision! This approach provides the best user satisfaction (9/10) with structured guidance. Users feel supported and confident throughout the process.",
-                        color: "bg-blue-50 border-blue-300 text-blue-800"
+                        color: "bg-blue-50 border-blue-300 text-blue-800",
+                        stars: 2
                     },
                     help: {
-                        title: "Help Button Approach Selected! 🎯",
+                        title: "Help Button Approach Selected! 🎯 ⭐⭐",
                         message: "Smart choice! This approach offers the highest content quality and flexibility. Users can get help when needed without cluttering the interface.",
-                        color: "bg-purple-50 border-purple-300 text-purple-800"
+                        color: "bg-purple-50 border-purple-300 text-purple-800",
+                        stars: 2
                     },
                     hybrid: {
-                        title: "Hybrid Solution Selected! 🎯",
+                        title: "Hybrid Solution Selected! 🎯 ⭐⭐⭐",
                         message: "Brilliant thinking! Combining the best features from all approaches creates a comprehensive solution. This shows advanced UX thinking - not just choosing one approach, but creating the optimal experience.",
-                        color: "bg-indigo-50 border-indigo-300 text-indigo-800"
+                        color: "bg-indigo-50 border-indigo-300 text-indigo-800",
+                        stars: 3
                     }
                 };
 
                 const selected = decisions[decision];
                 resultDiv.innerHTML = `
-                    <div class="${selected.color} rounded-lg p-4 border">
+                    <div class="${selected.color} rounded-lg p-4 border" data-task-id="${taskId}">
                         <h5 class="font-semibold mb-2">${selected.title}</h5>
                         <p class="text-sm">${selected.message}</p>
                     </div>
                 `;
                 resultDiv.classList.remove('hidden');
+                
+                // 🎮 Записать результат (все решения валидны, но hybrid дает 3 звезды)
+                this.game.rateTask(taskId, selected.stars, selected.message);
                 
                 // Mark final decision as completed for Day 3
                 this.completeTaskForDay(3, 'Final Decision');
